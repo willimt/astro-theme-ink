@@ -18,18 +18,28 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
 <BaseLayout>
   <!-- Hero -->
   <div id="content-header" class="animate mb-16 flex flex-col items-center gap-6 text-center">
-    <img
-      src={config.site.avatar}
-      alt={config.site.author}
-      width="96"
-      height="96"
-      class="size-24 rounded-full border-2 border-line bg-card object-cover p-1 shadow-sm"
-    />
+    <div class="relative">
+      <div
+        class="absolute -inset-5 rounded-full bg-gradient-to-br from-accent/25 via-accent/10 to-transparent blur-2xl"
+        aria-hidden="true"
+      >
+      </div>
+      <img
+        src={config.site.avatar}
+        alt={config.site.author}
+        width="96"
+        height="96"
+        class="relative size-24 rounded-full border-2 border-line bg-card object-cover p-1 shadow-sm"
+      />
+    </div>
 
     <div class="flex flex-col items-center gap-4">
       <p class="chip font-mono tracking-widest uppercase">Ink on Paper</p>
       <h1 class="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-        Hi, I'm <span class="text-accent">{config.site.author}</span>
+        Hi, I'm{' '}
+        <span class="bg-gradient-to-r from-accent to-accent/40 bg-clip-text text-transparent">
+          {config.site.author}
+        </span>
       </h1>
       <p class="max-w-xl text-base leading-relaxed text-ink-soft">{config.site.description}</p>
     </div>
@@ -60,7 +70,10 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
       <section aria-label="Recent posts" class="reveal mb-14">
         <div class="mb-4 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
-            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            <span
+              class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
+              aria-hidden="true"
+            />
             Recent Posts
           </h2>
           <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
@@ -85,7 +98,10 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
       <section aria-label="Tags" class="reveal mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
-            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            <span
+              class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
+              aria-hidden="true"
+            />
             Tags
           </h2>
           <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
@@ -110,7 +126,10 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
       <section aria-label="Friends" class="reveal">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
-            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            <span
+              class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
+              aria-hidden="true"
+            />
             Friends
           </h2>
           <a href="/links" class="link-ink text-sm" data-astro-prefetch>

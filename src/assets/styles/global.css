@@ -14,6 +14,20 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Soft aurora at the top of every page — palette-aware via tokens */
+#ambient {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 24rem;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(55% 55% at 12% 0%, hsl(var(--accent) / 0.12), transparent 65%),
+    radial-gradient(45% 45% at 88% 2%, hsl(var(--accent) / 0.1), transparent 65%),
+    radial-gradient(38% 38% at 52% 0%, hsl(var(--wash) / 0.7), transparent 72%);
+}
+
 /* ---- Entrance motion (staggered by page author) ---- */
 @keyframes fade-up {
   from {

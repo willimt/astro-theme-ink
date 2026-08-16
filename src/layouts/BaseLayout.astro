@@ -120,9 +120,10 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
   </head>
 
   <body
-    class="min-h-dvh bg-paper font-sans text-ink transition-colors duration-300"
+    class="relative min-h-dvh bg-paper font-sans text-ink transition-colors duration-300"
     data-astro-page
   >
+    <div id="ambient" aria-hidden="true"></div>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:border focus:border-accent focus:bg-card focus:px-3 focus:py-2"
