@@ -117,7 +117,7 @@ export const config: Config = {
     description: "Hansen's ink — 记录技术、生活与思考。",
     lang: 'en',
     favicon: '/favicon/favicon.ico',
-    avatar: '/avatar.png',
+    avatar: '/avatar.webp',
     ogImage: '/og-card.svg',
     palette: 'fresh',
     titleDelimiter: ' · '
@@ -150,7 +150,7 @@ export const config: Config = {
       tagline: 'Developer / Designer / Photographer',
       location: 'China / QingDao',
       about:
-        '你好，我是 Hansen，一名偶尔 996 的社畜，业余时间喜欢折腾各种技术和工具，追求高效和极简的生活方式。目前就职于一家芯片设计公司，主要从事软件开发和系统、工具的维护工作，最近在研究大模型在企业的实际应用落地。平时喜欢玩游戏、听音乐、看电影、拍照。',
+        '你好，我是 Hansen，一名偶尔 996 的社畜，业余时间喜欢折腾各种技术和工具，追求高效和极简的生活方式。目前就职于一家芯片设计公司，主要从事软件开发和系统、工具的维护工作，最近在研究嵌入式 IDE 的设计与开发。平时喜欢玩游戏、听音乐、看电影、拍照。',
       buttons: [{ title: 'More about me', link: '/about' }]
     },
     recentPosts: 5,

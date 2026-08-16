@@ -115,6 +115,10 @@ src/
 
 `pnpm build` produces a fully static site in `dist/` — host it anywhere (GitHub Pages, Vercel, Netlify, Cloudflare Pages…).
 
+**Before going live:** set your real domain as `site` in [`astro.config.ts`](./astro.config.ts) — sitemap, canonical links and RSS depend on it.
+
+**Performance:** deploy to a platform with a global CDN and automatic compression — Vercel, Netlify and Cloudflare Pages all enable Brotli/gzip and an image CDN by default, so you get those for free.
+
 ## Credits & license
 
 Inspired by the design ideas of [astro-theme-pure](https://github.com/cworld1/astro-theme-pure) (Apache-2.0) — same Astro ecosystem, independent implementation. The Shiki code-block pipeline (`src/plugins/shiki-custom-transformers.ts`, `src/plugins/shiki-official/`, `public/icons/code.svg`) is ported from astro-theme-pure (Apache-2.0). Licensed under [MIT](./LICENSE).

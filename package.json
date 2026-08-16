@@ -11,7 +11,8 @@
     "sync": "astro sync",
     "check": "astro check",
     "format": "prettier --write .",
-    "clean": "node -e \"['dist','.astro'].forEach(d=>fs.rmSync(d,{recursive:true,force:true}))\""
+    "clean": "node -e \"['dist','.astro'].forEach(d=>fs.rmSync(d,{recursive:true,force:true}))\"",
+    "optimize:avatar": "node scripts/optimize-avatar.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.15",

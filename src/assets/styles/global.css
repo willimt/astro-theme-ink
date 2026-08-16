@@ -368,3 +368,53 @@ mark {
   border-radius: 0.2em;
   padding-inline: 0.1em;
 }
+
+/* ---- Print ---- */
+@media print {
+  #ambient,
+  .site-header,
+  .mobile-nav,
+  footer,
+  #reading-progress,
+  .toc,
+  .toc-mobile,
+  .code-copy,
+  .code-lang,
+  .collapse-toggle,
+  .collapse-fade {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .prose {
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+  .prose a {
+    text-decoration: underline !important;
+    background-image: none !important;
+    color: inherit !important;
+  }
+  .astro-code {
+    box-shadow: none;
+    border-color: #ccc;
+    background-color: #f7f7f7 !important;
+  }
+  .astro-code code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  img {
+    max-width: 100% !important;
+  }
+  pre,
+  blockquote {
+    break-inside: avoid;
+  }
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
