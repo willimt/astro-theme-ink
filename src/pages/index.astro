@@ -93,7 +93,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Recent posts -->
   {
     recent.length > 0 && (
-      <section aria-label="Posts" class="reveal not-prose mb-16">
+      <section aria-label="Posts" class="animate not-prose mb-16" style="animation-delay: 60ms">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -121,7 +121,11 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Education -->
   {
     education.length > 0 && (
-      <section aria-label="Education" class="reveal not-prose mb-16">
+      <section
+        aria-label="Education"
+        class="animate not-prose mb-16"
+        style="animation-delay: 120ms"
+      >
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -153,7 +157,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Skills -->
   {
     skills.length > 0 && (
-      <section aria-label="Skills" class="reveal not-prose mb-16">
+      <section aria-label="Skills" class="animate not-prose mb-16" style="animation-delay: 180ms">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -184,7 +188,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Tags (optional) -->
   {
     showTags && tags.length > 0 && (
-      <section aria-label="Tags" class="reveal not-prose mb-16">
+      <section aria-label="Tags" class="animate not-prose mb-16" style="animation-delay: 240ms">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -212,7 +216,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Friends (optional) -->
   {
     showFriends && config.friends.length > 0 && (
-      <section aria-label="Friends" class="reveal not-prose">
+      <section aria-label="Friends" class="animate not-prose" style="animation-delay: 300ms">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span

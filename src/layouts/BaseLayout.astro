@@ -142,29 +142,5 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
       </main>
       <Footer />
     </div>
-
-    <!-- Scroll reveal -->
-    <script>
-      document.addEventListener('astro:page-load', () => {
-        const els = document.querySelectorAll('.reveal')
-        if (!els.length) return
-        if (!('IntersectionObserver' in window)) {
-          els.forEach((el) => el.classList.add('revealed'))
-          return
-        }
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('revealed')
-                io.unobserve(entry.target)
-              }
-            })
-          },
-          { threshold: 0.12 }
-        )
-        els.forEach((el) => io.observe(el))
-      })
-    </script>
   </body>
 </html>
