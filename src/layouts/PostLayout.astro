@@ -45,7 +45,9 @@ const jsonLd = {
   <!-- Reading progress -->
   <div id="reading-progress" aria-hidden="true"></div>
 
-  <div class="animate xl:grid xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:gap-10">
+  <!-- No entrance animation here: the full article appears immediately
+       (an opacity-0 fade-in reads as a dark flash on heavy pages). -->
+  <div class="xl:grid xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:gap-10">
     <TOC {headings} />
 
     <article class="min-w-0 xl:col-start-1 xl:row-start-1">

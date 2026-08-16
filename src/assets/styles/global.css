@@ -6,6 +6,7 @@
 /* ---- Base ---- */
 html {
   scroll-behavior: smooth;
+  background-color: hsl(var(--paper) / 1);
 }
 
 body {

@@ -6,7 +6,7 @@ import '@/assets/styles/global.css'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import { config } from '@/site-config'
-import { themeColorHex } from '@/utils/theme'
+import { THEME_COLORS, themeColorHex } from '@/utils/theme'
 
 interface Props {
   title?: string
@@ -35,7 +35,14 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
 ---
 
 <!doctype html>
-<html lang={config.site.lang} class="scroll-smooth">
+<html
+  lang={config.site.lang}
+  class="scroll-smooth"
+  data-bg-ink-light={THEME_COLORS.ink.light}
+  data-bg-ink-dark={THEME_COLORS.ink.dark}
+  data-bg-fresh-light={THEME_COLORS.fresh.light}
+  data-bg-fresh-dark={THEME_COLORS.fresh.dark}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -81,43 +88,14 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
         root.dataset.theme = theme
         root.dataset.palette = palette
 
-        // theme-color derived from the live --paper token (no duplicated hexes)
-        const meta = document.querySelector('meta[name="theme-color"]')
-        if (meta) {
-          const paper = getComputedStyle(root).getPropertyValue('--paper').trim()
-          if (paper) {
-            const [h, s, l] = paper.split(/\s+/).map(Number)
-            const c = ((1 - Math.abs((2 * l) / 100 - 1)) * s) / 100
-            const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
-            const m = l / 100 - c / 2
-            let r = 0,
-              g = 0,
-              b = 0
-            if (h < 60) {
-              r = c
-              g = x
-            } else if (h < 120) {
-              r = x
-              g = c
-            } else if (h < 180) {
-              g = c
-              b = x
-            } else if (h < 240) {
-              g = x
-              b = c
-            } else if (h < 300) {
-              r = x
-              b = c
-            } else {
-              r = c
-              b = x
-            }
-            const toHex = (v) =>
-              Math.round((v + m) * 255)
-                .toString(16)
-                .padStart(2, '0')
-            meta.setAttribute('content', `#${toHex(r)}${toHex(g)}${toHex(b)}`)
-          }
+        // Paint the html background before first paint (kills any canvas flash)
+        // and keep theme-color in sync. Hex values ride on data attributes so
+        // this works before the stylesheets load.
+        const bg = root.dataset[`bg-${palette}-${dark ? 'dark' : 'light'}`]
+        if (bg) {
+          root.style.backgroundColor = bg
+          const meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', bg)
         }
       })()
     </script>
