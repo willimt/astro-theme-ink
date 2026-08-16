@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.15",
+    "@astrojs/sitemap": "^3.7.3",
     "@iconify-json/lucide": "^1.2.0",
     "@unocss/astro": "^66.6.8",
     "@unocss/preset-icons": "^66.6.8",

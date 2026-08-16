@@ -31,12 +31,41 @@ body {
   animation: fade-up 420ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
+/* Scroll reveal (added by observer in BaseLayout) */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.1rem);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Brief transition when toggling the color theme */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    fill 0.25s ease !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate {
-    animation-duration: 60ms;
+  .animate,
+  .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -53,27 +82,52 @@ body {
   background-color: hsl(var(--accent) / 0.5);
 }
 
-/* ---- Shiki code blocks (`.astro-code`) ---- */
+/* ============================================================
+   Shiki code blocks
+   Note: `.astro-code` IS the <pre> element itself.
+   ============================================================ */
+
 .astro-code {
   position: relative;
   margin-block: 1.25rem;
-  border-radius: calc(var(--radius) * 1.5);
   border: 1px solid hsl(var(--line) / 1);
+  border-radius: calc(var(--radius) * 1.5);
   background-color: hsl(var(--wash) / 0.7) !important;
   overflow: hidden;
 }
 
-.astro-code pre {
-  margin: 0;
+/* The <code> scrolls horizontally inside the rounded frame */
+.astro-code code {
+  display: block;
+  width: fit-content;
+  min-width: 100%;
   padding: 1rem 1.15rem;
   overflow-x: auto;
-  background: transparent !important;
-}
-
-.astro-code code {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.7;
+  white-space: pre;
+}
+
+/* Language badge (injected by client script) */
+.astro-code .code-lang {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.75rem;
+  padding: 0.12rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: hsl(var(--ink-soft) / 1);
+  background-color: hsl(var(--card) / 0.92);
+  border: 1px solid hsl(var(--line) / 1);
+  border-radius: 0.4rem;
+  user-select: none;
+  pointer-events: none;
+}
+.astro-code.has-lang code {
+  padding-top: 2.15rem; /* leave room for the badge */
 }
 
 /* Copy button (injected by client script) */
@@ -88,7 +142,7 @@ body {
   font-size: 0.72rem;
   font-family: var(--font-sans);
   color: hsl(var(--ink-soft) / 1);
-  background-color: hsl(var(--card) / 0.9);
+  background-color: hsl(var(--card) / 0.92);
   border: 1px solid hsl(var(--line) / 1);
   border-radius: 0.4rem;
   opacity: 0;
@@ -98,24 +152,24 @@ body {
     border-color 0.2s ease;
   cursor: pointer;
 }
-
 .astro-code:hover .code-copy,
 .astro-code:focus-within .code-copy {
   opacity: 1;
 }
-
-.astro-code .code-copy:hover {
+.astro-code .code-copy:hover,
+.astro-code .code-copy.copied {
   color: hsl(var(--accent) / 1);
   border-color: hsl(var(--accent) / 0.5);
 }
 
-.astro-code .code-copy.copied {
-  color: hsl(var(--accent) / 1);
+/* Dark mode: switch token colors to the --shiki-dark variants
+   (light values are literal inline colors, so !important is needed) */
+html.dark .astro-code {
+  background-color: hsl(var(--wash) / 0.55) !important;
 }
-
-/* In dark mode, let Shiki recolor tokens */
-.dark .astro-code {
-  background-color: hsl(var(--wash) / 0.5) !important;
+html.dark .astro-code,
+html.dark .astro-code span {
+  color: var(--shiki-dark, hsl(var(--ink) / 1)) !important;
 }
 
 /* ---- Misc ---- */

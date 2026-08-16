@@ -11,21 +11,50 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
 
 {
   toc.length > 0 && (
-    <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:block">
-      <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">目录</h2>
-      <ul class="toc-list mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
-        {toc.map((h) => (
-          <li style={`padding-inline-start: ${(h.depth - 2) * 0.85}rem`}>
-            <a
-              href={`#${h.slug}`}
-              class="block rounded-md py-1 text-[13px] leading-snug text-ink-soft transition-colors duration-200 hover:text-accent"
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
+    <>
+      {/* Mobile: collapsible panel above the article */}
+      <details class="toc-mobile mb-8 rounded-xl border border-line bg-card/60 xl:hidden">
+        <summary class="flex cursor-pointer select-none items-center gap-2 px-4 py-3 font-serif text-sm font-semibold text-ink-soft transition-colors hover:text-accent">
+          <span class="i-lucide-list-tree size-4" aria-hidden="true" />
+          本页目录
+          <span
+            class="i-lucide-chevron-down ms-auto size-4 transition-transform duration-300"
+            aria-hidden="true"
+          />
+        </summary>
+        <nav class="px-2 pb-3" aria-label="文章目录（移动端）">
+          <ul class="flex flex-col gap-0.5 border-t border-line pt-2">
+            {toc.map((h) => (
+              <li style={`padding-inline-start: ${(h.depth - 2) * 0.8}rem`}>
+                <a
+                  href={`#${h.slug}`}
+                  class="toc-link block rounded-md px-3 py-1.5 text-sm leading-snug text-ink-soft transition-colors hover:text-accent"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </details>
+
+      {/* Desktop: sticky aside */}
+      <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:block">
+        <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">目录</h2>
+        <ul class="mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
+          {toc.map((h) => (
+            <li style={`padding-inline-start: ${(h.depth - 2) * 0.85}rem`}>
+              <a
+                href={`#${h.slug}`}
+                class="toc-link block rounded-md py-1 text-[13px] leading-snug text-ink-soft transition-colors duration-200 hover:text-accent"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </>
   )
 }
 
@@ -34,10 +63,13 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
     color: hsl(var(--accent) / 1);
     font-weight: 600;
   }
+  .toc-mobile[open] summary .i-lucide-chevron-down {
+    transform: rotate(180deg);
+  }
 </style>
 
 <script>
-  const links = Array.from(document.querySelectorAll('.toc a'))
+  const links = Array.from(document.querySelectorAll('.toc-link'))
   if (links.length && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       (entries) => {

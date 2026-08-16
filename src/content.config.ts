@@ -18,6 +18,8 @@ const blog = defineCollection({
     publishDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]).transform(dedupeTags),
+    /** Optional cover image; a path under `public/`, e.g. `/covers/welcome.png` */
+    heroImage: z.string().optional(),
     /** Hidden from lists but still accessible by URL */
     draft: z.boolean().default(false),
     /** Per-post comment toggle */

@@ -26,6 +26,8 @@ export interface Config {
     description: string
     lang: string
     favicon: string
+    /** Avatar image shown on the home page hero; a path under `public/` */
+    avatar: string
     /** Open-graph image path under `public/` */
     ogImage: string
     /** e.g. " · " */
@@ -70,7 +72,8 @@ export const config: Config = {
     description: 'A warm, paper-feel personal blog theme — ink on paper.',
     lang: 'zh-CN',
     favicon: '/favicon.svg',
-    ogImage: '/favicon.svg',
+    avatar: '/avatar.svg',
+    ogImage: '/og-card.svg',
     titleDelimiter: ' · '
   },
 

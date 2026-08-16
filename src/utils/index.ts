@@ -1,3 +1,14 @@
+/** Static UnoCSS icon classes for common social platforms.
+ *  UnoCSS can only detect literal class names, so lookups happen here. */
+export const SOCIAL_ICONS: Record<string, string> = {
+  github: 'i-lucide-github',
+  gitlab: 'i-lucide-gitlab',
+  rss: 'i-lucide-rss',
+  mail: 'i-lucide-mail',
+  x: 'i-lucide-twitter',
+  weibo: 'i-lucide-globe'
+}
+
 /** Join class names, skipping falsy values. */
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(' ')

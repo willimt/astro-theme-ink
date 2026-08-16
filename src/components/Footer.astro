@@ -1,19 +1,9 @@
 ---
+import { SOCIAL_ICONS } from '@/utils'
 import { config } from '@/site-config'
 
 const year = new Date().getFullYear()
 const copyright = config.footer.copyright ?? `© ${year} ${config.site.author}`
-
-// Static class map — UnoCSS can only detect literal class names,
-// so social icons must be resolved here, not interpolated.
-const SOCIAL_ICONS: Record<string, string> = {
-  github: 'i-lucide-github',
-  gitlab: 'i-lucide-gitlab',
-  rss: 'i-lucide-rss',
-  mail: 'i-lucide-mail',
-  x: 'i-lucide-twitter',
-  weibo: 'i-lucide-globe'
-}
 
 const social = Object.entries(config.footer.social ?? {})
 const footerLinks = config.footer.links ?? []

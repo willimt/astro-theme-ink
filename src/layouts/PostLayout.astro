@@ -5,7 +5,9 @@ import type { CollectionEntry } from 'astro:content'
 import BaseLayout from './BaseLayout.astro'
 import Comment from '@/components/Comment.astro'
 import TOC from '@/components/TOC.astro'
+import { config } from '@/site-config'
 import { formatDate } from '@/utils'
+import { getBlogCollection, sortMDByDate } from '@/utils/server'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -17,11 +19,47 @@ const { post, headings, minutesRead } = Astro.props
 const { data } = post
 const published = data.publishDate
 const updated = data.updatedDate
+
+// Neighbour posts (newer / older by publish date)
+const allPosts = sortMDByDate(await getBlogCollection())
+const index = allPosts.findIndex((p) => p.id === post.id)
+const newerPost = index > 0 ? allPosts[index - 1] : undefined
+const olderPost = index >= 0 && index < allPosts.length - 1 ? allPosts[index + 1] : undefined
+
+const canonical = new URL(`/blog/${post.id}/`, Astro.site ?? 'https://example.com')
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  datePublished: published.toISOString(),
+  ...(updated && { dateModified: updated.toISOString() }),
+  author: { '@type': 'Person', name: config.site.author },
+  mainEntityOfPage: canonical.href
+}
 ---
 
 <BaseLayout title={data.title} description={data.description} date={updated ?? published}>
+  <!-- Reading progress -->
+  <div id="reading-progress" aria-hidden="true"></div>
+
   <div class="animate xl:grid xl:grid-cols-[minmax(0,1fr)_13rem] xl:gap-12">
+    <TOC {headings} />
+
     <article class="min-w-0">
+      <!-- Cover image -->
+      {
+        data.heroImage && (
+          <img
+            src={data.heroImage}
+            alt={data.title}
+            loading="eager"
+            class="mb-9 h-auto max-h-96 w-full rounded-2xl border border-line object-cover"
+          />
+        )
+      }
+
       <!-- Post header -->
       <header class="mb-9">
         <h1 class="font-serif text-3xl font-semibold leading-tight sm:text-4xl">
@@ -75,10 +113,81 @@ const updated = data.updatedDate
           </a>
         </div>
 
+        <!-- Prev / next -->
+        {
+          (newerPost || olderPost) && (
+            <nav class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2" aria-label="文章导航">
+              {newerPost && (
+                <a
+                  href={`/blog/${newerPost.id}`}
+                  class="paper-card group flex flex-col gap-1 p-4"
+                  data-astro-prefetch
+                >
+                  <span class="flex items-center gap-1.5 text-xs text-ink-soft">
+                    <span
+                      class="i-lucide-arrow-left size-3.5 transition-transform duration-300 group-hover:-translate-x-1"
+                      aria-hidden="true"
+                    />
+                    上一篇
+                  </span>
+                  <span class="line-clamp-2 text-sm font-medium group-hover:text-accent">
+                    {newerPost.data.title}
+                  </span>
+                </a>
+              )}
+              {olderPost && (
+                <a
+                  href={`/blog/${olderPost.id}`}
+                  class="paper-card group flex flex-col gap-1 p-4 sm:text-end"
+                  data-astro-prefetch
+                >
+                  <span class="flex items-center justify-end gap-1.5 text-xs text-ink-soft sm:flex-row-reverse">
+                    <span
+                      class="i-lucide-arrow-right size-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                    下一篇
+                  </span>
+                  <span class="line-clamp-2 text-sm font-medium group-hover:text-accent">
+                    {olderPost.data.title}
+                  </span>
+                </a>
+              )}
+            </nav>
+          )
+        }
+
         {data.comment && <Comment />}
       </footer>
     </article>
-
-    <TOC {headings} />
   </div>
+
+  <!-- BlogPosting structured data -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </BaseLayout>
+
+<style>
+  #reading-progress {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+    height: 3px;
+    background-color: hsl(var(--accent) / 0.85);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('reading-progress')
+  if (bar) {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(window.scrollY / max, 1) : 0})`
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+  }
+</script>

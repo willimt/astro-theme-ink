@@ -2,10 +2,13 @@ import { defineConfig } from 'astro/config'
 
 // UnoCSS integration
 import unocss from '@unocss/astro'
+// Sitemap generation (https://docs.astro.build/en/guides/integrations-guide/sitemap)
+import sitemap from '@astrojs/sitemap'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com', // TODO: replace with your site URL
+  // TODO: replace with your real site URL — needed for sitemap & canonical links
+  site: 'https://example.com',
 
   // The site is fully static, so we can prerender everything.
   output: 'static',
@@ -20,5 +23,5 @@ export default defineConfig({
     }
   },
 
-  integrations: [unocss()]
+  integrations: [unocss(), sitemap()]
 })

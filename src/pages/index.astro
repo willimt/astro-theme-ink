@@ -1,107 +1,155 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import PostCard from '@/components/PostCard.astro'
+import { SOCIAL_ICONS } from '@/utils'
 import { config } from '@/site-config'
 import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from '@/utils/server'
 
 const posts = sortMDByDate(await getBlogCollection())
 const recent = posts.slice(0, 5)
 const tags = getUniqueTagsWithCount(posts).slice(0, 12)
+
+const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item]) => ({
+  ...item,
+  icon: SOCIAL_ICONS[key] ?? 'i-lucide-link'
+}))
 ---
 
 <BaseLayout>
   <!-- Hero -->
-  <div id="content-header" class="animate mb-14 flex flex-col items-center gap-5 text-center">
-    <p class="chip font-mono tracking-widest uppercase">墨 · Ink on Paper</p>
-    <h1 class="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-      你好，我是 <span class="text-accent">{config.site.author}</span>
-    </h1>
-    <p class="max-w-xl text-base leading-relaxed text-ink-soft">{config.site.description}</p>
-    <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
+  <div id="content-header" class="animate mb-16 flex flex-col items-center gap-6 text-center">
+    <img
+      src={config.site.avatar}
+      alt={config.site.author}
+      width="96"
+      height="96"
+      class="size-24 rounded-full border-2 border-line bg-card object-cover p-1 shadow-sm"
+    />
+
+    <div class="flex flex-col items-center gap-4">
+      <p class="chip font-mono tracking-widest uppercase">墨 · Ink on Paper</p>
+      <h1 class="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
+        你好，我是 <span class="text-accent">{config.site.author}</span>
+      </h1>
+      <p class="max-w-xl text-base leading-relaxed text-ink-soft">{config.site.description}</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-2.5">
       <a href="/about" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>关于我</a>
       <a href="/blog" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>全部文章</a>
+      {
+        socialItems.map((item) => (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={item.label}
+            title={item.label}
+            class="icon-link"
+          >
+            <span class={`${item.icon} size-4`} aria-hidden="true" />
+          </a>
+        ))
+      }
     </div>
   </div>
 
-  <div id="content" class="animate flex flex-col gap-14">
-    <!-- Recent posts -->
-    {
-      recent.length > 0 && (
-        <section aria-label="最近文章">
-          <div class="mb-4 flex items-end justify-between">
-            <h2 class="font-serif text-2xl font-semibold">最近文章</h2>
-            <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
-              查看全部 →
-            </a>
-          </div>
-          <div class="flex flex-col gap-4">
-            {recent.map((post) => (
-              <PostCard post={post} />
-            ))}
-          </div>
-        </section>
-      )
-    }
+  <!-- Recent posts -->
+  {
+    recent.length > 0 && (
+      <section aria-label="最近文章" class="reveal mb-14">
+        <div class="mb-4 flex items-end justify-between">
+          <h2 class="font-serif text-2xl font-semibold">最近文章</h2>
+          <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
+            查看全部 →
+          </a>
+        </div>
+        <div class="flex flex-col gap-4">
+          {recent.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-    <!-- Tags -->
-    {
-      tags.length > 0 && (
-        <section aria-label="标签">
-          <div class="mb-4 flex items-end justify-between">
-            <h2 class="font-serif text-2xl font-semibold">标签</h2>
-            <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
-              全部标签 →
+  <!-- Tags -->
+  {
+    tags.length > 0 && (
+      <section aria-label="标签" class="reveal mb-14">
+        <div class="mb-4 flex items-end justify-between">
+          <h2 class="font-serif text-2xl font-semibold">标签</h2>
+          <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
+            全部标签 →
+          </a>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {tags.map(([tag, count]) => (
+            <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
+              #{tag}
+              <span class="font-mono text-[10px] opacity-70">{count}</span>
             </a>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            {tags.map(([tag, count]) => (
-              <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
-                #{tag}
-                <span class="font-mono text-[10px] opacity-70">{count}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )
-    }
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-    <!-- Friends -->
-    {
-      config.friends.length > 0 && (
-        <section aria-label="友链">
-          <div class="mb-4 flex items-end justify-between">
-            <h2 class="font-serif text-2xl font-semibold">友链</h2>
-            <a href="/links" class="link-ink text-sm" data-astro-prefetch>
-              全部友链 →
-            </a>
-          </div>
-          <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {config.friends.slice(0, 3).map((friend) => (
-              <a
-                href={friend.url}
-                target="_blank"
-                rel="noreferrer"
-                class="paper-card group flex items-center gap-3 px-4 py-3"
-              >
-                {friend.avatar && (
-                  <img
-                    src={friend.avatar}
-                    alt=""
-                    loading="lazy"
-                    class="size-9 shrink-0 rounded-full border border-line bg-wash object-cover"
-                  />
-                )}
-                <span class="min-w-0">
-                  <span class="block truncate font-serif font-semibold group-hover:text-accent">
-                    {friend.name}
-                  </span>
-                  <span class="block truncate text-xs text-ink-soft">{friend.desc}</span>
+  <!-- Friends -->
+  {
+    config.friends.length > 0 && (
+      <section aria-label="友链" class="reveal">
+        <div class="mb-4 flex items-end justify-between">
+          <h2 class="font-serif text-2xl font-semibold">友链</h2>
+          <a href="/links" class="link-ink text-sm" data-astro-prefetch>
+            全部友链 →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {config.friends.slice(0, 3).map((friend) => (
+            <a
+              href={friend.url}
+              target="_blank"
+              rel="noreferrer"
+              class="paper-card group flex items-center gap-3 px-4 py-3"
+            >
+              {friend.avatar && (
+                <img
+                  src={friend.avatar}
+                  alt=""
+                  loading="lazy"
+                  class="size-9 shrink-0 rounded-full border border-line bg-wash object-cover"
+                />
+              )}
+              <span class="min-w-0">
+                <span class="block truncate font-serif font-semibold group-hover:text-accent">
+                  {friend.name}
                 </span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )
-    }
-  </div>
+                <span class="block truncate text-xs text-ink-soft">{friend.desc}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>
+
+<style>
+  .icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    color: hsl(var(--ink-soft) / 1);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .icon-link:hover {
+    color: hsl(var(--accent) / 1);
+    background-color: hsl(var(--wash) / 1);
+  }
+</style>

@@ -6,12 +6,16 @@ A warm, paper-feel personal blog theme built with [Astro](https://astro.build) &
 
 ## Features
 
-- 📝 Blog list with pagination, tags, yearly archives, RSS
+- 📝 Blog list with pagination, tags, yearly archives, RSS & sitemap
 - 🔍 Built-in lightweight full-text search — a prerendered JSON index, zero external services
 - 💬 Giscus comments (opt-in, configure in `src/site.config.ts`)
-- 🌗 Light / dark / system themes, applied before first paint (no flash)
-- 📖 Sticky table of contents on article pages
+- 🌗 Light / dark / system themes, applied before first paint (no flash) with a smooth cross-fade
+- 📖 Sticky table of contents on desktop, collapsible TOC on mobile
+- 🖼️ Optional cover images per post (`heroImage`)
+- 📊 Reading progress bar + prev/next post navigation on article pages
+- 🔍 SEO: JSON-LD `BlogPosting` structured data, Open Graph / Twitter cards, canonical URLs
 - ✍️ Serif-display typography over UnoCSS `presetTypography`
+- 📦 Code blocks with language badges, copy buttons, and proper dark-mode token colors
 - 🧩 UnoCSS `presetWind3` + `presetIcons` (lucide), pure static output
 
 ## Quick start
@@ -38,6 +42,7 @@ title: 'Post title'
 description: 'One-sentence summary'
 publishDate: 2026-08-16
 updatedDate: 2026-08-16 # optional
+heroImage: '/covers/my-cover.png' # optional, path under public/
 tags: [tag-a, tag-b]
 draft: false # optional, hidden from lists when true
 comment: true # optional, per-post comment toggle
@@ -50,15 +55,15 @@ Your content here.
 
 Everything lives in [`src/site.config.ts`](./src/site.config.ts):
 
-| Section          | What it controls                                         |
-| ---------------- | -------------------------------------------------------- |
-| `site`           | Title, author, description, language, favicon, OG image  |
-| `header.menu`    | Navigation links                                         |
-| `footer`         | Copyright, extra links, social icons                     |
-| `blog.pageSize`  | Posts per page                                           |
-| `search.enabled` | Toggle the search page & index                           |
-| `comment`        | Giscus repo/category ids — leave `repo` empty to disable |
-| `friends`        | Friend links rendered on `/links` and the home page      |
+| Section          | What it controls                                               |
+| ---------------- | -------------------------------------------------------------- |
+| `site`           | Title, author, avatar, description, language, favicon, OG card |
+| `header.menu`    | Navigation links                                               |
+| `footer`         | Copyright, extra links, social icons                           |
+| `blog.pageSize`  | Posts per page                                                 |
+| `search.enabled` | Toggle the search page & index                                 |
+| `comment`        | Giscus repo/category ids — leave `repo` empty to disable       |
+| `friends`        | Friend links rendered on `/links` and the home page            |
 
 ## Customizing the look
 
