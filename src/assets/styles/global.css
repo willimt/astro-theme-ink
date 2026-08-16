@@ -98,53 +98,53 @@ html.theme-switching *::after {
 
 /* ============================================================
    Shiki code blocks — the look of ink.willimt.com:
-   sticky line numbers, language label top-right, hover copy
+   compact line numbers, language label top-right, hover copy
    button, long-block collapse. Note: `.astro-code` IS the <pre>.
    ============================================================ */
 
 .astro-code {
   position: relative;
-  margin-block: 1.5rem;
+  margin-block: 1.25rem;
   border: 1px solid hsl(var(--line) / 1);
-  border-radius: calc(var(--radius) * 1.5);
+  border-radius: calc(var(--radius) * 1.25);
   background-color: hsl(var(--wash) / 0.7) !important;
   /* beat shiki's inline `overflow-x: auto` so controls stay put */
   overflow: hidden !important;
   box-shadow:
     0 1px 2px hsl(var(--ink) / 0.05),
-    0 18px 44px -22px hsl(var(--ink) / 0.2);
+    0 14px 36px -20px hsl(var(--ink) / 0.18);
 }
 
-/* The <code> scrolls horizontally; line numbers stick to the viewport edge */
+/* The <code> scrolls horizontally */
 .astro-code code {
   display: block;
   width: fit-content;
   min-width: 100%;
-  padding: 0.9rem 1.15rem 1rem 0;
+  padding: 0.7rem 1rem 0.8rem 0;
   overflow-x: auto;
   font-family: var(--font-mono);
-  font-size: 0.875rem;
-  line-height: 1.75;
+  font-size: 0.85rem;
+  line-height: 1.55;
   white-space: pre;
   counter-reset: ink-line;
 }
 
 .astro-code .line {
   display: block;
-  padding-inline-start: 3.2rem;
+  padding-inline-start: 2.3rem;
   position: relative;
 }
 .astro-code .line::before {
   content: counter(ink-line);
   counter-increment: ink-line;
-  position: sticky;
-  inset-inline-start: 0.8rem;
-  display: inline-flex;
-  justify-content: flex-end;
-  width: 2.2rem;
-  margin-inline-end: 0.6rem;
-  color: hsl(var(--ink-soft) / 0.5);
-  font-size: 0.78em;
+  position: absolute;
+  inset-inline-start: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  text-align: right;
+  color: hsl(var(--ink-soft) / 0.45);
+  font-size: 0.72em;
   user-select: none;
 }
 /* Drop the trailing empty line shiki emits */
