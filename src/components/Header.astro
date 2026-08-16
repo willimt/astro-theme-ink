@@ -59,6 +59,26 @@ function isActive(link: string): boolean {
       </button>
     </div>
   </div>
+
+  <!-- Mobile nav: horizontally scrollable row under the bar -->
+  <nav
+    class="mobile-nav mx-auto flex max-w-5xl gap-1 overflow-x-auto px-5 pb-2 sm:px-8 md:hidden"
+    aria-label="Primary navigation"
+  >
+    {
+      config.header.menu.map((item) => (
+        <a
+          href={item.link}
+          class={[
+            'flex-none rounded-md px-3 py-1 text-sm transition-colors duration-200',
+            isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
+          ].join(' ')}
+        >
+          {item.title}
+        </a>
+      ))
+    }
+  </nav>
 </header>
 
 <style>
@@ -94,6 +114,15 @@ function isActive(link: string): boolean {
   .icon-btn:hover {
     color: hsl(var(--accent) / 1);
     background-color: hsl(var(--wash) / 1);
+  }
+
+  /* Mobile nav row: scrollable, no visible scrollbar */
+  .mobile-nav {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mobile-nav::-webkit-scrollbar {
+    display: none;
   }
 
   /* Theme icons: only the icon matching [data-theme] is shown */
