@@ -5,6 +5,7 @@ import type { CollectionEntry } from 'astro:content'
 
 import BaseLayout from './BaseLayout.astro'
 import Comment from '@/components/Comment.astro'
+import Pageview from '@/components/Pageview.astro'
 import TOC from '@/components/TOC.astro'
 import { config } from '@/site-config'
 import { formatDate } from '@/utils'
@@ -87,6 +88,14 @@ const jsonLd = {
           }
           <span aria-hidden="true">·</span>
           <span>{minutesRead} min read</span>
+          {
+            config.pageview.server && (
+              <>
+                <span aria-hidden="true">·</span>
+                <Pageview />
+              </>
+            )
+          }
           {
             data.tags.length > 0 && (
               <>

@@ -97,6 +97,18 @@ comment: {
 
 评论框会出现在文章末尾，主题会跟随你选择的明暗模式。`repo` 留空则整块隐藏。
 
+### 文章浏览量
+
+如果你有 Waline 服务器（或想用已有的），把地址填进 `pageview.server`，文章页的 meta 行就会显示当前文章的浏览量：
+
+```ts title="site-config.ts"
+pageview: {
+  server: 'https://你的-waline-服务器/' // 留空则隐藏
+}
+```
+
+实现原理：直接请求 `{server}/article?path=当前路径` 拿计数，无额外依赖；请求失败时静默隐藏。没有 Waline 的话也可以用不蒜子（busuanzi）之类的服务，自行接入即可。
+
 ## 6. 搜索开关
 
 ```ts title="site-config.ts"

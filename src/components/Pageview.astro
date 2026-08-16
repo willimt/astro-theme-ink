@@ -1,0 +1,48 @@
+---
+import { config } from '@/site-config'
+
+const server = config.pageview.server
+const path = Astro.url.pathname
+---
+
+{
+  server && (
+    <span
+      class="pv inline-flex items-center gap-1 text-xs text-ink-soft"
+      data-server={server}
+      data-path={path}
+    >
+      <span class="i-lucide-eye size-3.5" aria-hidden="true" />
+      <span class="pv-num" aria-label="views">
+        ···
+      </span>
+      <span class="pv-unit">views</span>
+    </span>
+  )
+}
+
+<script>
+  // Fetch the article view count from a Waline server (`GET /article?path=…`).
+  // Pure client-side; hidden gracefully on any failure.
+  const el = document.querySelector<HTMLElement>('.pv')
+  if (el) {
+    const server = el.dataset.server
+    const path = el.dataset.path || window.location.pathname
+    fetch(`${server}/article?path=${encodeURIComponent(path)}`)
+      .then((r) => r.json())
+      .then((json) => {
+        // Some Waline deployments return a plain number, others
+        // `{ data: [{ views }] }` — accept both.
+        const views = typeof json === 'number' ? json : json?.data?.[0]?.views
+        if (typeof views === 'number' && el.isConnected) {
+          const num = el.querySelector('.pv-num')
+          if (num) num.textContent = views.toLocaleString()
+        } else if (el.isConnected) {
+          el.remove()
+        }
+      })
+      .catch(() => {
+        el.remove()
+      })
+  }
+</script>

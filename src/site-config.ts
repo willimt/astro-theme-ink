@@ -1,4 +1,4 @@
-/**
+﻿/**
  * astro-theme-ink · site configuration
  * Everything the theme needs in one typed object — no virtual modules,
  * just import { config } from '@/site-config' where needed.
@@ -79,6 +79,11 @@ export interface Config {
   header: {
     menu: NavItem[]
   }
+  /** Article page views — Waline server URL; leave empty to disable.
+   *  (Any Waline server exposing the `/article?path=` API works.) */
+  pageview: {
+    server: string
+  }
   footer: {
     /** Shown as `© <year> <author>`; set a custom string to override entirely */
     copyright?: string
@@ -130,6 +135,12 @@ export const config: Config = {
       { title: 'Links', link: '/links' },
       { title: 'About', link: '/about' }
     ]
+  },
+
+  // Article page views. Fill in your Waline server URL (e.g. Waline on
+  // LeanCloud or a self-hosted one) to enable; empty = hidden.
+  pageview: {
+    server: ''
   },
 
   footer: {
