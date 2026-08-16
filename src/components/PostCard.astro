@@ -29,7 +29,7 @@ const { remarkPluginFrontmatter } = await render(post)
     class="font-serif text-xl font-semibold leading-snug transition-colors duration-200 group-hover:text-accent"
   >
     <a href={`/blog/${post.id}`} data-astro-prefetch class="after:absolute after:inset-0">
-      {data.draft && <span class="me-1 text-accent">[草稿]</span>}
+      {data.draft && <span class="me-1 text-accent">[Draft]</span>}
       {data.title}
     </a>
   </h2>
@@ -46,7 +46,7 @@ const { remarkPluginFrontmatter } = await render(post)
     }
     <span class="ms-auto flex items-center gap-1 text-xs text-ink-soft">
       <span class="i-lucide-clock size-3.5" aria-hidden="true"></span>
-      {remarkPluginFrontmatter.minutesRead} 分钟
+      {remarkPluginFrontmatter.minutesRead} min read
     </span>
   </div>
 </article>

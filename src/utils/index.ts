@@ -14,10 +14,10 @@ export function cn(...classes: Array<string | false | null | undefined>): string
   return classes.filter(Boolean).join(' ')
 }
 
-/** Format a date using the site locale, e.g. "2026年8月16日". */
+/** Format a date using the site locale, e.g. "August 16, 2026". */
 export function formatDate(
   date: Date,
-  locale = 'zh-CN',
+  locale = 'en-US',
   options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
 ): string {
   return new Intl.DateTimeFormat(locale, options).format(date)

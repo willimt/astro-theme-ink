@@ -31,20 +31,20 @@ interface Props {
 const { page, tag } = Astro.props
 ---
 
-<BaseLayout title={`#${tag}`} description={`标签 ${tag} 下的文章`}>
+<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}`}>
   <div class="animate">
     <header class="mb-8">
       <h1 class="font-serif text-3xl font-semibold">
         <span class="text-accent">#{tag}</span>
       </h1>
       <p class="mt-2 text-sm text-ink-soft">
-        共 {page.total} 篇 · 第 {page.currentPage} / {Math.max(1, page.lastPage)} 页
+        {page.total} posts · page {page.currentPage} of {Math.max(1, page.lastPage)}
       </p>
     </header>
 
     {
       page.data.length === 0 ? (
-        <p class="py-12 text-center text-ink-soft">这个标签下暂无文章。</p>
+        <p class="py-12 text-center text-ink-soft">No posts with this tag.</p>
       ) : (
         <div class="flex flex-col gap-4">
           {page.data.map((post) => (
@@ -55,8 +55,8 @@ const { page, tag } = Astro.props
     }
 
     <Pagination
-      prev={page.url.prev ? { title: '上一页', url: page.url.prev } : undefined}
-      next={page.url.next ? { title: '下一页', url: page.url.next } : undefined}
+      prev={page.url.prev ? { title: 'Previous', url: page.url.prev } : undefined}
+      next={page.url.next ? { title: 'Next', url: page.url.next } : undefined}
     />
   </div>
 </BaseLayout>

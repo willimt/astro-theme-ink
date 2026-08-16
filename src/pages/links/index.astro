@@ -3,11 +3,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import { config } from '@/site-config'
 ---
 
-<BaseLayout title="友链" description={`${config.friends.length} 位朋友`}>
+<BaseLayout title="Friends" description={`${config.friends.length} friends`}>
   <div class="animate">
     <header class="mb-8">
-      <h1 class="font-serif text-3xl font-semibold">友链</h1>
-      <p class="mt-2 text-sm text-ink-soft">共 {config.friends.length} 位朋友</p>
+      <h1 class="font-serif text-3xl font-semibold">Friends</h1>
+      <p class="mt-2 text-sm text-ink-soft">{config.friends.length} friends</p>
     </header>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -50,18 +50,19 @@ import { config } from '@/site-config'
     </div>
 
     <div class="paper-card mt-10 p-6">
-      <h2 class="font-serif text-lg font-semibold">申请友链</h2>
+      <h2 class="font-serif text-lg font-semibold">Apply for a friendship</h2>
       <p class="mt-2 text-sm leading-relaxed text-ink-soft">
-        欢迎交换友链！请先在贵站添加本站链接，然后通过评论或邮件告诉我你的：
+        Want to exchange links? Add this site to yours first, then reach out via comments or email
+        with:
       </p>
       <ul class="mt-3 list-inside list-disc space-y-1 text-sm text-ink-soft">
-        <li>站点名称</li>
-        <li>一句话简介</li>
-        <li>网站地址</li>
-        <li>头像（可选）</li>
+        <li>Site name</li>
+        <li>Short description</li>
+        <li>Website URL</li>
+        <li>Avatar (optional)</li>
       </ul>
       <p class="mt-3 text-sm leading-relaxed text-ink-soft">
-        本站链接：<code class="rounded bg-wash px-1.5 py-0.5 font-mono text-xs"
+        This site: <code class="rounded bg-wash px-1.5 py-0.5 font-mono text-xs"
           >{config.site.title} — {config.site.description}</code
         >
       </p>

@@ -1,51 +1,43 @@
-﻿---
+---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { config } from '@/site-config'
 ---
 
-<BaseLayout title="鍏充簬" description={`鍏充簬 ${config.site.author}`}>
+<BaseLayout title="About" description={`About ${config.site.author}`}>
   <div class="animate mx-auto max-w-3xl">
     <header class="mb-8 text-center">
-      <h1 class="font-serif text-3xl font-semibold">鍏充簬</h1>
+      <h1 class="font-serif text-3xl font-semibold">About</h1>
       <p class="mt-3 text-ink-soft">{config.site.description}</p>
     </header>
 
     <div class="prose prose-fill">
-      <h2>杩欎釜绔欑偣</h2>
+      <h2>This site</h2>
       <p>
-        杩欐槸涓€涓敱 <strong>astro-theme-ink</strong> 椹卞姩鐨勪釜浜哄崥瀹?鈥斺€?涓€娆炬俯鏆栫焊鎰熼鏍肩殑
-        Astro 涓婚銆傚ⅷ鑹叉枃瀛楄惤鍦ㄧ背鐧界焊涓婏紝鏄畠鎯充紶杈剧殑鍏ㄩ儴銆?
+        A personal blog powered by <strong>astro-theme-ink</strong> — a warm paper-feel Astro theme. Ink
+        on paper is all it wants to convey.
       </p>
       <blockquote>
-        绠€鍗曠殑涓滆タ寰€寰€鏈€濂姐€傜暀鐧戒笉鏄┖鐧斤紝鏄懠鍚搞€?/blockquote>
-
-        <h2>
-          鍏充簬鎴?/h2>
-          <p>
-            鍦ㄨ繖閲屾浛鎹负浣犵殑涓汉浠嬬粛锛氫綘鏄皝銆佸湪鍋氫粈涔堛€佸叧蹇冧粈涔堛€傚彲浠ヨ亰鑱婃妧鏈€佺敓娲伙紝
-            鎴栬€呬换浣曚綘鎰挎剰鍒嗕韩鐨勪簨鎯呫€?
-          </p>
-
-          <h2>鎶€鏈爤</h2>
-          <ul>
-            <li><strong>Astro 5</strong> 鈥斺€?鍐呭椹卞姩鐨?Web 妗嗘灦</li>
-            <li>
-              <strong>UnoCSS</strong>锛坧resetWind3 + presetTypography +
-              presetIcons锛夆€斺€?鍗虫椂鍘熷瓙鍖?CSS 寮曟搸
-            </li>
-            <li>
-              <strong
-                >绾潤鎬佽緭鍑?/strong> 鈥斺€?鏋勫缓浜х墿鍙洿鎺ユ墭绠″埌浠绘剰闈欐€佸钩鍙?/li>
-              </strong>
-
-              <h2>鑱旂郴</h2>
-              <p>
-                娆㈣繋閫氳繃 <a href="/links">鍙嬮摼</a> 鎴栨枃绔犺瘎璁哄尯涓庢垜浜ゆ祦銆?
-              </p>
-            </li>
-          </ul>
-        </h2>
+        Simple things are often the best. Whitespace is not emptiness — it is breathing.
       </blockquote>
+
+      <h2>About me</h2>
+      <p>
+        Replace this with your introduction: who you are, what you do, and what you care about. Talk
+        tech, life, or anything you would like to share.
+      </p>
+
+      <h2>Tech stack</h2>
+      <ul>
+        <li><strong>Astro 5</strong> — the content-driven web framework</li>
+        <li>
+          <strong>UnoCSS</strong> (presetWind3 + presetTypography + presetIcons) — the instant atomic
+          CSS engine
+        </li>
+        <li><strong>Pure static output</strong> — deploy the build anywhere</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>Feel free to reach out via <a href="/links">friend links</a> or the comment section.</p>
     </div>
-  </div></BaseLayout
->
+  </div>
+</BaseLayout>

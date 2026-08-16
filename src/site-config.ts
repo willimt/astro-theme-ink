@@ -70,7 +70,7 @@ export const config: Config = {
     title: 'Astro Theme Ink',
     author: 'Ink Lab',
     description: 'A warm, paper-feel personal blog theme — ink on paper.',
-    lang: 'zh-CN',
+    lang: 'en',
     favicon: '/favicon.svg',
     avatar: '/avatar.svg',
     ogImage: '/og-card.svg',

@@ -16,13 +16,13 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
       <details class="toc-mobile mb-8 rounded-xl border border-line bg-card/60 xl:hidden">
         <summary class="flex cursor-pointer select-none items-center gap-2 px-4 py-3 font-serif text-sm font-semibold text-ink-soft transition-colors hover:text-accent">
           <span class="i-lucide-list-tree size-4" aria-hidden="true" />
-          本页目录
+          Table of contents
           <span
             class="i-lucide-chevron-down ms-auto size-4 transition-transform duration-300"
             aria-hidden="true"
           />
         </summary>
-        <nav class="px-2 pb-3" aria-label="文章目录（移动端）">
+        <nav class="px-2 pb-3" aria-label="Table of contents (mobile)">
           <ul class="flex flex-col gap-0.5 border-t border-line pt-2">
             {toc.map((h) => (
               <li style={`padding-inline-start: ${(h.depth - 2) * 0.8}rem`}>
@@ -40,7 +40,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
 
       {/* Desktop: sticky aside, placed in the right column of the article grid */}
       <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:col-start-2 xl:block">
-        <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">目录</h2>
+        <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">Contents</h2>
         <ul class="mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
           {toc.map((h) => (
             <li style={`padding-inline-start: ${(h.depth - 2) * 0.85}rem`}>

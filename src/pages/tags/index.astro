@@ -5,16 +5,16 @@ import { getBlogCollection, getUniqueTagsWithCount } from '@/utils/server'
 const tags = getUniqueTagsWithCount(await getBlogCollection())
 ---
 
-<BaseLayout title="标签" description={`${tags.length} 个标签`}>
+<BaseLayout title="Tags" description={`${tags.length} tags`}>
   <div class="animate">
     <header class="mb-8">
-      <h1 class="font-serif text-3xl font-semibold">标签</h1>
-      <p class="mt-2 text-sm text-ink-soft">共 {tags.length} 个标签</p>
+      <h1 class="font-serif text-3xl font-semibold">Tags</h1>
+      <p class="mt-2 text-sm text-ink-soft">{tags.length} tags</p>
     </header>
 
     {
       tags.length === 0 ? (
-        <p class="py-12 text-center text-ink-soft">暂无标签。</p>
+        <p class="py-12 text-center text-ink-soft">No tags yet.</p>
       ) : (
         <div class="flex flex-wrap gap-2.5">
           {tags.map(([tag, count]) => (

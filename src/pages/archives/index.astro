@@ -6,25 +6,27 @@ import { getBlogCollection, groupByYear } from '@/utils/server'
 const groups = groupByYear(await getBlogCollection())
 ---
 
-<BaseLayout title="归档" description="按年份归档的文章">
+<BaseLayout title="Archives" description="Posts grouped by year">
   <div class="animate">
     <header class="mb-8">
-      <h1 class="font-serif text-3xl font-semibold">归档</h1>
+      <h1 class="font-serif text-3xl font-semibold">Archives</h1>
       <p class="mt-2 text-sm text-ink-soft">
-        共 {[...groups.values()].reduce((n, g) => n + g.length, 0)} 篇文章
+        {[...groups.values()].reduce((n, g) => n + g.length, 0)} posts
       </p>
     </header>
 
     {
       groups.size === 0 ? (
-        <p class="py-12 text-center text-ink-soft">暂无文章。</p>
+        <p class="py-12 text-center text-ink-soft">No posts yet.</p>
       ) : (
         <div class="flex flex-col gap-10">
           {[...groups.entries()].map(([year, posts]) => (
-            <section aria-label={`${year}年`}>
+            <section aria-label={`${year}`}>
               <h2 class="mb-4 flex items-baseline gap-3 font-serif text-2xl font-semibold">
                 {year}
-                <span class="font-mono text-sm font-normal text-ink-soft">{posts.length} 篇</span>
+                <span class="font-mono text-sm font-normal text-ink-soft">
+                  {posts.length} posts
+                </span>
               </h2>
               <ul class="flex flex-col divide-y divide-line border-y border-line">
                 {posts.map((post) => (
@@ -38,7 +40,7 @@ const groups = groupByYear(await getBlogCollection())
                         datetime={post.data.publishDate.toISOString()}
                         class="w-24 shrink-0 font-mono text-xs text-ink-soft"
                       >
-                        {formatDate(post.data.publishDate, 'zh-CN', {
+                        {formatDate(post.data.publishDate, 'en-US', {
                           month: '2-digit',
                           day: '2-digit'
                         })}

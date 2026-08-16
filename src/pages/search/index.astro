@@ -3,11 +3,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import { config } from '@/site-config'
 ---
 
-<BaseLayout title="搜索" description="站内全文搜索" noindex>
+<BaseLayout title="Search" description="Full-text site search" noindex>
   <div class="animate mx-auto max-w-2xl">
     <header class="mb-6">
-      <h1 class="font-serif text-3xl font-semibold">搜索</h1>
-      <p class="mt-2 text-sm text-ink-soft">在本地索引中检索全部文章（无需外部服务）</p>
+      <h1 class="font-serif text-3xl font-semibold">Search</h1>
+      <p class="mt-2 text-sm text-ink-soft">
+        Search all posts from a local index (no external service)
+      </p>
     </header>
 
     {
@@ -21,7 +23,7 @@ import { config } from '@/site-config'
             <input
               id="search-input"
               type="search"
-              placeholder="输入关键词，如 astro、主题、搜索…"
+              placeholder="Search posts, e.g. astro, theme…"
               autocomplete="off"
               autofocus
               class="w-full rounded-xl border border-line bg-card px-10 py-3 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink-soft/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
@@ -31,7 +33,7 @@ import { config } from '@/site-config'
           <ul id="search-results" class="mt-6 flex flex-col gap-3" />
         </>
       ) : (
-        <p class="py-10 text-center text-ink-soft">搜索功能已在配置中关闭。</p>
+        <p class="py-10 text-center text-ink-soft">Search is disabled in the configuration.</p>
       )
     }
   </div>
@@ -83,12 +85,12 @@ import { config } from '@/site-config'
       const query = q.trim().toLowerCase()
       if (!query) {
         list!.innerHTML = ''
-        status!.textContent = '输入关键词开始搜索'
+        status!.textContent = 'Type to search…'
         return
       }
       if (!index) {
         list!.innerHTML = ''
-        status!.textContent = '正在加载索引…'
+        status!.textContent = 'Loading index…'
         return
       }
       const hits = index.filter(
@@ -98,7 +100,7 @@ import { config } from '@/site-config'
           item.tags.some((t) => t.toLowerCase().includes(query)) ||
           item.content.toLowerCase().includes(query)
       )
-      status!.textContent = `找到 ${hits.length} 条结果`
+      status!.textContent = `${hits.length} results found`
       list!.innerHTML = hits.length
         ? hits
             .map(
@@ -121,7 +123,7 @@ import { config } from '@/site-config'
             </li>`
             )
             .join('')
-        : '<li class="py-12 text-center text-ink-soft">没有找到相关文章</li>'
+        : '<li class="py-12 text-center text-ink-soft">No matching posts</li>'
     }
 
     let timer: number | undefined
@@ -137,7 +139,7 @@ import { config } from '@/site-config'
         render(input.value)
       })
       .catch(() => {
-        status!.textContent = '搜索索引加载失败'
+        status!.textContent = 'Failed to load search index'
       })
   }
 </script>

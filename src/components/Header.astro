@@ -19,8 +19,8 @@ function isActive(link: string): boolean {
       <span class="font-serif text-lg font-semibold tracking-wide">{config.site.title}</span>
     </a>
 
-    <!-- Desktop nav -->
-    <nav class="hidden items-center gap-1 md:flex" aria-label="主导航">
+    <!-- Nav -->
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
       {
         config.header.menu.map((item) => (
           <a
@@ -40,7 +40,7 @@ function isActive(link: string): boolean {
     <div class="flex items-center gap-1">
       {
         config.search.enabled && (
-          <a href="/search" title="搜索" aria-label="搜索" class="icon-btn" data-astro-prefetch>
+          <a href="/search" title="Search" aria-label="Search" class="icon-btn" data-astro-prefetch>
             <span class="i-lucide-search size-5" aria-hidden="true" />
           </a>
         )
@@ -50,46 +50,15 @@ function isActive(link: string): boolean {
         id="theme-toggle"
         type="button"
         class="icon-btn"
-        aria-label="切换主题"
-        title="切换主题"
+        aria-label="Toggle theme"
+        title="Toggle theme"
       >
         <span class="i-lucide-monitor icon-system size-5" aria-hidden="true"></span>
         <span class="i-lucide-sun icon-light hidden size-5" aria-hidden="true"></span>
         <span class="i-lucide-moon icon-dark hidden size-5" aria-hidden="true"></span>
       </button>
-
-      <button
-        id="menu-toggle"
-        type="button"
-        class="icon-btn md:hidden"
-        aria-label="打开菜单"
-        aria-expanded="false"
-      >
-        <span class="i-lucide-menu size-5" aria-hidden="true"></span>
-      </button>
     </div>
   </div>
-
-  <!-- Mobile menu -->
-  <nav id="mobile-menu" class="mobile-menu md:hidden" aria-label="移动端导航">
-    <div class="mx-auto max-w-5xl px-5 pb-3 sm:px-8">
-      <div class="flex flex-col gap-0.5">
-        {
-          config.header.menu.map((item) => (
-            <a
-              href={item.link}
-              class={[
-                'rounded-md px-3 py-2 text-sm transition-colors',
-                isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
-              ].join(' ')}
-            >
-              {item.title}
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </nav>
 </header>
 
 <style>
@@ -127,19 +96,6 @@ function isActive(link: string): boolean {
     background-color: hsl(var(--wash) / 1);
   }
 
-  /* Mobile menu: hidden by default, slides down when open */
-  .mobile-menu {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s ease;
-  }
-  .mobile-menu > div {
-    overflow: hidden;
-  }
-  .mobile-menu.open {
-    grid-template-rows: 1fr;
-  }
-
   /* Theme icons: only the icon matching [data-theme] is shown */
   #theme-toggle[data-theme='light'] .icon-light,
   #theme-toggle[data-theme='dark'] .icon-dark,
@@ -151,8 +107,6 @@ function isActive(link: string): boolean {
 <script>
   const header = document.getElementById('site-header')
   const toggle = document.getElementById('theme-toggle')
-  const menuToggle = document.getElementById('menu-toggle')
-  const mobileMenu = document.getElementById('mobile-menu')
 
   // Frosted bar on scroll
   const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8)
@@ -179,13 +133,4 @@ function isActive(link: string): boolean {
     applyTheme(next)
   })
   if (toggle) toggle.dataset.theme = document.documentElement.dataset.theme || 'system'
-
-  // Mobile menu
-  menuToggle?.addEventListener('click', () => {
-    const open = mobileMenu?.classList.toggle('open')
-    menuToggle.setAttribute('aria-expanded', String(!!open))
-  })
-  mobileMenu
-    ?.querySelectorAll('a')
-    .forEach((a) => a.addEventListener('click', () => mobileMenu.classList.remove('open')))
 </script>

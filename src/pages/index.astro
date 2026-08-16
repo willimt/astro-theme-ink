@@ -27,16 +27,16 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     />
 
     <div class="flex flex-col items-center gap-4">
-      <p class="chip font-mono tracking-widest uppercase">墨 · Ink on Paper</p>
+      <p class="chip font-mono tracking-widest uppercase">Ink on Paper</p>
       <h1 class="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-        你好，我是 <span class="text-accent">{config.site.author}</span>
+        Hi, I'm <span class="text-accent">{config.site.author}</span>
       </h1>
       <p class="max-w-xl text-base leading-relaxed text-ink-soft">{config.site.description}</p>
     </div>
 
     <div class="flex flex-wrap items-center justify-center gap-2.5">
-      <a href="/about" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>关于我</a>
-      <a href="/blog" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>全部文章</a>
+      <a href="/about" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>About me</a>
+      <a href="/blog" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>All posts</a>
       {
         socialItems.map((item) => (
           <a
@@ -57,14 +57,14 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Recent posts -->
   {
     recent.length > 0 && (
-      <section aria-label="最近文章" class="reveal mb-14">
+      <section aria-label="Recent posts" class="reveal mb-14">
         <div class="mb-4 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
-            最近文章
+            Recent Posts
           </h2>
           <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
-            查看全部 →
+            View all →
           </a>
         </div>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -79,14 +79,14 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Tags -->
   {
     tags.length > 0 && (
-      <section aria-label="标签" class="reveal mb-16">
+      <section aria-label="Tags" class="reveal mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
-            标签
+            Tags
           </h2>
           <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
-            全部标签 →
+            All tags →
           </a>
         </div>
         <div class="flex flex-wrap gap-2">
@@ -104,14 +104,14 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Friends -->
   {
     config.friends.length > 0 && (
-      <section aria-label="友链" class="reveal">
+      <section aria-label="Friends" class="reveal">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
-            友链
+            Friends
           </h2>
           <a href="/links" class="link-ink text-sm" data-astro-prefetch>
-            全部友链 →
+            All friends →
           </a>
         </div>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
