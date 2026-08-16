@@ -1,6 +1,14 @@
-/** Browser chrome colors (theme-color meta).
- *  Keep in sync with the surface values in `src/assets/styles/tokens.css`. */
+/** Built-in color palettes (warm "ink" and fresh "mint").
+ *  Hex values are the exact conversion of the `--paper` tokens in
+ *  `src/assets/styles/tokens.css` (kept in sync manually). */
 export const THEME_COLORS = {
-  light: '#f7f1e5',
-  dark: '#17120c'
+  ink: { light: '#faf8f5', dark: '#181511' },
+  fresh: { light: '#f4faf9', dark: '#101817' }
 } as const
+
+export type Palette = keyof typeof THEME_COLORS
+
+/** Browser chrome color (theme-color meta) for a palette + mode. */
+export function themeColorHex(palette: Palette, dark: boolean): string {
+  return THEME_COLORS[palette][dark ? 'dark' : 'light']
+}

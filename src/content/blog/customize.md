@@ -104,6 +104,10 @@ draft: false
 
 主题的页面都在 `src/pages/` 下，复制一个已有的页面（如 `links/index.astro`）改内容即可；导航入口在 `site-config.ts` 的 `header.menu` 里加一行。
 
+**如何切换清新淡雅配色？**
+
+主题内置两套配色：默认的暖调「墨色」（ink）和冷调薄荷「清新」（fresh）。点顶栏的调色板按钮即可切换并记住选择；也可以把 `site-config.ts` 里的 `site.palette` 改成 `'fresh'`，作为新访客看到的默认配色。两套配色的变量都定义在 `src/assets/styles/tokens.css`，直接改数值就能调出你自己的色板。
+
 ## 完
 
 以上就是全部定制入口。剩下的就是你的内容了 —— 祝你写作愉快。

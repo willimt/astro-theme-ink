@@ -30,6 +30,8 @@ export interface Config {
     avatar: string
     /** Open-graph image path under `public/` */
     ogImage: string
+    /** Default color palette for first-time visitors: 'ink' (warm) | 'fresh' (mint) */
+    palette: 'ink' | 'fresh'
     /** e.g. " · " */
     titleDelimiter: string
   }
@@ -74,6 +76,7 @@ export const config: Config = {
     favicon: '/favicon.svg',
     avatar: '/avatar.svg',
     ogImage: '/og-card.svg',
+    palette: 'ink',
     titleDelimiter: ' · '
   },
 

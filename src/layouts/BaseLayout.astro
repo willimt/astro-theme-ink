@@ -6,7 +6,7 @@ import '@/assets/styles/global.css'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import { config } from '@/site-config'
-import { THEME_COLORS } from '@/utils/theme'
+import { themeColorHex } from '@/utils/theme'
 
 interface Props {
   title?: string
@@ -44,7 +44,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content={THEME_COLORS.light} />
+    <meta name="theme-color" content={themeColorHex(config.site.palette, false)} />
 
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
@@ -59,19 +59,62 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
 
     {date && <meta property="article:published_time" content={date.toISOString()} />}
 
-    <!-- Theme, applied before first paint to avoid flash -->
+    <!-- Theme + palette, applied before first paint to avoid flash -->
     <script is:inline>
       ;(() => {
-        const key = 'ink-theme'
-        const stored = localStorage.getItem(key)
+        const THEME_KEY = 'ink-theme'
+        const PALETTE_KEY = 'ink-palette'
+        const stored = localStorage.getItem(THEME_KEY)
         const theme = stored === 'light' || stored === 'dark' ? stored : 'system'
         const dark =
           theme === 'dark' ||
           (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-        document.documentElement.classList.toggle('dark', dark)
-        document.documentElement.dataset.theme = theme
+        const palette =
+          localStorage.getItem(PALETTE_KEY) === 'fresh' ? 'fresh' : '${config.site.palette}'
+        const root = document.documentElement
+        root.classList.toggle('dark', dark)
+        root.classList.toggle('fresh', palette === 'fresh')
+        root.dataset.theme = theme
+        root.dataset.palette = palette
+
+        // theme-color derived from the live --paper token (no duplicated hexes)
         const meta = document.querySelector('meta[name="theme-color"]')
-        if (meta) meta.setAttribute('content', dark ? THEME_COLORS.dark : THEME_COLORS.light)
+        if (meta) {
+          const paper = getComputedStyle(root).getPropertyValue('--paper').trim()
+          if (paper) {
+            const [h, s, l] = paper.split(/\s+/).map(Number)
+            const c = ((1 - Math.abs((2 * l) / 100 - 1)) * s) / 100
+            const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
+            const m = l / 100 - c / 2
+            let r = 0,
+              g = 0,
+              b = 0
+            if (h < 60) {
+              r = c
+              g = x
+            } else if (h < 120) {
+              r = x
+              g = c
+            } else if (h < 180) {
+              g = c
+              b = x
+            } else if (h < 240) {
+              g = x
+              b = c
+            } else if (h < 300) {
+              r = x
+              b = c
+            } else {
+              r = c
+              b = x
+            }
+            const toHex = (v) =>
+              Math.round((v + m) * 255)
+                .toString(16)
+                .padStart(2, '0')
+            meta.setAttribute('content', `#${toHex(r)}${toHex(g)}${toHex(b)}`)
+          }
+        }
       })()
     </script>
   </head>
