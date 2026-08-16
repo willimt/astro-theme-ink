@@ -42,7 +42,11 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
+    <link rel="icon" href={config.site.favicon} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content={themeColorHex(config.site.palette, false)} />
 

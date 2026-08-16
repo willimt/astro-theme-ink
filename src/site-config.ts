@@ -116,8 +116,8 @@ export const config: Config = {
     author: 'Ink Lab',
     description: 'A warm, paper-feel personal blog theme — ink on paper.',
     lang: 'en',
-    favicon: '/favicon.svg',
-    avatar: '/avatar.svg',
+    favicon: '/favicon/favicon.ico',
+    avatar: '/avatar.png',
     ogImage: '/og-card.svg',
     palette: 'ink',
     titleDelimiter: ' · '
