@@ -1,7 +1,27 @@
 import { getCollection } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 
+import { readingTime, stripMarkdown } from './index'
+
 export type Post = CollectionEntry<'blog'>
+
+/** Raw markdown of every post, keyed by its path (used for reading-time). */
+const rawPosts = import.meta.glob('/src/content/blog/**/*.{md,mdx}', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+})
+
+/** Estimate reading time from the post's raw markdown (CJK-aware).
+ *  Note: Astro ≥5.18 no longer provides `remarkPluginFrontmatter.minutesRead`,
+ *  so we compute it ourselves. */
+export function getPostReadingTime(post: Post): number {
+  const raw =
+    rawPosts[`/src/content/blog/${post.id}.md`] ??
+    rawPosts[`/src/content/blog/${post.id}.mdx`] ??
+    ''
+  return readingTime(stripMarkdown(raw))
+}
 
 /** All published posts (drafts excluded). */
 export async function getBlogCollection(): Promise<Post[]> {

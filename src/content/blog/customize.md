@@ -86,4 +86,24 @@ draft: false
 
 ## 完
 
+## 常见问题
+
+**为什么我改了颜色但没生效？**
+
+确认你改的是 `src/assets/styles/tokens.css` 里的 HSL 三元组（如 `--accent: 22 46% 44%`），而不是注释掉的旧值；改完重新运行 `pnpm dev` 或重新构建。注意三元组中间用空格分隔，不是逗号。
+
+**头像显示不出来？**
+
+`site.avatar` 必须是 `public/` 目录下的路径（如 `/avatar.svg`），并且文件真实存在。放在 `src/` 下是拿不到的。
+
+**评论框不出现？**
+
+`comment.repo` 为空时评论功能是关闭的。去 [giscus.app](https://giscus.app) 完成配置，把 `repo`、`repoId`、`category`、`categoryId` 四项都填上再构建。
+
+**想加新的页面类型？**
+
+主题的页面都在 `src/pages/` 下，复制一个已有的页面（如 `links/index.astro`）改内容即可；导航入口在 `site-config.ts` 的 `header.menu` 里加一行。
+
+## 完
+
 以上就是全部定制入口。剩下的就是你的内容了 —— 祝你写作愉快。

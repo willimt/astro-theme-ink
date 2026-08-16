@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content'
 import type { GetStaticPaths } from 'astro'
 
 import PostLayout from '@/layouts/PostLayout.astro'
+import { getPostReadingTime } from '@/utils/server'
 
 export const prerender = true
 
@@ -18,8 +19,8 @@ interface Props {
 }
 
 const { post } = Astro.props as Props
-const { Content, headings, remarkPluginFrontmatter } = await render(post)
-const minutesRead = (remarkPluginFrontmatter.minutesRead as number | undefined) ?? 1
+const { Content, headings } = await render(post)
+const minutesRead = getPostReadingTime(post)
 ---
 
 <PostLayout post={post} {headings} {minutesRead}>

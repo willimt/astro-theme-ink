@@ -1,8 +1,8 @@
 ---
-import { render } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 
 import { cn, formatDate } from '@/utils'
+import { getPostReadingTime } from '@/utils/server'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -12,7 +12,7 @@ interface Props {
 const { post, class: className } = Astro.props
 const { data } = post
 const date = data.updatedDate ?? data.publishDate
-const { remarkPluginFrontmatter } = await render(post)
+const minutesRead = getPostReadingTime(post)
 ---
 
 <article class={cn('paper-card group relative flex flex-col gap-2 p-5 sm:p-6', className)}>
@@ -46,7 +46,7 @@ const { remarkPluginFrontmatter } = await render(post)
     }
     <span class="ms-auto flex items-center gap-1 text-xs text-ink-soft">
       <span class="i-lucide-clock size-3.5" aria-hidden="true"></span>
-      {remarkPluginFrontmatter.minutesRead} min read
+      {minutesRead} min read
     </span>
   </div>
 </article>
