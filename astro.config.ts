@@ -29,6 +29,9 @@ export default defineConfig({
   // The site is fully static, so we can prerender everything.
   output: 'static',
 
+  // Prefetch every internal link on hover/scroll for instant navigation
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
+
   // [Markdown]
   markdown: {
     rehypePlugins: [rehypeImageAttributes],

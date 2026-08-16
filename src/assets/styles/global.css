@@ -14,6 +14,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Visible keyboard focus (accent ring) for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--accent) / 0.75);
+  outline-offset: 2px;
+}
+
 /* Soft aurora at the top of every page — palette-aware via tokens */
 #ambient {
   position: absolute;

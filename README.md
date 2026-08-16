@@ -117,4 +117,4 @@ src/
 
 ## Credits & license
 
-Inspired by the design ideas of [astro-theme-pure](https://github.com/cworld1/astro-theme-pure) (Apache-2.0) — same Astro ecosystem, independent implementation. Licensed under [MIT](./LICENSE).
+Inspired by the design ideas of [astro-theme-pure](https://github.com/cworld1/astro-theme-pure) (Apache-2.0) — same Astro ecosystem, independent implementation. The Shiki code-block pipeline (`src/plugins/shiki-custom-transformers.ts`, `src/plugins/shiki-official/`, `public/icons/code.svg`) is ported from astro-theme-pure (Apache-2.0). Licensed under [MIT](./LICENSE).
