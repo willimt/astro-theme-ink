@@ -38,8 +38,8 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
         </nav>
       </details>
 
-      {/* Desktop: sticky aside */}
-      <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:block">
+      {/* Desktop: sticky aside, placed in the right column of the article grid */}
+      <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:col-start-2 xl:block">
         <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">目录</h2>
         <ul class="mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
           {toc.map((h) => (
