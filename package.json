@@ -21,6 +21,7 @@
     "@unocss/astro": "^66.6.8",
     "@unocss/preset-icons": "^66.6.8",
     "@unocss/reset": "^66.6.8",
+    "@waline/client": "^3.15.2",
     "astro": "^5.17.3",
     "sharp": "^0.34.5",
     "unocss": "^66.6.8"

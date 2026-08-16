@@ -8,8 +8,7 @@ A warm, paper-feel personal blog theme built with [Astro](https://astro.build) &
 
 - 📝 Blog list with pagination, tags, yearly archives, RSS & sitemap
 - 🔍 Built-in lightweight full-text search — a prerendered JSON index, zero external services
-- 📊 Article page views (Waline server API, opt-in via `pageview.server`)
-- 💬 Giscus comments (opt-in, configure in `src/site.config.ts`)
+- 💬 Waline comments + 📊 article page views (share one Waline server, opt-in via `src/site.config.ts`)
 - 🌗 Light / dark / system themes, applied before first paint (no flash) with a smooth cross-fade
 - 🎨 Two built-in palettes — warm **ink** and fresh **haze blue** — switchable from the header (persisted); soft aurora gradients & palette-aware accents
 - 📖 Sticky table of contents on desktop, collapsible TOC on mobile
@@ -67,7 +66,7 @@ Everything lives in [`src/site.config.ts`](./src/site.config.ts):
 | `home`           | **Config-driven home page** — hero, posts count, education, skills, tags/friends toggles |
 | `blog.pageSize`  | Posts per page                                                                           |
 | `search.enabled` | Toggle the search page & index                                                           |
-| `comment`        | Giscus repo/category ids — leave `repo` empty to disable                                 |
+| `comment`        | Waline server URL — leave empty to disable                                               |
 | `friends`        | Friend links rendered on `/links` and (optionally) the home page                         |
 
 ### Config-driven home page

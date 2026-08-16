@@ -59,7 +59,8 @@ astro-theme-ink 是一款基于 [Astro 5](https://astro.build) 与 [UnoCSS](http
 ## 搜索与评论
 
 - **站内搜索**：构建时生成 JSON 索引，前端本地过滤 + 关键词高亮，**无任何外部服务**
-- **评论**：Giscus（GitHub 驱动），在配置里填上仓库信息即启用，跟随主题明暗
+- **评论**：Waline（自部署，Vercel + LeanCloud 即可），配置里填上服务器地址即启用
+- **浏览量**：同一 Waline 服务器提供文章页访问计数
 
 ## SEO 与分享
 

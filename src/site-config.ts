@@ -1,4 +1,4 @@
-﻿/**
+/**
  * astro-theme-ink · site configuration
  * Everything the theme needs in one typed object — no virtual modules,
  * just import { config } from '@/site-config' where needed.
@@ -101,16 +101,12 @@ export interface Config {
     enabled: boolean
   }
   /**
-   * Giscus comment system. Leave `repo` empty to disable.
-   * See https://giscus.app to obtain the ids.
+   * Waline comment system. Leave `server` empty to disable.
+   * See https://waline.js.org to deploy your own Waline instance.
    */
   comment: {
-    provider: 'giscus'
-    repo: string
-    repoId: string
-    category: string
-    categoryId: string
-    lang: string
+    provider: 'waline'
+    server: string
   }
   friends: FriendLink[]
 }
@@ -198,13 +194,10 @@ export const config: Config = {
   },
 
   comment: {
-    provider: 'giscus',
-    // Fill in your giscus.app settings to enable comments:
-    repo: '',
-    repoId: '',
-    category: 'Announcements',
-    categoryId: '',
-    lang: 'en'
+    provider: 'waline',
+    // Fill in your Waline server URL to enable comments, e.g. deployed on
+    // Vercel + LeanCloud: https://your-waline.vercel.app/
+    server: ''
   },
 
   friends: [

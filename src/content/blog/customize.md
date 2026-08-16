@@ -79,27 +79,25 @@ home: {
 }
 ```
 
-## 5. 评论系统（Giscus）
+## 5. 评论系统（Waline）
 
-1. 去 [giscus.app](https://giscus.app) 按引导选择你的 GitHub 仓库，生成配置
+主题的评论和浏览量共用一个 **Waline** 服务器（自部署、无平台绑定）。部署方法：
+
+1. 按 [Waline 官方文档](https://waline.js.org/guide/get-started/) 部署到 Vercel + LeanCloud（或自托管），拿到形如 `https://your-waline.vercel.app/` 的服务器地址
 2. 填进 `site-config.ts`：
 
 ```ts title="site-config.ts"
 comment: {
-  provider: 'giscus',
-  repo: '用户名/仓库名',   // 填上即启用评论
-  repoId: 'R_xxx',
-  category: 'Announcements',
-  categoryId: 'DIC_xxx',
-  lang: 'en'
+  provider: 'waline',
+  server: 'https://your-waline.vercel.app/'   // 填上即启用评论
 }
 ```
 
-评论框会出现在文章末尾，主题会跟随你选择的明暗模式。`repo` 留空则整块隐藏。
+评论框会出现在文章末尾。`server` 留空则整块隐藏。
 
 ### 文章浏览量
 
-如果你有 Waline 服务器（或想用已有的），把地址填进 `pageview.server`，文章页的 meta 行就会显示当前文章的浏览量：
+同一 Waline 服务器还提供浏览量：把地址填进 `pageview.server`，文章页的 meta 行就会显示当前文章的浏览量：
 
 ```ts title="site-config.ts"
 pageview: {
@@ -199,7 +197,7 @@ Frontmatter 字段详见[安装与使用](/blog/getting-started)。补充几个�
 
 **评论框不出现？**
 
-`comment.repo` 为空即关闭。去 giscus.app 完成配置后四项都填上再构建。
+`comment.server` 为空即关闭。按 Waline 文档部署好服务器后把地址填进 `comment.server`（和 `pageview.server`）再构建。
 
 **想加新的页面类型？**
 

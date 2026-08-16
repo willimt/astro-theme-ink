@@ -1,62 +1,42 @@
 ---
 import { config } from '@/site-config'
 
-const enabled = config.comment.provider === 'giscus' && config.comment.repo !== ''
-const { repo, repoId, category, categoryId, lang } = config.comment
+import '@waline/client/style'
+
+const server = config.comment.server
+const enabled = config.comment.provider === 'waline' && server !== ''
 ---
 
 {
   enabled && (
-    <section class="mt-14" aria-label="Comments">
+    <section class="not-prose mt-14" aria-label="Comments">
       <h2 class="mb-4 flex items-center gap-2 font-serif text-lg font-semibold">
         <span class="i-lucide-message-square size-4 text-accent" aria-hidden="true" />
         Comments
       </h2>
-      {/*
-        Config travels on the div's data attributes so the script below stays
-        plain JS. The script injects giscus dynamically with `data-theme`
-        matching the theme applied by the head script (light/dark class); on
-        toggle the Header posts a setConfig message to the iframe.
-      */}
-      <div
-        class="giscus"
-        data-repo={repo}
-        data-repo-id={repoId}
-        data-category={category}
-        data-category-id={categoryId}
-        data-lang={lang}
-      />
+      <div id="waline" />
     </section>
   )
 }
 
-{
-  /*
-  Top-level (not nested in a conditional) so prettier-plugin-astro can parse it.
-  Runs on every page, but no-ops unless the `.giscus` host exists above.
-  Note: plain JS only — is:inline scripts are emitted verbatim, no TS allowed.
-*/
-}
-<script is:inline>
-  ;(() => {
-    const host = document.querySelector('.giscus')
-    if (!host) return
-    const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-    const s = document.createElement('script')
-    s.src = 'https://giscus.app/client.js'
-    s.dataset.repo = host.dataset.repo ?? ''
-    s.dataset.repoId = host.dataset.repoId ?? ''
-    s.dataset.category = host.dataset.category ?? ''
-    s.dataset.categoryId = host.dataset.categoryId ?? ''
-    s.dataset.mapping = 'pathname'
-    s.dataset.strict = '0'
-    s.dataset.reactionsEnabled = '1'
-    s.dataset.emitMetadata = '0'
-    s.dataset.inputPosition = 'bottom'
-    s.dataset.theme = theme
-    s.dataset.lang = host.dataset.lang ?? 'en'
-    s.crossOrigin = 'anonymous'
-    s.async = true
-    document.currentScript?.after(s)
-  })()
+<script>
+  import { init } from '@waline/client'
+  import { config } from '@/site-config'
+
+  const server = config.comment.server
+  if (server && document.getElementById('waline')) {
+    init({
+      el: '#waline',
+      serverURL: server,
+      lang: 'zh-CN',
+      // page views are handled by the separate <Pageview /> component
+      pageview: false,
+      imageUploader: false,
+      reaction: true,
+      locale: {
+        reaction0: 'Like',
+        placeholder: 'Welcome to comment. (Email to receive replies. Login is unnecessary)'
+      }
+    })
+  }
 </script>
