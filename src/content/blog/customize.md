@@ -104,6 +104,10 @@ draft: false
 
 主题的页面都在 `src/pages/` 下，复制一个已有的页面（如 `links/index.astro`）改内容即可；导航入口在 `site-config.ts` 的 `header.menu` 里加一行。
 
+**首页内容怎么改？**
+
+首页是配置驱动的：`site-config.ts` 里的 `home` 配置块控制英雄区（tagline / 位置 / 个人简介 / 按钮）、最近文章数量、教育经历、技能分组，以及是否显示标签云和友链。填了内容分区就自动出现，清空就消失，不用改任何组件。
+
 **如何切换清新淡雅配色？**
 
 主题内置两套配色：默认的暖调「墨色」（ink）和雾霾蓝「清新」（fresh）。点顶栏的调色板按钮即可切换并记住选择；也可以把 `site-config.ts` 里的 `site.palette` 改成 `'fresh'`，作为新访客看到的默认配色。两套配色的变量都定义在 `src/assets/styles/tokens.css`，直接改数值就能调出你自己的色板；页面顶部柔和的渐变光晕（`#ambient`）和首页头像光晕都基于 `--accent` 自动跟随配色。

@@ -56,15 +56,38 @@ Your content here.
 
 Everything lives in [`src/site.config.ts`](./src/site.config.ts):
 
-| Section          | What it controls                                               |
-| ---------------- | -------------------------------------------------------------- |
-| `site`           | Title, author, avatar, description, language, favicon, OG card |
-| `header.menu`    | Navigation links                                               |
-| `footer`         | Copyright, extra links, social icons                           |
-| `blog.pageSize`  | Posts per page                                                 |
-| `search.enabled` | Toggle the search page & index                                 |
-| `comment`        | Giscus repo/category ids — leave `repo` empty to disable       |
-| `friends`        | Friend links rendered on `/links` and the home page            |
+| Section          | What it controls                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| `site`           | Title, author, avatar, description, language, favicon, OG card                           |
+| `header.menu`    | Navigation links                                                                         |
+| `footer`         | Copyright, extra links, social icons                                                     |
+| `home`           | **Config-driven home page** — hero, posts count, education, skills, tags/friends toggles |
+| `blog.pageSize`  | Posts per page                                                                           |
+| `search.enabled` | Toggle the search page & index                                                           |
+| `comment`        | Giscus repo/category ids — leave `repo` empty to disable                                 |
+| `friends`        | Friend links rendered on `/links` and (optionally) the home page                         |
+
+### Config-driven home page
+
+Sections on the home page render automatically from [`src/site.config.ts`](./src/site.config.ts) → `home`:
+
+```ts
+home: {
+  hero: {
+    tagline: 'Developer / Designer / Photographer', // chip above the name
+    location: 'China / QingDao',                    // location chip
+    about: 'A short paragraph about yourself…',
+    buttons: [{ title: 'More about me', link: '/about' }]
+  },
+  recentPosts: 5,        // 0 hides the section
+  education: [{ school: '…', major: '…', degree: '…', date: '…' }],
+  skills: [{ title: 'Program', items: ['Python', 'Java'] }],
+  showTags: false,       // optional tag cloud
+  showFriends: false     // optional friend links
+}
+```
+
+Edit the config — sections appear / disappear without touching any component.
 
 ## Customizing the look
 

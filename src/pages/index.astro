@@ -5,8 +5,10 @@ import { SOCIAL_ICONS } from '@/utils'
 import { config } from '@/site-config'
 import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from '@/utils/server'
 
+const { hero, recentPosts, education = [], skills = [], showTags, showFriends } = config.home
+
 const posts = sortMDByDate(await getBlogCollection())
-const recent = posts.slice(0, 5)
+const recent = recentPosts > 0 ? posts.slice(0, recentPosts) : []
 const tags = getUniqueTagsWithCount(posts).slice(0, 12)
 
 const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item]) => ({
@@ -34,32 +36,51 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     </div>
 
     <div class="flex flex-col items-center gap-4">
-      <p class="chip font-mono tracking-widest uppercase">Ink on Paper</p>
+      {hero.tagline && <p class="chip font-mono tracking-widest uppercase">{hero.tagline}</p>}
+
       <h1 class="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-        Hi, I'm{' '}
         <span class="bg-gradient-to-r from-accent to-accent/40 bg-clip-text text-transparent">
           {config.site.author}
         </span>
       </h1>
-      <p class="max-w-xl text-base leading-relaxed text-ink-soft">{config.site.description}</p>
-    </div>
 
-    <div class="flex flex-wrap items-center justify-center gap-2.5">
-      <a href="/about" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>About me</a>
-      <a href="/blog" class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>All posts</a>
+      <div class="flex flex-wrap items-center justify-center gap-2.5">
+        {
+          hero.location && (
+            <span class="chip">
+              <span class="i-lucide-map-pin size-3.5" aria-hidden="true" />
+              {hero.location}
+            </span>
+          )
+        }
+        {
+          socialItems.map((item) => (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={item.label}
+              title={item.label}
+              class="icon-link size-9"
+            >
+              <span class={`${item.icon} size-4`} aria-hidden="true" />
+            </a>
+          ))
+        }
+      </div>
+
+      {hero.about && <p class="max-w-2xl text-base leading-relaxed text-ink-soft">{hero.about}</p>}
+
       {
-        socialItems.map((item) => (
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={item.label}
-            title={item.label}
-            class="icon-link size-9"
-          >
-            <span class={`${item.icon} size-4`} aria-hidden="true" />
-          </a>
-        ))
+        hero.buttons && hero.buttons.length > 0 && (
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            {hero.buttons.map((btn) => (
+              <a href={btn.link} class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>
+                {btn.title}
+              </a>
+            ))}
+          </div>
+        )
       }
     </div>
   </div>
@@ -67,17 +88,17 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Recent posts -->
   {
     recent.length > 0 && (
-      <section aria-label="Recent posts" class="reveal mb-14">
-        <div class="mb-4 flex items-end justify-between">
+      <section aria-label="Posts" class="reveal mb-16">
+        <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
               class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
               aria-hidden="true"
             />
-            Recent Posts
+            Posts
           </h2>
           <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
-            View all →
+            More posts →
           </a>
         </div>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -92,9 +113,72 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     )
   }
 
-  <!-- Tags -->
+  <!-- Education -->
   {
-    tags.length > 0 && (
+    education.length > 0 && (
+      <section aria-label="Education" class="reveal mb-16">
+        <div class="mb-5 flex items-end justify-between">
+          <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
+            <span
+              class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
+              aria-hidden="true"
+            />
+            Education
+          </h2>
+        </div>
+        <div class="paper-card divide-y divide-line overflow-hidden">
+          {education.map((item) => (
+            <div class="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between">
+              <div>
+                <p class="font-serif font-semibold leading-snug">{item.school}</p>
+                {(item.major || item.degree) && (
+                  <p class="mt-0.5 text-sm text-ink-soft">
+                    {[item.major, item.degree].filter(Boolean).join(' · ')}
+                  </p>
+                )}
+              </div>
+              <p class="shrink-0 font-mono text-xs text-ink-soft sm:ms-6">{item.date}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Skills -->
+  {
+    skills.length > 0 && (
+      <section aria-label="Skills" class="reveal mb-16">
+        <div class="mb-5 flex items-end justify-between">
+          <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
+            <span
+              class="size-2.5 rounded-full bg-gradient-to-br from-accent to-accent/40"
+              aria-hidden="true"
+            />
+            Skills
+          </h2>
+        </div>
+        <div class="flex flex-col gap-5">
+          {skills.map((group) => (
+            <div>
+              <h3 class="mb-2 text-sm font-semibold uppercase tracking-widest text-ink-soft">
+                {group.title}
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <span class="chip">{item}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Tags (optional) -->
+  {
+    showTags && tags.length > 0 && (
       <section aria-label="Tags" class="reveal mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
@@ -120,9 +204,9 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     )
   }
 
-  <!-- Friends -->
+  <!-- Friends (optional) -->
   {
-    config.friends.length > 0 && (
+    showFriends && config.friends.length > 0 && (
       <section aria-label="Friends" class="reveal">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
