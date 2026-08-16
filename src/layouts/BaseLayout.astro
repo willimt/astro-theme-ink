@@ -185,6 +185,25 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
             }
           })
           block.appendChild(btn)
+
+          // Collapse long blocks (> 15 lines) with a fade + pill toggle
+          const lineCount = block.querySelectorAll('.line').length
+          if (lineCount > 15) {
+            block.classList.add('collapsed')
+            const fade = document.createElement('div')
+            fade.className = 'collapse-fade'
+            const toggle = document.createElement('button')
+            toggle.type = 'button'
+            toggle.className = 'collapse-toggle'
+            toggle.setAttribute('aria-expanded', 'false')
+            toggle.innerHTML =
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="desc"></span>'
+            toggle.addEventListener('click', () => {
+              const collapsed = block.classList.toggle('collapsed')
+              toggle.setAttribute('aria-expanded', String(!collapsed))
+            })
+            block.append(fade, toggle)
+          }
         })
       })
     </script>

@@ -61,3 +61,42 @@ pnpm dev
 图片会被居中显示并带上圆角：
 
 ![占位图片](https://picsum.photos/seed/ink/800/450)
+
+## 长代码块折叠
+
+超过 15 行的代码块会自动折叠，点击底部的 "Show all" 展开：
+
+```bash
+# 一个很长的部署脚本示例（用于演示代码块折叠）
+set -euo pipefail
+
+APP_DIR="/opt/my-app"
+BACKUP_DIR="/var/backups/my-app"
+
+log() {
+  echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+backup() {
+  log "Backing up $APP_DIR ..."
+  mkdir -p "$BACKUP_DIR"
+  tar -czf "$BACKUP_DIR/app-$(date +%Y%m%d%H%M%S).tar.gz" -C "$APP_DIR" .
+  log "Backup done."
+}
+
+deploy() {
+  log "Pulling latest code ..."
+  cd "$APP_DIR" && git pull --ff-only
+  log "Restarting service ..."
+  systemctl restart my-app
+  log "Service restarted."
+}
+
+main() {
+  backup
+  deploy
+  log "All done. Exiting."
+}
+
+main "$@"
+```

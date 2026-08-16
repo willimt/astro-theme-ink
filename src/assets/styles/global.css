@@ -97,8 +97,9 @@ html.theme-switching *::after {
 }
 
 /* ============================================================
-   Shiki code blocks
-   Note: `.astro-code` IS the <pre> element itself.
+   Shiki code blocks — the look of ink.willimt.com:
+   sticky line numbers, language label top-right, hover copy
+   button, long-block collapse. Note: `.astro-code` IS the <pre>.
    ============================================================ */
 
 .astro-code {
@@ -107,72 +108,75 @@ html.theme-switching *::after {
   border: 1px solid hsl(var(--line) / 1);
   border-radius: calc(var(--radius) * 1.5);
   background-color: hsl(var(--wash) / 0.7) !important;
-  /* beat shiki's inline `overflow-x: auto` so the header strip stays put */
+  /* beat shiki's inline `overflow-x: auto` so controls stay put */
   overflow: hidden !important;
-  padding-top: 2.75rem; /* room for the header strip */
   box-shadow:
     0 1px 2px hsl(var(--ink) / 0.05),
     0 18px 44px -22px hsl(var(--ink) / 0.2);
 }
 
-/* Header strip: soft gradient bar with a hairline */
-.astro-code::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
-  height: 2.25rem;
-  border-bottom: 1px solid hsl(var(--line) / 1);
-  background: linear-gradient(to bottom, hsl(var(--card) / 0.7), hsl(var(--wash) / 0.5));
-  pointer-events: none;
-}
-
-/* The <code> scrolls horizontally inside the rounded frame */
+/* The <code> scrolls horizontally; line numbers stick to the viewport edge */
 .astro-code code {
   display: block;
   width: fit-content;
   min-width: 100%;
-  padding: 0.9rem 1.15rem 1rem;
+  padding: 0.9rem 1.15rem 1rem 0;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.875rem;
-  line-height: 1.7;
+  line-height: 1.75;
   white-space: pre;
+  counter-reset: ink-line;
 }
 
-/* Language badge (injected by client script), sits on the header strip */
+.astro-code .line {
+  display: block;
+  padding-inline-start: 3.2rem;
+  position: relative;
+}
+.astro-code .line::before {
+  content: counter(ink-line);
+  counter-increment: ink-line;
+  position: sticky;
+  inset-inline-start: 0.8rem;
+  display: inline-flex;
+  justify-content: flex-end;
+  width: 2.2rem;
+  margin-inline-end: 0.6rem;
+  color: hsl(var(--ink-soft) / 0.5);
+  font-size: 0.78em;
+  user-select: none;
+}
+/* Drop the trailing empty line shiki emits */
+.astro-code .line:last-child:empty,
+.astro-code .line:last-child:has(> span:empty:only-child) {
+  display: none;
+}
+
+/* Language label (top-right); fades out when the copy button appears */
 .astro-code .code-lang {
   position: absolute;
-  top: 0.55rem;
-  left: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+  top: 0.62rem;
+  right: 0.95rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: hsl(var(--ink-soft) / 1);
+  color: hsl(var(--ink-soft) / 0.85);
+  transition: opacity 0.25s ease;
   user-select: none;
   pointer-events: none;
 }
-.astro-code .code-lang::before {
-  content: '';
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 999px;
-  background-color: hsl(var(--accent) / 0.7);
-}
 
-/* Copy button (injected by client script), sits on the header strip */
+/* Copy button (top-right, revealed on hover) */
 .astro-code .code-copy {
   position: absolute;
-  top: 0.35rem;
-  right: 0.55rem;
+  top: 0.45rem;
+  right: 0.65rem;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.28rem 0.6rem;
+  padding: 0.25rem 0.55rem;
   font-size: 0.72rem;
   font-family: var(--font-sans);
   color: hsl(var(--ink-soft) / 1);
@@ -181,7 +185,7 @@ html.theme-switching *::after {
   border-radius: 0.45rem;
   opacity: 0;
   transition:
-    opacity 0.2s ease,
+    opacity 0.25s ease,
     color 0.2s ease,
     border-color 0.2s ease;
   cursor: pointer;
@@ -190,10 +194,73 @@ html.theme-switching *::after {
 .astro-code:focus-within .code-copy {
   opacity: 1;
 }
+.astro-code:hover .code-lang {
+  opacity: 0;
+}
 .astro-code .code-copy:hover,
 .astro-code .code-copy.copied {
   color: hsl(var(--accent) / 1);
   border-color: hsl(var(--accent) / 0.5);
+}
+
+/* Long blocks: collapse with a bottom fade + pill toggle */
+.astro-code.collapsed code {
+  max-height: 15rem;
+  overflow: hidden;
+}
+.astro-code .collapse-fade {
+  display: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 5rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, hsl(var(--wash) / 0.92));
+}
+.astro-code.collapsed .collapse-fade {
+  display: block;
+}
+.astro-code .collapse-toggle {
+  position: absolute;
+  bottom: 0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  color: hsl(var(--ink-soft) / 1);
+  background-color: hsl(var(--card) / 0.92);
+  border: 1px solid hsl(var(--line) / 1);
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.25s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.astro-code.collapsed .collapse-toggle {
+  opacity: 1;
+}
+.astro-code.collapsed .collapse-toggle:hover {
+  color: hsl(var(--accent) / 1);
+  border-color: hsl(var(--accent) / 0.5);
+}
+.astro-code.collapsed .collapse-toggle .desc::before {
+  content: 'Show all';
+}
+.astro-code:not(.collapsed) .collapse-toggle .desc::before {
+  content: 'Collapse';
+}
+.astro-code .collapse-toggle svg {
+  transition: transform 0.2s ease;
+  transform: rotate(180deg);
+}
+.astro-code.collapsed .collapse-toggle svg {
+  transform: rotate(0deg);
 }
 
 /* Dark mode: switch token colors to the --shiki-dark variants
@@ -204,6 +271,9 @@ html.dark .astro-code {
 html.dark .astro-code,
 html.dark .astro-code span {
   color: var(--shiki-dark, hsl(var(--ink) / 1)) !important;
+}
+html.dark .astro-code.collapsed .collapse-fade {
+  background: linear-gradient(to bottom, transparent, hsl(var(--wash) / 0.95));
 }
 
 /* ---- Misc ---- */
