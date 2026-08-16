@@ -10,7 +10,7 @@ A warm, paper-feel personal blog theme built with [Astro](https://astro.build) &
 - 🔍 Built-in lightweight full-text search — a prerendered JSON index, zero external services
 - 💬 Giscus comments (opt-in, configure in `src/site.config.ts`)
 - 🌗 Light / dark / system themes, applied before first paint (no flash) with a smooth cross-fade
-- 🎨 Two built-in palettes — warm **ink** and fresh **mint** — switchable from the header (persisted)
+- 🎨 Two built-in palettes — warm **ink** and fresh **light blue** — switchable from the header (persisted)
 - 📖 Sticky table of contents on desktop, collapsible TOC on mobile
 - 🖼️ Optional cover images per post (`heroImage`)
 - 📊 Reading progress bar + prev/next post navigation on article pages

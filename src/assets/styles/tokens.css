@@ -36,32 +36,32 @@
   --line: 32 10% 20%;
 }
 
-/* ---- Palette: fresh (cool mint) · light ---- */
+/* ---- Palette: fresh (light blue, airy) · light ---- */
 .fresh {
   color-scheme: light;
 
-  --paper: 162 38% 97%;
-  --card: 158 42% 99%;
-  --ink: 168 18% 14%;
-  --ink-soft: 165 9% 38%;
-  --wash: 160 26% 93%;
-  --accent: 168 38% 42%;
-  --ring: 168 38% 42%;
-  --line: 162 22% 87%;
+  --paper: 210 45% 98%;
+  --card: 210 55% 99%;
+  --ink: 214 30% 16%;
+  --ink-soft: 213 12% 40%;
+  --wash: 210 32% 93%;
+  --accent: 210 60% 47%;
+  --ring: 210 60% 47%;
+  --line: 211 25% 87%;
 }
 
 /* ---- Palette: fresh · dark ---- */
 .fresh.dark {
   color-scheme: dark;
 
-  --paper: 168 20% 8%;
-  --card: 168 16% 11%;
-  --ink: 158 32% 92%;
-  --ink-soft: 162 12% 66%;
-  --wash: 168 14% 14%;
-  --accent: 162 58% 70%;
-  --ring: 162 58% 70%;
-  --line: 168 12% 20%;
+  --paper: 214 35% 9%;
+  --card: 214 30% 12%;
+  --ink: 210 40% 93%;
+  --ink-soft: 212 14% 68%;
+  --wash: 213 25% 15%;
+  --accent: 208 80% 66%;
+  --ring: 208 80% 66%;
+  --line: 213 20% 21%;
 }
 
 /* ---- Shape & type (shared) ---- */

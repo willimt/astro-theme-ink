@@ -3,7 +3,7 @@
  *  `src/assets/styles/tokens.css` (kept in sync manually). */
 export const THEME_COLORS = {
   ink: { light: '#faf8f5', dark: '#181511' },
-  fresh: { light: '#f4faf9', dark: '#101817' }
+  fresh: { light: '#f8fafc', dark: '#0f161f' }
 } as const
 
 export type Palette = keyof typeof THEME_COLORS
