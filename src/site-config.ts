@@ -154,20 +154,7 @@ export const config: Config = {
       buttons: [{ title: 'More about me', link: '/about' }]
     },
     recentPosts: 5,
-    education: [
-      {
-        school: '西南交通大学 计算机与人工智能学院',
-        major: '计算机技术',
-        degree: '硕士',
-        date: 'August 2021 - July 2024'
-      },
-      {
-        school: '西南交通大学 计算机与人工智能学院',
-        major: '计算机科学与技术',
-        degree: '本科',
-        date: 'August 2017 - July 2021'
-      }
-    ],
+    education: [],
     skills: [
       { title: 'Program', items: ['Python', 'Java', 'C', 'C++', 'SQL', 'Shell'] },
       { title: 'Web', items: ['TypeScript', 'Vue.js', 'Node.js', 'JavaScript', 'HTML', 'CSS'] },
