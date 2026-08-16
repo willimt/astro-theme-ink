@@ -97,183 +97,252 @@ html.theme-switching *::after {
 }
 
 /* ============================================================
-   Shiki code blocks — the look of ink.willimt.com:
-   compact line numbers, language label top-right, hover copy
-   button, long-block collapse. Note: `.astro-code` IS the <pre>.
+   Shiki code blocks — ported from astro-theme-pure, the exact look
+   of ink.willimt.com. The structure is built at build time by the
+   Shiki transformers: `div.astro-code > pre > code` with sticky line
+   numbers, optional title, language label, copy button, collapse,
+   and diff/highlight notations. Font sizing comes from the prose
+   typography preset, exactly like the original theme.
    ============================================================ */
 
 .astro-code {
-  position: relative;
   margin-block: 1.25rem;
-  border: 1px solid hsl(var(--line) / 1);
-  border-radius: calc(var(--radius) * 1.25);
-  background-color: hsl(var(--wash) / 0.7) !important;
-  /* beat shiki's inline `overflow-x: auto` so controls stay put */
-  overflow: hidden !important;
-  box-shadow:
-    0 1px 2px hsl(var(--ink) / 0.05),
-    0 14px 36px -20px hsl(var(--ink) / 0.18);
+  border-radius: calc(var(--radius) * 1.5);
+  background-color: hsl(var(--wash) / var(--un-bg-opacity, 1)) !important;
+  display: flex;
+  flex-direction: column;
+
+  /* Code container */
+  & pre {
+    margin: 0;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    padding-inline: 0;
+    background: none;
+    overflow-x: auto;
+    & code {
+      display: block;
+      width: fit-content;
+      min-width: 100%;
+      min-height: 1.5rem;
+      counter-reset: step;
+      counter-increment: step 0;
+      /* Number gutter strip */
+      &::before {
+        position: absolute;
+        inset-inline-start: 0;
+        width: 2.75rem;
+        top: 0.8571429em;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-color: hsl(var(--wash) / var(--un-bg-opacity, 1));
+        z-index: 1;
+      }
+      & .line {
+        padding-inline-end: 3rem;
+        &::before {
+          position: sticky;
+          content: counter(step);
+          counter-increment: step;
+          color: hsl(var(--ink-soft) / 0.6);
+          background-color: hsl(var(--wash) / var(--un-bg-opacity, 1));
+          inset-inline-start: 0;
+          justify-content: end;
+          display: inline-flex;
+          width: 2rem;
+          padding-inline-end: 0.75rem;
+          box-sizing: content-box;
+          z-index: 2;
+        }
+        &:last-child:empty,
+        &:last-child:has(> span:empty:only-child) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+html.dark .astro-code pre span {
+  color: var(--shiki-dark) !important;
 }
 
-/* The <code> scrolls horizontally */
-.astro-code code {
-  display: block;
-  width: fit-content;
-  min-width: 100%;
-  padding: 0.7rem 1rem 0.8rem 0;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.55;
-  white-space: pre;
-  counter-reset: ink-line;
-}
+/* Title (from ```lang title="..." ) */
+.astro-code {
+  &:has(code) {
+    position: relative;
+  }
+  &:has(div.title) {
+    padding-top: 2rem;
+    & code::before {
+      top: calc(2rem + 0.8571429em);
+    }
+  }
+  & .title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0.5rem;
+    z-index: 3;
+    font-size: 0.875rem;
+    color: hsl(var(--ink-soft) / 1);
+    padding: 0.25rem 0.75rem;
+    border: 1px solid hsl(var(--line) / 1);
+    border-radius: 0.5rem;
+    background-color: hsl(var(--card) / 1);
+  }
 
-.astro-code .line {
-  display: block;
-  padding-inline-start: 2.3rem;
-  position: relative;
-}
-.astro-code .line::before {
-  content: counter(ink-line);
-  counter-increment: ink-line;
-  position: absolute;
-  inset-inline-start: 0.55rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.5rem;
-  text-align: right;
-  color: hsl(var(--ink-soft) / 0.45);
-  font-size: 0.72em;
-  user-select: none;
-}
-/* Drop the trailing empty line shiki emits */
-.astro-code .line:last-child:empty,
-.astro-code .line:last-child:has(> span:empty:only-child) {
-  display: none;
-}
+  /* Language */
+  & .language {
+    transition: opacity 0.3s;
+    position: absolute;
+    top: 0.75rem;
+    right: 0;
+    font-size: 0.875rem;
+    color: hsl(var(--ink-soft) / 1);
+    background-color: hsl(var(--wash) / 1);
+    padding-inline: 0.25rem 0.75rem;
+  }
 
-/* Language label (top-right); fades out when the copy button appears */
-.astro-code .code-lang {
-  position: absolute;
-  top: 0.62rem;
-  right: 0.95rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: hsl(var(--ink-soft) / 0.85);
-  transition: opacity 0.25s ease;
-  user-select: none;
-  pointer-events: none;
-}
+  /* Copy */
+  & button.copy {
+    transition: opacity 0.3s;
+    opacity: 0;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    user-select: none;
+    cursor: pointer;
+    color: hsl(var(--ink-soft) / 1);
+    background-color: hsl(var(--card) / 1);
+    border: 1px solid hsl(var(--line) / 1);
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    box-sizing: content-box;
+    & svg {
+      display: block;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    & .hidden {
+      display: none;
+    }
+    & .success::before {
+      content: 'Copied!';
+      position: absolute;
+      right: 100%;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 0.25rem;
+      color: hsl(var(--ink-soft) / 1);
+      background-color: hsl(var(--card) / 1);
+      border: 1px solid hsl(var(--line) / 1);
+    }
+    &.copied {
+      & .success {
+        display: block;
+      }
+      & .ready {
+        display: none;
+      }
+    }
+  }
+  &:hover,
+  &:focus-within {
+    & button.copy {
+      opacity: 1;
+    }
+    & .language {
+      opacity: 0;
+    }
+  }
 
-/* Copy button (top-right, revealed on hover) */
-.astro-code .code-copy {
-  position: absolute;
-  top: 0.45rem;
-  right: 0.65rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.25rem 0.55rem;
-  font-size: 0.72rem;
-  font-family: var(--font-sans);
-  color: hsl(var(--ink-soft) / 1);
-  background-color: hsl(var(--card) / 0.85);
-  border: 1px solid hsl(var(--line) / 1);
-  border-radius: 0.45rem;
-  opacity: 0;
-  transition:
-    opacity 0.25s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-  cursor: pointer;
-}
-.astro-code:hover .code-copy,
-.astro-code:focus-within .code-copy {
-  opacity: 1;
-}
-.astro-code:hover .code-lang {
-  opacity: 0;
-}
-.astro-code .code-copy:hover,
-.astro-code .code-copy.copied {
-  color: hsl(var(--accent) / 1);
-  border-color: hsl(var(--accent) / 0.5);
-}
+  /* Highlighted & diffs */
+  & .highlighted,
+  & .diff {
+    min-width: 100%;
+    display: inline-block;
+  }
+  & .highlighted,
+  & .highlighted::before {
+    background-color: rgba(149, 166, 183, 0.32) !important;
+  }
+  & .diff {
+    &.remove {
+      background-color: rgba(244, 63, 94, 0.16);
+      &::before {
+        background-color: rgba(244, 63, 94, 0.16);
+        content: '-';
+      }
+    }
+    &.add {
+      background-color: rgba(16, 185, 129, 0.16);
+      &::before {
+        background-color: rgba(16, 185, 129, 0.16);
+        content: '+';
+      }
+    }
+  }
 
-/* Long blocks: collapse with a bottom fade + pill toggle */
-.astro-code.collapsed code {
-  max-height: 15rem;
-  overflow: hidden;
-}
-.astro-code .collapse-fade {
-  display: none;
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 5rem;
-  pointer-events: none;
-  background: linear-gradient(to bottom, transparent, hsl(var(--wash) / 0.92));
-}
-.astro-code.collapsed .collapse-fade {
-  display: block;
-}
-.astro-code .collapse-toggle {
-  position: absolute;
-  bottom: 0.55rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.9rem;
-  font-size: 0.75rem;
-  font-family: var(--font-sans);
-  color: hsl(var(--ink-soft) / 1);
-  background-color: hsl(var(--card) / 0.92);
-  border: 1px solid hsl(var(--line) / 1);
-  border-radius: 999px;
-  cursor: pointer;
-  opacity: 0;
-  transition:
-    opacity 0.25s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-.astro-code.collapsed .collapse-toggle {
-  opacity: 1;
-}
-.astro-code.collapsed .collapse-toggle:hover {
-  color: hsl(var(--accent) / 1);
-  border-color: hsl(var(--accent) / 0.5);
-}
-.astro-code.collapsed .collapse-toggle .desc::before {
-  content: 'Show all';
-}
-.astro-code:not(.collapsed) .collapse-toggle .desc::before {
-  content: 'Collapse';
-}
-.astro-code .collapse-toggle svg {
-  transition: transform 0.2s ease;
-  transform: rotate(180deg);
-}
-.astro-code.collapsed .collapse-toggle svg {
-  transform: rotate(0deg);
-}
-
-/* Dark mode: switch token colors to the --shiki-dark variants
-   (light values are literal inline colors, so !important is needed) */
-html.dark .astro-code {
-  background-color: hsl(var(--wash) / 0.55) !important;
-}
-html.dark .astro-code,
-html.dark .astro-code span {
-  color: var(--shiki-dark, hsl(var(--ink) / 1)) !important;
-}
-html.dark .astro-code.collapsed .collapse-fade {
-  background: linear-gradient(to bottom, transparent, hsl(var(--wash) / 0.95));
+  /* Collapse */
+  & .collapse-toggle {
+    z-index: 3;
+    padding: 0.25rem;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.3rem;
+    box-sizing: border-box;
+    margin: 0;
+    cursor: pointer;
+    color: hsl(var(--ink-soft) / 1);
+    background-color: hsl(var(--card) / 1);
+    border-top: 1px solid hsl(var(--line) / 1);
+    & svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s ease;
+      transform: rotate(180deg);
+    }
+    & .desc::before {
+      content: 'Collapse';
+    }
+  }
+  &.collapsed {
+    & pre {
+      max-height: 15rem;
+      overflow: hidden;
+    }
+    & .collapse-toggle {
+      margin: 0.5rem;
+      border: 1px solid hsl(var(--line) / 1);
+      border-radius: 0.5rem;
+      & .desc::before {
+        content: 'Show all';
+      }
+      & svg {
+        transform: rotate(0deg);
+      }
+    }
+    & .collapse-fade {
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 8rem;
+      background: linear-gradient(to bottom, transparent 0%, hsl(var(--wash) / 1) 60%);
+    }
+  }
 }
 
 /* ---- Misc ---- */
