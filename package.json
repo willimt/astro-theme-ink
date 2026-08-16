@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.20.0",
   "description": "A warm, paper-feel personal blog theme built with Astro & UnoCSS. Ink on paper.",
   "scripts": {
     "dev": "astro dev",
