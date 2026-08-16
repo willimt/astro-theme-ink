@@ -18,8 +18,15 @@ import {
 
 const ink = 'hsl(var(--ink) / var(--un-text-opacity, 1))'
 const inkSoft = 'hsl(var(--ink-soft) / var(--un-text-opacity, 1))'
+const accent = 'hsl(var(--accent) / var(--un-text-opacity, 1))'
 const line = 'var(--un-default-border-color)'
 
+/**
+ * Article typography.
+ * Note: preset-typography emits `:where(...)` selectors that are global unless
+ * content is wrapped in `.not-prose`. All rules below are scoped to `.prose`,
+ * and site chrome (header/footer/cards) carries the `not-prose` class.
+ */
 const typography: TypographyOptions = {
   selectorName: 'prose',
   colorScheme: {
@@ -39,77 +46,192 @@ const typography: TypographyOptions = {
     'td-borders': line
   },
   cssExtend: {
-    // Serif headings — the "printed page" feel
-    'h1,h2,h3,h4,h5,h6': {
+    // Root: airy reading rhythm
+    '.prose': {
+      'font-size': '1.0625rem',
+      'line-height': '1.85',
+      'letter-spacing': '0.012em'
+    },
+
+    // Headings — serif, balanced, breathing margins
+    '.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6': {
       'font-family': 'var(--font-serif)',
       'font-weight': '600',
       'letter-spacing': '0.01em',
+      'line-height': '1.35',
+      'text-wrap': 'balance',
       'scroll-margin-top': '5.5rem'
     },
-    // Anchor links appear on hover
-    'h1>a,h2>a,h3>a,h4>a,h5>a,h6>a': {
-      'margin-inline-start': '0.6rem',
-      color: inkSoft,
+    '.prose h2': { 'margin-top': '2.4em', 'margin-bottom': '0.9em' },
+    '.prose h3': { 'margin-top': '2em', 'margin-bottom': '0.7em' },
+    '.prose h4': { 'margin-top': '1.6em', 'margin-bottom': '0.5em' },
+    '.prose p': { 'margin-block': '1.05em' },
+
+    // Heading anchor links (appear on hover / focus)
+    '.prose h1>a,.prose h2>a,.prose h3>a,.prose h4>a,.prose h5>a,.prose h6>a': {
+      'margin-inline-start': '0.55rem',
+      color: 'hsl(var(--accent) / 0.75)',
+      'font-size': '0.85em',
       opacity: '0',
-      transition: 'opacity 0.2s ease',
+      transition: 'opacity 0.2s ease, color 0.2s ease',
       'text-decoration': 'none',
       'font-weight': '400',
       'user-select': 'none'
     },
-    'h1:hover>a,h2:hover>a,h3:hover>a,h4:hover>a,h5:hover>a,h6:hover>a': { opacity: '1' },
-    'h1:focus-within>a,h2:focus-within>a,h3:focus-within>a,h4:focus-within>a,h5:focus-within>a,h6:focus-within>a':
-      {
-        opacity: '1'
-      },
-    // Links: underline on hover, accent color
-    a: {
+    '.prose h1:hover>a,.prose h2:hover>a,.prose h3:hover>a,.prose h4:hover>a,.prose h5:hover>a,.prose h6:hover>a':
+      { opacity: '1' },
+    '.prose h1:focus-within>a,.prose h2:focus-within>a,.prose h3:focus-within>a,.prose h4:focus-within>a,.prose h5:focus-within>a,.prose h6:focus-within>a':
+      { opacity: '1' },
+    '.prose h1:target>a,.prose h2:target>a,.prose h3:target>a,.prose h4:target>a,.prose h5:target>a,.prose h6:target>a':
+      { opacity: '1' },
+
+    // Links: animated ink underline that draws in on hover
+    '.prose a': {
       'font-weight': '500',
-      'text-decoration': 'underline',
-      'text-decoration-color': 'hsl(var(--accent) / 0.35)',
-      'text-underline-offset': '0.18em',
-      'word-break': 'break-word',
-      transition: 'color 0.15s ease, text-decoration-color 0.15s ease'
+      color: ink,
+      'text-decoration': 'none',
+      'background-image': 'linear-gradient(currentColor, currentColor)',
+      'background-size': '0% 1.5px',
+      'background-repeat': 'no-repeat',
+      'background-position': '0 92%',
+      transition: 'color 0.2s ease, background-size 0.3s ease',
+      'word-break': 'break-word'
     },
-    'a:hover': {
-      color: 'hsl(var(--accent) / 1)',
-      'text-decoration-color': 'hsl(var(--accent) / 0.9)'
+    '.prose a:hover': {
+      color: accent,
+      'background-size': '100% 1.5px'
     },
+
     // Inline code: little paper chips
-    ':not(pre) > code': {
+    '.prose :not(pre) > code': {
       'font-family': 'var(--font-mono)',
       'font-size': '0.86em',
       padding: '0.18em 0.42em',
       'border-radius': '0.35em',
       'background-color': 'hsl(var(--wash) / 1)',
       border: '1px solid hsl(var(--line) / 1)',
+      'box-shadow': 'inset 0 -1px 0 hsl(var(--line) / 0.6)',
       'white-space': 'pre-wrap',
       'word-break': 'break-all'
     },
-    ':not(pre) > code::before': { content: 'none' },
-    ':not(pre) > code::after': { content: 'none' },
-    // Blockquote: ink margin line + serif italic voice
-    blockquote: {
+    '.prose :not(pre) > code::before': { content: 'none' },
+    '.prose :not(pre) > code::after': { content: 'none' },
+
+    // Blockquote: ink bar + soft wash, serif italic voice
+    '.prose blockquote': {
       'font-family': 'var(--font-serif)',
       'font-style': 'italic',
-      'border-inline-start-width': '3px',
-      'border-inline-start-color': 'hsl(var(--accent) / 0.55)',
-      'border-radius': '0 var(--radius) var(--radius) 0',
-      'background-color': 'hsl(var(--wash) / 0.6)',
-      'padding-inline': '1.1rem',
-      'padding-block': '0.35rem'
+      position: 'relative',
+      'border-inline-start': 'none',
+      'border-radius': '0.65rem',
+      'background-color': 'hsl(var(--wash) / 0.55)',
+      'box-shadow': 'inset 3px 0 0 hsl(var(--accent) / 0.55)',
+      'padding-block': '0.55rem',
+      'padding-inline': '1.4rem'
     },
-    // Tables
-    'thead th': { 'font-weight': '600', color: ink },
-    'td, th': { padding: '0.5em 0.9em' },
-    // Images
-    img: { 'border-radius': 'var(--radius)', margin: '0 auto' },
-    kbd: {
+
+    // Lists: custom elegant markers
+    '.prose ul': { 'list-style': 'none', 'padding-inline-start': '0.2rem' },
+    '.prose ul > li': {
+      position: 'relative',
+      'padding-inline-start': '1.35em',
+      'margin-block': '0.4em'
+    },
+    '.prose ul > li::before': {
+      content: '""',
+      position: 'absolute',
+      'inset-inline-start': '0.1em',
+      top: '0.66em',
+      width: '0.38em',
+      height: '0.38em',
+      'border-radius': '999px',
+      'background-color': 'hsl(var(--accent) / 0.6)'
+    },
+    '.prose ol': {
+      'list-style': 'none',
+      'padding-inline-start': '0.2rem',
+      'counter-reset': 'ink-ol'
+    },
+    '.prose ol > li': {
+      'counter-increment': 'ink-ol',
+      position: 'relative',
+      'padding-inline-start': '1.75em',
+      'margin-block': '0.4em'
+    },
+    '.prose ol > li::before': {
+      content: 'counter(ink-ol)',
+      position: 'absolute',
+      'inset-inline-start': '0',
+      top: '0.1em',
+      'font-family': 'var(--font-serif)',
+      'font-weight': '600',
+      'font-size': '0.88em',
+      color: 'hsl(var(--accent) / 0.85)',
+      'min-width': '1.5em',
+      'text-align': 'end'
+    },
+    '.prose ul ul,.prose ol ul,.prose ul ol,.prose ol ol': {
+      'padding-inline-start': '0.4em',
+      'margin-block': '0.2em'
+    },
+
+    // Horizontal rule: fading hairline
+    '.prose hr': {
+      border: 'none',
+      height: '1px',
+      width: '65%',
+      margin: '2.5em auto',
+      background: 'linear-gradient(to right, transparent, hsl(var(--line) / 1), transparent)'
+    },
+
+    // Tables: hairline rows only, hover highlight
+    '.prose table': {
+      'font-size': '0.9em',
+      display: 'block',
+      'overflow-x': 'auto',
+      'border-collapse': 'collapse'
+    },
+    '.prose thead th': {
+      'font-weight': '600',
+      color: ink,
+      'background-color': 'hsl(var(--wash) / 0.6)',
+      'white-space': 'nowrap'
+    },
+    '.prose td,.prose th': { border: 'none', padding: '0.55em 1em' },
+    '.prose tbody tr': {
+      'border-top': '1px solid hsl(var(--line) / 1)',
+      transition: 'background-color 0.15s ease'
+    },
+    '.prose tbody tr:hover': { 'background-color': 'hsl(var(--wash) / 0.5)' },
+
+    // Images & captions
+    '.prose img': {
+      'border-radius': 'calc(var(--radius) * 1.25)',
+      margin: '1.5em auto',
+      'box-shadow': '0 1px 2px hsl(var(--ink) / 0.05), 0 14px 36px -18px hsl(var(--ink) / 0.18)'
+    },
+    '.prose figcaption': {
+      'text-align': 'center',
+      'font-size': '0.85em',
+      color: 'hsl(var(--ink-soft) / 1)',
+      'margin-top': '0.4em'
+    },
+
+    // Strong & emphasized
+    '.prose strong': { 'font-weight': '600', color: ink },
+    '.prose em': { 'font-style': 'italic' },
+
+    // Keyboard keys
+    '.prose kbd': {
       'font-family': 'var(--font-mono)',
       'border-radius': '0.3em',
       'border-color': line,
       'box-shadow': '0 2px 0 hsl(var(--line) / 1)',
       padding: '0.15em 0.45em'
-    }
+    },
+
+    // Footnote refs
+    '.prose sup a': { 'scroll-margin-top': '5rem' }
   }
 }
 

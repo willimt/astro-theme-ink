@@ -19,7 +19,10 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
 
 <BaseLayout>
   <!-- Hero -->
-  <div id="content-header" class="animate mb-16 flex flex-col items-center gap-6 text-center">
+  <div
+    id="content-header"
+    class="animate not-prose mb-16 flex flex-col items-center gap-6 text-center"
+  >
     <div class="relative">
       <div
         class="absolute -inset-5 rounded-full bg-gradient-to-br from-accent/25 via-accent/10 to-transparent blur-2xl"
@@ -88,7 +91,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Recent posts -->
   {
     recent.length > 0 && (
-      <section aria-label="Posts" class="reveal mb-16">
+      <section aria-label="Posts" class="reveal not-prose mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -116,7 +119,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Education -->
   {
     education.length > 0 && (
-      <section aria-label="Education" class="reveal mb-16">
+      <section aria-label="Education" class="reveal not-prose mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -148,7 +151,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Skills -->
   {
     skills.length > 0 && (
-      <section aria-label="Skills" class="reveal mb-16">
+      <section aria-label="Skills" class="reveal not-prose mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -179,7 +182,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Tags (optional) -->
   {
     showTags && tags.length > 0 && (
-      <section aria-label="Tags" class="reveal mb-16">
+      <section aria-label="Tags" class="reveal not-prose mb-16">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span
@@ -207,7 +210,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Friends (optional) -->
   {
     showFriends && config.friends.length > 0 && (
-      <section aria-label="Friends" class="reveal">
+      <section aria-label="Friends" class="reveal not-prose">
         <div class="mb-5 flex items-end justify-between">
           <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
             <span

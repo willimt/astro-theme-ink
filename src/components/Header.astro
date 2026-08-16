@@ -9,7 +9,7 @@ function isActive(link: string): boolean {
 }
 ---
 
-<header class="site-header sticky top-0 z-40" id="site-header">
+<header class="site-header not-prose sticky top-0 z-40" id="site-header">
   <div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-5 sm:px-8">
     <!-- Brand -->
     <a href="/" class="group flex items-center gap-2" aria-label={config.site.title}>
@@ -75,7 +75,7 @@ function isActive(link: string): boolean {
 
 <!-- Mobile nav: in normal flow (scrolls away), only the slim bar stays sticky -->
 <nav
-  class="mobile-nav mx-auto flex max-w-5xl gap-1 overflow-x-auto px-5 pb-2 sm:px-8 md:hidden"
+  class="mobile-nav not-prose mx-auto flex max-w-5xl gap-1 overflow-x-auto px-5 pb-2 sm:px-8 md:hidden"
   aria-label="Primary navigation"
 >
   {

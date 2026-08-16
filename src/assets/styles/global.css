@@ -103,11 +103,28 @@ html.theme-switching *::after {
 
 .astro-code {
   position: relative;
-  margin-block: 1.25rem;
+  margin-block: 1.5rem;
   border: 1px solid hsl(var(--line) / 1);
   border-radius: calc(var(--radius) * 1.5);
   background-color: hsl(var(--wash) / 0.7) !important;
-  overflow: hidden;
+  /* beat shiki's inline `overflow-x: auto` so the header strip stays put */
+  overflow: hidden !important;
+  padding-top: 2.75rem; /* room for the header strip */
+  box-shadow:
+    0 1px 2px hsl(var(--ink) / 0.05),
+    0 18px 44px -22px hsl(var(--ink) / 0.2);
+}
+
+/* Header strip: soft gradient bar with a hairline */
+.astro-code::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2.25rem;
+  border-bottom: 1px solid hsl(var(--line) / 1);
+  background: linear-gradient(to bottom, hsl(var(--card) / 0.7), hsl(var(--wash) / 0.5));
+  pointer-events: none;
 }
 
 /* The <code> scrolls horizontally inside the rounded frame */
@@ -115,7 +132,7 @@ html.theme-switching *::after {
   display: block;
   width: fit-content;
   min-width: 100%;
-  padding: 1rem 1.15rem;
+  padding: 0.9rem 1.15rem 1rem;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.875rem;
@@ -123,42 +140,45 @@ html.theme-switching *::after {
   white-space: pre;
 }
 
-/* Language badge (injected by client script) */
+/* Language badge (injected by client script), sits on the header strip */
 .astro-code .code-lang {
   position: absolute;
   top: 0.55rem;
-  left: 0.75rem;
-  padding: 0.12rem 0.5rem;
+  left: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: hsl(var(--ink-soft) / 1);
-  background-color: hsl(var(--card) / 0.92);
-  border: 1px solid hsl(var(--line) / 1);
-  border-radius: 0.4rem;
   user-select: none;
   pointer-events: none;
 }
-.astro-code.has-lang code {
-  padding-top: 2.15rem; /* leave room for the badge */
+.astro-code .code-lang::before {
+  content: '';
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background-color: hsl(var(--accent) / 0.7);
 }
 
-/* Copy button (injected by client script) */
+/* Copy button (injected by client script), sits on the header strip */
 .astro-code .code-copy {
   position: absolute;
-  top: 0.55rem;
-  right: 0.6rem;
+  top: 0.35rem;
+  right: 0.55rem;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.25rem 0.55rem;
+  padding: 0.28rem 0.6rem;
   font-size: 0.72rem;
   font-family: var(--font-sans);
   color: hsl(var(--ink-soft) / 1);
-  background-color: hsl(var(--card) / 0.92);
+  background-color: hsl(var(--card) / 0.85);
   border: 1px solid hsl(var(--line) / 1);
-  border-radius: 0.4rem;
+  border-radius: 0.45rem;
   opacity: 0;
   transition:
     opacity 0.2s ease,

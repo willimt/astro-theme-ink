@@ -15,7 +15,9 @@ const date = data.updatedDate ?? data.publishDate
 const minutesRead = getPostReadingTime(post)
 ---
 
-<article class={cn('paper-card group relative flex flex-col gap-2 p-5 sm:p-6', className)}>
+<article
+  class={cn('paper-card not-prose group relative flex flex-col gap-2 p-5 sm:p-6', className)}
+>
   <div class="flex items-center justify-between gap-3">
     <time datetime={date.toISOString()} class="chip font-mono tabular-nums">
       {formatDate(date)}
