@@ -112,14 +112,14 @@ export interface Config {
 
 export const config: Config = {
   site: {
-    title: 'Astro Theme Ink',
-    author: 'Ink Lab',
-    description: 'A warm, paper-feel personal blog theme — ink on paper.',
+    title: "Hansen's ink",
+    author: 'Hansen W.',
+    description: "Hansen's ink — 记录技术、生活与思考。",
     lang: 'en',
     favicon: '/favicon/favicon.ico',
     avatar: '/avatar.png',
     ogImage: '/og-card.svg',
-    palette: 'ink',
+    palette: 'fresh',
     titleDelimiter: ' · '
   },
 
@@ -133,10 +133,10 @@ export const config: Config = {
   },
 
   footer: {
-    // copyright: `© 2019 - ${new Date().getFullYear()} Ink Lab`,
+    copyright: `© 2020 - ${new Date().getFullYear()} Hansen W.`,
     links: [{ title: 'RSS', url: '/rss.xml' }],
     social: {
-      github: { label: 'GitHub', url: 'https://github.com/' }
+      github: { label: 'GitHub', url: 'https://github.com/willimt' }
     }
   },
 
