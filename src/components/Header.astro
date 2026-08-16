@@ -25,6 +25,7 @@ function isActive(link: string): boolean {
         config.header.menu.map((item) => (
           <a
             href={item.link}
+            aria-current={isActive(item.link) ? 'page' : undefined}
             class={[
               'rounded-md px-3 py-1.5 text-sm transition-colors duration-200',
               isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
@@ -59,27 +60,28 @@ function isActive(link: string): boolean {
       </button>
     </div>
   </div>
-
-  <!-- Mobile nav: horizontally scrollable row under the bar -->
-  <nav
-    class="mobile-nav mx-auto flex max-w-5xl gap-1 overflow-x-auto px-5 pb-2 sm:px-8 md:hidden"
-    aria-label="Primary navigation"
-  >
-    {
-      config.header.menu.map((item) => (
-        <a
-          href={item.link}
-          class={[
-            'flex-none rounded-md px-3 py-1 text-sm transition-colors duration-200',
-            isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
-          ].join(' ')}
-        >
-          {item.title}
-        </a>
-      ))
-    }
-  </nav>
 </header>
+
+<!-- Mobile nav: in normal flow (scrolls away), only the slim bar stays sticky -->
+<nav
+  class="mobile-nav mx-auto flex max-w-5xl gap-1 overflow-x-auto px-5 pb-2 sm:px-8 md:hidden"
+  aria-label="Primary navigation"
+>
+  {
+    config.header.menu.map((item) => (
+      <a
+        href={item.link}
+        aria-current={isActive(item.link) ? 'page' : undefined}
+        class={[
+          'flex-none rounded-md px-3 py-1 text-sm transition-colors duration-200',
+          isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
+        ].join(' ')}
+      >
+        {item.title}
+      </a>
+    ))
+  }
+</nav>
 
 <style>
   /* Sticky bar: transparent at top, frosted paper once scrolled */
@@ -151,6 +153,15 @@ function isActive(link: string): boolean {
     document.documentElement.classList.toggle('dark', dark)
     document.documentElement.dataset.theme = theme
     if (toggle) toggle.dataset.theme = theme
+    // Keep Giscus in sync with the chosen theme
+    document
+      .querySelectorAll<HTMLIFrameElement>('iframe[src*="giscus.app"]')
+      .forEach((frame) =>
+        frame.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme: dark ? 'dark' : 'light' } } },
+          'https://giscus.app'
+        )
+      )
   }
   toggle?.addEventListener('click', () => {
     // brief cross-fade while the theme class flips

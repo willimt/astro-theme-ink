@@ -45,7 +45,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             rel="noreferrer"
             aria-label={item.label}
             title={item.label}
-            class="icon-link"
+            class="icon-link size-9"
           >
             <span class={`${item.icon} size-4`} aria-hidden="true" />
           </a>
@@ -68,8 +68,11 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
           </a>
         </div>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {recent.map((post) => (
-            <PostCard post={post} />
+          {recent.map((post, i) => (
+            <PostCard
+              post={post}
+              class={recent.length % 2 === 1 && i === recent.length - 1 ? 'md:col-span-2' : ''}
+            />
           ))}
         </div>
       </section>
@@ -143,22 +146,3 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     )
   }
 </BaseLayout>
-
-<style>
-  .icon-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 0.5rem;
-    color: hsl(var(--ink-soft) / 1);
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
-  }
-  .icon-link:hover {
-    color: hsl(var(--accent) / 1);
-    background-color: hsl(var(--wash) / 1);
-  }
-</style>

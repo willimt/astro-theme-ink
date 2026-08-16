@@ -156,7 +156,20 @@ export default defineConfig({
     chip: 'inline-flex items-center gap-1 rounded-full border border-line bg-wash px-2.5 py-0.5 text-xs text-ink-soft transition-colors duration-200 hover:border-accent/50 hover:text-accent',
     // Text link with underline animation
     'link-ink':
-      'underline decoration-accent/35 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent/80'
+      'underline decoration-accent/35 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent/80',
+    // Icon-only link (add a size utility, e.g. `size-8`)
+    'icon-link':
+      'inline-flex items-center justify-center rounded-lg text-ink-soft transition-colors duration-200 hover:bg-wash hover:text-accent'
   },
-  safelist: ['i-lucide-sun', 'i-lucide-moon', 'i-lucide-computer', 'i-lucide-menu']
+  // Classes referenced only through config lookups (SOCIAL_ICONS in
+  // src/utils/index.ts) are invisible to the scanners — generate them explicitly.
+  safelist: [
+    'i-lucide-github',
+    'i-lucide-gitlab',
+    'i-lucide-rss',
+    'i-lucide-mail',
+    'i-lucide-twitter',
+    'i-lucide-globe',
+    'i-lucide-link'
+  ]
 })

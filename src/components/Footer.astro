@@ -45,7 +45,7 @@ const socialItems = social.map(([key, item]) => ({
               rel="noreferrer"
               aria-label={item.label}
               title={item.label}
-              class="icon-link"
+              class="icon-link size-8"
             >
               <span class={`${item.icon} size-5`} aria-hidden="true" />
             </a>
@@ -55,22 +55,3 @@ const socialItems = social.map(([key, item]) => ({
     }
   </div>
 </footer>
-
-<style>
-  .icon-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 0.5rem;
-    color: hsl(var(--ink-soft) / 1);
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
-  }
-  .icon-link:hover {
-    color: hsl(var(--accent) / 1);
-    background-color: hsl(var(--wash) / 1);
-  }
-</style>

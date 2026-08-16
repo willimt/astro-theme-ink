@@ -6,6 +6,7 @@ import '@/assets/styles/global.css'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import { config } from '@/site-config'
+import { THEME_COLORS } from '@/utils/theme'
 
 interface Props {
   title?: string
@@ -43,7 +44,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#f7f1e5" />
+    <meta name="theme-color" content={THEME_COLORS.light} />
 
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
@@ -70,7 +71,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
         document.documentElement.classList.toggle('dark', dark)
         document.documentElement.dataset.theme = theme
         const meta = document.querySelector('meta[name="theme-color"]')
-        if (meta) meta.setAttribute('content', dark ? '#17120c' : '#f7f1e5')
+        if (meta) meta.setAttribute('content', dark ? THEME_COLORS.dark : THEME_COLORS.light)
       })()
     </script>
   </head>
@@ -118,7 +119,9 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
           btn.innerHTML =
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy'
           btn.addEventListener('click', async () => {
-            const text = block.innerText
+            // `.astro-code` is the <pre> itself; read only the <code> so the
+            // language badge and the copy button are not included.
+            const text = block.querySelector('code')?.innerText ?? block.innerText
             try {
               await navigator.clipboard.writeText(text)
               btn.classList.add('copied')

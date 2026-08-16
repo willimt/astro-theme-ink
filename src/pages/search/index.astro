@@ -106,7 +106,7 @@ import { config } from '@/site-config'
             .map(
               (item) => `
             <li>
-              <a href="/blog/${item.slug}" class="paper-card group block p-4" data-astro-prefetch>
+              <a href="/blog/${item.slug}" class="paper-card group block p-4">
                 <div class="flex items-center justify-between gap-3">
                   <h2 class="truncate font-serif font-semibold transition-colors group-hover:text-accent">${highlight(item.title, query)}</h2>
                   <time class="shrink-0 font-mono text-xs text-ink-soft">${new Date(item.date).toLocaleDateString()}</time>

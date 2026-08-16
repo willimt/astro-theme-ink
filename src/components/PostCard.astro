@@ -36,7 +36,7 @@ const minutesRead = getPostReadingTime(post)
 
   <p class="line-clamp-2 text-sm leading-relaxed text-ink-soft">{data.description}</p>
 
-  <div class="mt-auto flex flex-wrap items-center gap-2 pt-3">
+  <div class="relative z-10 mt-auto flex flex-wrap items-center gap-2 pt-3">
     {
       data.tags.map((tag) => (
         <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>

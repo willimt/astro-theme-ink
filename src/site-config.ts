@@ -109,7 +109,7 @@ export const config: Config = {
     repoId: '',
     category: 'Announcements',
     categoryId: '',
-    lang: 'zh-CN'
+    lang: 'en'
   },
 
   friends: [
