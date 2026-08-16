@@ -134,7 +134,10 @@ export const config: Config = {
 
   footer: {
     copyright: `© 2020 - ${new Date().getFullYear()} Hansen W.`,
-    links: [{ title: 'RSS', url: '/rss.xml' }],
+    links: [
+      { title: 'RSS', url: '/rss.xml' },
+      { title: '鲁ICP备2022004230号-1', url: 'https://beian.miit.gov.cn/' }
+    ],
     social: {
       github: { label: 'GitHub', url: 'https://github.com/willimt' }
     }
