@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import type { MarkdownHeading } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
@@ -48,13 +49,17 @@ const jsonLd = {
     <TOC {headings} />
 
     <article class="min-w-0 xl:col-start-1 xl:row-start-1">
-      <!-- Cover image -->
+      <!-- Cover image (optimized: responsive sizes, eager for LCP, no CLS) -->
       {
         data.heroImage && (
-          <img
-            src={data.heroImage}
-            alt={data.title}
+          <Image
+            src={data.heroImage.src}
+            alt={data.heroImage.alt ?? data.title}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 1024px) 760px, 100vw"
+            fetchpriority="high"
             loading="eager"
+            decoding="async"
             class="mb-9 h-auto max-h-96 w-full rounded-2xl border border-line object-cover"
           />
         )

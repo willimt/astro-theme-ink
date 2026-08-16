@@ -34,6 +34,8 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
         alt={config.site.author}
         width="96"
         height="96"
+        loading="eager"
+        decoding="async"
         class="relative size-24 rounded-full border-2 border-line bg-card object-cover p-1 shadow-sm"
       />
     </div>

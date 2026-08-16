@@ -18,6 +18,8 @@ import {
   transformerNotationHighlight,
   transformerRemoveNotationEscape
 } from './src/plugins/shiki-official/transformers.ts'
+// Lazy-load Markdown images
+import rehypeImageAttributes from './src/plugins/rehype-image-attributes.ts'
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,6 +31,7 @@ export default defineConfig({
 
   // [Markdown]
   markdown: {
+    rehypePlugins: [rehypeImageAttributes],
     shikiConfig: {
       themes: {
         light: 'github-light',

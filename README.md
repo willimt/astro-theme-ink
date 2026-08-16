@@ -43,7 +43,9 @@ title: 'Post title'
 description: 'One-sentence summary'
 publishDate: 2026-08-16
 updatedDate: 2026-08-16 # optional
-heroImage: '/covers/my-cover.png' # optional, path under public/
+heroImage: # optional — local asset relative to this file, optimized at build
+  src: ../../assets/cover.png
+  alt: 'Cover description'
 tags: [tag-a, tag-b]
 draft: false # optional, hidden from lists when true
 comment: true # optional, per-post comment toggle

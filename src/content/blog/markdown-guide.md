@@ -58,9 +58,9 @@ pnpm dev
 
 ## 图片
 
-图片会被居中显示并带上圆角：
+本地图片会被自动懒加载并居中、圆角展示；推荐用 HTML 标签写上宽高避免布局抖动：
 
-![占位图片](https://picsum.photos/seed/ink/800/450)
+<img src="/og-card.svg" alt="占位图片" width="1200" height="630" loading="lazy" decoding="async" />
 
 ## 长代码块折叠
 

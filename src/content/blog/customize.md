@@ -4,6 +4,9 @@ description: '从站点信息、首页内容、评论系统到配色、排版、
 publishDate: 2026-08-16
 updatedDate: 2026-08-17
 tags: [主题, 文档]
+heroImage:
+  src: ../../assets/cover-demo.png
+  alt: '演示封面'
 ---
 
 主题的几乎一切定制都收拢在几个文件里。本文按"配置 → 样式 → 内容 → 部署"的顺序完整过一遍。
@@ -157,8 +160,8 @@ rm -rf /var/cache             # [!code --]
 Frontmatter 字段详见[安装与使用](/blog/getting-started)。补充几个技巧：
 
 - `draft: true`：草稿只通过 URL 访问，不进列表和搜索
-- `heroImage: '/covers/xxx.png'`：文章封面（放 `public/`）
-- 正文支持：标题锚点（悬停显示 `#`）、表格、引用、脚注、图片圆角投影
+- `heroImage: { src: ../../assets/cover.png, alt: '…' }`：文章封面。必须是相对文章文件的本地资源，构建时会被 sharp 压缩并生成响应式尺寸（不会布局抖动）
+- 正文支持：标题锚点（悬停显示 `#`）、表格、引用、脚注、图片圆角投影；正文里的图片自动懒加载
 
 ## 11. 部署细节
 
