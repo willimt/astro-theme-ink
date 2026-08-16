@@ -1,117 +1,195 @@
 ---
-title: '如何自定义这个主题'
-description: '从配色、字体到评论系统：astro-theme-ink 的全部定制入口，一篇文章讲清楚。'
+title: '深度定制指南'
+description: '从站点信息、首页内容、评论系统到配色、排版、代码块语法与部署——把主题完全调成你的样子。'
 publishDate: 2026-08-16
-tags: [主题, 配置]
-heroImage: '/og-card.svg'
+updatedDate: 2026-08-17
+tags: [主题, 文档]
 ---
 
-astro-theme-ink 把几乎所有的定制入口都收拢在了两三个文件里。本文带你逐个认识它们。
+主题的几乎一切定制都收拢在几个文件里。本文按"配置 → 样式 → 内容 → 部署"的顺序完整过一遍。
 
 ## 1. 站点信息：`src/site-config.ts`
 
-标题、作者、导航菜单、页脚、友链、评论都在这里：
-
-```ts
-export const config: Config = {
-  site: {
-    title: 'Astro Theme Ink',
-    author: 'Ink Lab',
-    description: 'A warm, paper-feel personal blog theme — ink on paper.',
-    lang: 'zh-CN',
-    avatar: '/avatar.svg', // 首页头像（public/ 下）
-    ogImage: '/og-card.svg' // 社交分享卡片
-  },
-  header: { menu: [...] },
-  footer: { ... },
-  comment: { repo: '', ... } // 填上 Giscus 仓库信息即启用评论
+```ts title="site-config.ts"
+site: {
+  title: "Hansen's ink",   // 站点标题（浏览器标签、页头品牌）
+  author: 'Hansen W.',      // 作者名（首页与页脚版权）
+  description: '……',        // 站点描述（meta description）
+  lang: 'en',               // html lang 与 RSS language
+  favicon: '/favicon/favicon.ico',
+  avatar: '/avatar.png',    // 首页头像（public/ 下）
+  ogImage: '/og-card.svg',  // 社交分享卡片
+  palette: 'fresh',         // 默认配色 'ink' | 'fresh'
+  titleDelimiter: ' · '     // 标题分隔符
 }
 ```
 
-> 修改头像：把图片放进 `public/`，再把 `site.avatar` 改成它的路径即可。
+## 2. 页头与导航
 
-## 2. 配色与字体：`src/assets/styles/tokens.css`
+```ts title="site-config.ts"
+header: {
+  menu: [
+    { title: 'Blog', link: '/blog' },
+    { title: 'Tags', link: '/tags' },
+    { title: 'Links', link: '/links' },
+    { title: 'About', link: '/about' }
+  ]
+}
+```
 
-主题的"纸感"来自这组 CSS 变量：
+菜单项在桌面端内联展示，移动端自动变成顶栏下方的横向滚动条。当前页会高亮（带 `aria-current`）。
 
-```css
+## 3. 页脚
+
+```ts title="site-config.ts"
+footer: {
+  copyright: '© 2020 - 2026 Hansen W.',   // 自定义版权行；不写则默认 © 年份 作者
+  links: [{ title: 'RSS', url: '/rss.xml' }],  // 版权行后的链接
+  social: {
+    github: { label: 'GitHub', url: 'https://github.com/willimt' }
+    // 支持 github/gitlab/rss/mail/x/weibo
+  }
+}
+```
+
+## 4. 首页内容：配置驱动
+
+首页完全由 `home` 配置块驱动，**填了内容分区就出现，清空就消失**：
+
+```ts title="site-config.ts"
+home: {
+  hero: {
+    tagline: 'Developer / Designer / Photographer', // 名字上方的小字
+    location: 'China / QingDao',                    // 位置徽标
+    about: '一段关于你的介绍……',
+    buttons: [{ title: 'More about me', link: '/about' }]
+  },
+  recentPosts: 5,                                   // 0 隐藏文章区
+  education: [
+    { school: '某大学', major: '专业', degree: '学历', date: 'Aug 2021 - Jul 2024' }
+  ],
+  skills: [
+    { title: 'Program', items: ['Python', 'Java', 'C'] }
+  ],
+  showTags: false,      // 首页是否显示标签云
+  showFriends: false    // 首页是否显示友链预览
+}
+```
+
+## 5. 评论系统（Giscus）
+
+1. 去 [giscus.app](https://giscus.app) 按引导选择你的 GitHub 仓库，生成配置
+2. 填进 `site-config.ts`：
+
+```ts title="site-config.ts"
+comment: {
+  provider: 'giscus',
+  repo: '用户名/仓库名',   // 填上即启用评论
+  repoId: 'R_xxx',
+  category: 'Announcements',
+  categoryId: 'DIC_xxx',
+  lang: 'en'
+}
+```
+
+评论框会出现在文章末尾，主题会跟随你选择的明暗模式。`repo` 留空则整块隐藏。
+
+## 6. 搜索开关
+
+```ts title="site-config.ts"
+search: {
+  enabled: true
+}
+```
+
+关闭后顶栏的搜索入口和 `/search` 页内容都会消失（搜索索引也不再生成）。
+
+## 7. 配色与字体：`src/assets/styles/tokens.css`
+
+两套配色的全部颜色都在这里，直接改 HSL 三元组即可调出你自己的色板：
+
+```css title="tokens.css"
 :root {
-  --paper: 42 35% 97%; /* 米白纸面 */
-  --ink: 30 14% 13%; /* 暖墨文字 */
-  --accent: 22 46% 44%; /* 赭石强调色 */
-  --radius: 0.5rem;
+  /* ink · 浅色 */
+  --paper: 42 35% 97%;
+  --accent: 22 46% 44%; /* 强调色，改这一个就能换整体气质 */
+}
+.fresh {
+  /* fresh · 浅色 */
+  --paper: 212 28% 97%;
+  --accent: 213 30% 45%;
 }
 .dark {
-  /* 暗色覆盖同名的变量 */
+  /* ink 深色 */
+}
+.fresh.dark {
+  /* fresh 深色 */
 }
 ```
 
-想换成冷色调或别的品牌色，改这三个数就够了 —— 全站都会跟着变。
+字体栈也在这里（`--font-serif/--font-sans/--font-mono`），想换字体改这三行即可。
 
-## 3. 排版与组件：`uno.config.ts`
+## 8. 排版与组件：`uno.config.ts`
 
-UnoCSS 的主题映射（`bg-paper`、`text-ink` 这些工具类）、`shortcuts`（`paper-card`、`chip`）、以及正文排版 `presetTypography` 的定制都在这里。例如行内代码的"纸片"样式：
+- `theme.colors`：把 token 映射成工具类（`bg-paper`、`text-ink`…）
+- `shortcuts`：`paper-card`（卡片）、`chip`（胶囊）、`link-ink`（链接）、`icon-link`（图标按钮）
+- `presetTypography`：正文排版的全部细节（标题、链接动效、列表标记、引用块、表格…）
 
-```ts
-':not(pre) > code': {
-  padding: '0.18em 0.42em',
-  'background-color': 'hsl(var(--wash) / 1)',
-  border: '1px solid hsl(var(--line) / 1)',
-  'border-radius': '0.35em'
-}
+## 9. 代码块语法
+
+代码块支持标题、高亮和 diff 标记：
+
+````markdown
+```bash title="deploy.sh"
+git pull --ff-only            # [!code highlight]
+systemctl restart my-app      # [!code ++]
+rm -rf /var/cache             # [!code --]
 ```
+````
 
-## 4. 写一篇文章
+- `title="文件名"`：显示标题条
+- `[!code highlight]`：高亮该行
+- `[!code ++]` / `[!code --]`：标记新增 / 删除行
+- 超过 15 行自动折叠；右上角悬停出复制按钮
 
-在 `src/content/blog/` 下新建 Markdown 文件，可选 `heroImage` 封面图（放在 `public/`）：
+## 10. 写文章
 
-```markdown
----
-title: '文章标题'
-description: '一句话摘要'
-publishDate: 2026-08-16
-tags: [标签]
-heroImage: '/covers/my-cover.png' # 可选封面
-draft: false
----
+Frontmatter 字段详见[安装与使用](/blog/getting-started)。补充几个技巧：
 
-正文……
-```
+- `draft: true`：草稿只通过 URL 访问，不进列表和搜索
+- `heroImage: '/covers/xxx.png'`：文章封面（放 `public/`）
+- 正文支持：标题锚点（悬停显示 `#`）、表格、引用、脚注、图片圆角投影
 
-## 5. 开启评论（Giscus）
+## 11. 部署细节
 
-1. 到 [giscus.app](https://giscus.app) 按引导配置你的仓库；
-2. 把 `repo`、`repoId`、`category`、`categoryId` 填进 `site-config.ts` 的 `comment` 字段；
-3. 重新构建即可，评论框会自动出现在文章末尾。
+- 把 `astro.config.ts` 的 `site` 改成真实域名（sitemap / canonical / RSS 依赖它）
+- `pnpm build` 输出纯静态 `dist/`，任意平台可托管
+- 备案/ICP 之类的页脚文字写在 `footer.links` 里即可
 
-## 完
+## 12. 移除演示内容清单
+
+- `src/content/blog/` 下的示例文章（welcome / features / getting-started / customize / markdown-guide）可全部删除
+- `public/avatar.png`、`public/favicon/`、`public/og-card.svg` 换成你的
+- `site-config.ts` 里的演示配置改为你的信息
 
 ## 常见问题
 
-**为什么我改了颜色但没生效？**
+**改了颜色没生效？**
 
-确认你改的是 `src/assets/styles/tokens.css` 里的 HSL 三元组（如 `--accent: 22 46% 44%`），而不是注释掉的旧值；改完重新运行 `pnpm dev` 或重新构建。注意三元组中间用空格分隔，不是逗号。
+确认改的是 `tokens.css` 里的 HSL 三元组（空格分隔，不是逗号），并重新 `pnpm dev` 或构建。
 
 **头像显示不出来？**
 
-`site.avatar` 必须是 `public/` 目录下的路径（如 `/avatar.svg`），并且文件真实存在。放在 `src/` 下是拿不到的。
+`site.avatar` 必须是 `public/` 目录下的真实路径（如 `/avatar.png`），放 `src/` 下拿不到。
 
 **评论框不出现？**
 
-`comment.repo` 为空时评论功能是关闭的。去 [giscus.app](https://giscus.app) 完成配置，把 `repo`、`repoId`、`category`、`categoryId` 四项都填上再构建。
+`comment.repo` 为空即关闭。去 giscus.app 完成配置后四项都填上再构建。
 
 **想加新的页面类型？**
 
-主题的页面都在 `src/pages/` 下，复制一个已有的页面（如 `links/index.astro`）改内容即可；导航入口在 `site-config.ts` 的 `header.menu` 里加一行。
+复制 `src/pages/` 下已有的页面（如 `links/index.astro`）改内容，再在 `header.menu` 加一行导航。
 
-**首页内容怎么改？**
+**如何让默认就是雾霾蓝？**
 
-首页是配置驱动的：`site-config.ts` 里的 `home` 配置块控制英雄区（tagline / 位置 / 个人简介 / 按钮）、最近文章数量、教育经历、技能分组，以及是否显示标签云和友链。填了内容分区就自动出现，清空就消失，不用改任何组件。
-
-**如何切换清新淡雅配色？**
-
-主题内置两套配色：默认的暖调「墨色」（ink）和雾霾蓝「清新」（fresh）。点顶栏的调色板按钮即可切换并记住选择；也可以把 `site-config.ts` 里的 `site.palette` 改成 `'fresh'`，作为新访客看到的默认配色。两套配色的变量都定义在 `src/assets/styles/tokens.css`，直接改数值就能调出你自己的色板；页面顶部柔和的渐变光晕（`#ambient`）和首页头像光晕都基于 `--accent` 自动跟随配色。
-
-## 完
-
-以上就是全部定制入口。剩下的就是你的内容了 —— 祝你写作愉快。
+`site.palette: 'fresh'`。访问者之后也能在顶栏自由切换，选择会记住。
