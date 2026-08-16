@@ -177,6 +177,11 @@ hr {
   border-color: hsl(var(--line) / 1);
 }
 
+/* Let prose fill its column (article pages) instead of the 65ch cap */
+.prose.prose-fill {
+  max-width: none;
+}
+
 /* Search highlight */
 mark {
   background-color: hsl(var(--accent) / 0.18);

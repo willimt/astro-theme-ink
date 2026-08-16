@@ -1,42 +1,51 @@
----
+﻿---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { config } from '@/site-config'
 ---
 
-<BaseLayout title="关于" description={`关于 ${config.site.author}`}>
-  <div class="animate mx-auto max-w-2xl">
+<BaseLayout title="鍏充簬" description={`鍏充簬 ${config.site.author}`}>
+  <div class="animate mx-auto max-w-3xl">
     <header class="mb-8 text-center">
-      <h1 class="font-serif text-3xl font-semibold">关于</h1>
+      <h1 class="font-serif text-3xl font-semibold">鍏充簬</h1>
       <p class="mt-3 text-ink-soft">{config.site.description}</p>
     </header>
 
-    <div class="prose">
-      <h2>这个站点</h2>
+    <div class="prose prose-fill">
+      <h2>杩欎釜绔欑偣</h2>
       <p>
-        这是一个由 <strong>astro-theme-ink</strong> 驱动的个人博客 —— 一款温暖纸感风格的 Astro 主题。墨色文字落在米白纸上，是它想传达的全部。
+        杩欐槸涓€涓敱 <strong>astro-theme-ink</strong> 椹卞姩鐨勪釜浜哄崥瀹?鈥斺€?涓€娆炬俯鏆栫焊鎰熼鏍肩殑
+        Astro 涓婚銆傚ⅷ鑹叉枃瀛楄惤鍦ㄧ背鐧界焊涓婏紝鏄畠鎯充紶杈剧殑鍏ㄩ儴銆?
       </p>
-      <blockquote>简单的东西往往最好。留白不是空白，是呼吸。</blockquote>
+      <blockquote>
+        绠€鍗曠殑涓滆タ寰€寰€鏈€濂姐€傜暀鐧戒笉鏄┖鐧斤紝鏄懠鍚搞€?/blockquote>
 
-      <h2>关于我</h2>
-      <p>
-        在这里替换为你的个人介绍：你是谁、在做什么、关心什么。可以聊聊技术、生活，
-        或者任何你愿意分享的事情。
-      </p>
+        <h2>
+          鍏充簬鎴?/h2>
+          <p>
+            鍦ㄨ繖閲屾浛鎹负浣犵殑涓汉浠嬬粛锛氫綘鏄皝銆佸湪鍋氫粈涔堛€佸叧蹇冧粈涔堛€傚彲浠ヨ亰鑱婃妧鏈€佺敓娲伙紝
+            鎴栬€呬换浣曚綘鎰挎剰鍒嗕韩鐨勪簨鎯呫€?
+          </p>
 
-      <h2>技术栈</h2>
-      <ul>
-        <li><strong>Astro 5</strong> —— 内容驱动的 Web 框架</li>
-        <li>
-          <strong>UnoCSS</strong>（presetWind3 + presetTypography + presetIcons）—— 即时原子化 CSS
-          引擎
-        </li>
-        <li><strong>纯静态输出</strong> —— 构建产物可直接托管到任意静态平台</li>
-      </ul>
+          <h2>鎶€鏈爤</h2>
+          <ul>
+            <li><strong>Astro 5</strong> 鈥斺€?鍐呭椹卞姩鐨?Web 妗嗘灦</li>
+            <li>
+              <strong>UnoCSS</strong>锛坧resetWind3 + presetTypography +
+              presetIcons锛夆€斺€?鍗虫椂鍘熷瓙鍖?CSS 寮曟搸
+            </li>
+            <li>
+              <strong
+                >绾潤鎬佽緭鍑?/strong> 鈥斺€?鏋勫缓浜х墿鍙洿鎺ユ墭绠″埌浠绘剰闈欐€佸钩鍙?/li>
+              </strong>
 
-      <h2>联系</h2>
-      <p>
-        欢迎通过 <a href="/links">友链</a> 或文章评论区与我交流。
-      </p>
+              <h2>鑱旂郴</h2>
+              <p>
+                娆㈣繋閫氳繃 <a href="/links">鍙嬮摼</a> 鎴栨枃绔犺瘎璁哄尯涓庢垜浜ゆ祦銆?
+              </p>
+            </li>
+          </ul>
+        </h2>
+      </blockquote>
     </div>
-  </div>
-</BaseLayout>
+  </div></BaseLayout
+>

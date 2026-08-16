@@ -44,7 +44,7 @@ const jsonLd = {
   <!-- Reading progress -->
   <div id="reading-progress" aria-hidden="true"></div>
 
-  <div class="animate xl:grid xl:grid-cols-[minmax(0,1fr)_13rem] xl:gap-12">
+  <div class="animate xl:grid xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:gap-10">
     <TOC {headings} />
 
     <article class="min-w-0 xl:col-start-1 xl:row-start-1">
@@ -67,35 +67,39 @@ const jsonLd = {
           {data.title}
         </h1>
 
-        <div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-          <time datetime={published.toISOString()} class="chip">
-            <span class="i-lucide-calendar size-3.5" aria-hidden="true"></span>
-            {formatDate(published)}
-          </time>
+        <!-- Editorial-style meta: plain muted text, no chips -->
+        <div class="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-ink-soft">
+          <time datetime={published.toISOString()}>{formatDate(published)}</time>
           {
             updated && (
-              <span class="chip">
-                <span class="i-lucide-pencil size-3.5" aria-hidden="true" />
-                更新于 {formatDate(updated)}
-              </span>
+              <>
+                <span aria-hidden="true">·</span>
+                <span>更新于 {formatDate(updated)}</span>
+              </>
             )
           }
-          <span class="chip">
-            <span class="i-lucide-clock size-3.5" aria-hidden="true"></span>
-            {minutesRead} 分钟
-          </span>
+          <span aria-hidden="true">·</span>
+          <span>{minutesRead} 分钟</span>
           {
-            data.tags.map((tag) => (
-              <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
-                #{tag}
-              </a>
-            ))
+            data.tags.length > 0 && (
+              <>
+                <span aria-hidden="true">·</span>
+                {data.tags.map((tag, i) => (
+                  <>
+                    <a href={`/tags/${tag}`} class="link-ink" data-astro-prefetch>
+                      #{tag}
+                    </a>
+                    {i < data.tags.length - 1 && <span class="text-ink-soft/50">/</span>}
+                  </>
+                ))}
+              </>
+            )
           }
         </div>
       </header>
 
       <!-- Article body -->
-      <div class="prose">
+      <div class="prose prose-fill">
         <slot />
       </div>
 

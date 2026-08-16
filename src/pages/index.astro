@@ -59,12 +59,15 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     recent.length > 0 && (
       <section aria-label="最近文章" class="reveal mb-14">
         <div class="mb-4 flex items-end justify-between">
-          <h2 class="font-serif text-2xl font-semibold">最近文章</h2>
+          <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
+            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            最近文章
+          </h2>
           <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
             查看全部 →
           </a>
         </div>
-        <div class="flex flex-col gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           {recent.map((post) => (
             <PostCard post={post} />
           ))}
@@ -76,9 +79,12 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   <!-- Tags -->
   {
     tags.length > 0 && (
-      <section aria-label="标签" class="reveal mb-14">
-        <div class="mb-4 flex items-end justify-between">
-          <h2 class="font-serif text-2xl font-semibold">标签</h2>
+      <section aria-label="标签" class="reveal mb-16">
+        <div class="mb-5 flex items-end justify-between">
+          <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
+            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            标签
+          </h2>
           <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
             全部标签 →
           </a>
@@ -99,8 +105,11 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
   {
     config.friends.length > 0 && (
       <section aria-label="友链" class="reveal">
-        <div class="mb-4 flex items-end justify-between">
-          <h2 class="font-serif text-2xl font-semibold">友链</h2>
+        <div class="mb-5 flex items-end justify-between">
+          <h2 class="flex items-center gap-2.5 font-serif text-2xl font-semibold">
+            <span class="size-2 rounded-full bg-accent/80" aria-hidden="true" />
+            友链
+          </h2>
           <a href="/links" class="link-ink text-sm" data-astro-prefetch>
             全部友链 →
           </a>
