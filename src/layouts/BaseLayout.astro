@@ -76,7 +76,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
         const THEME_KEY = 'ink-theme'
         const PALETTE_KEY = 'ink-palette'
         const stored = localStorage.getItem(THEME_KEY)
-        const theme = stored === 'light' || stored === 'dark' ? stored : 'system'
+        const theme = stored === 'light' || stored === 'dark' ? stored : '${config.site.theme}'
         const dark =
           theme === 'dark' ||
           (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)

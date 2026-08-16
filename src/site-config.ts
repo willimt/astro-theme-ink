@@ -73,6 +73,8 @@ export interface Config {
     ogImage: string
     /** Default color palette for first-time visitors: 'ink' (warm) | 'fresh' (mint) */
     palette: 'ink' | 'fresh'
+    /** Default theme for first-time visitors: 'light' | 'dark' | 'system' (follow OS) */
+    theme: 'light' | 'dark' | 'system'
     /** e.g. " · " */
     titleDelimiter: string
   }
@@ -121,6 +123,7 @@ export const config: Config = {
     avatar: '/avatar.webp',
     ogImage: '/og-card.svg',
     palette: 'fresh',
+    theme: 'system',
     titleDelimiter: ' · '
   },
 
