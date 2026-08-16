@@ -1,0 +1,52 @@
+---
+import { render } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+
+import { cn, formatDate } from '@/utils'
+
+interface Props {
+  post: CollectionEntry<'blog'>
+  class?: string
+}
+
+const { post, class: className } = Astro.props
+const { data } = post
+const date = data.updatedDate ?? data.publishDate
+const { remarkPluginFrontmatter } = await render(post)
+---
+
+<article class={cn('paper-card group relative flex flex-col gap-2 p-5 sm:p-6', className)}>
+  <div class="flex items-center justify-between gap-3">
+    <time datetime={date.toISOString()} class="chip font-mono tabular-nums">
+      {formatDate(date)}
+    </time>
+    <span
+      class="i-lucide-arrow-right size-4 text-accent opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+      aria-hidden="true"></span>
+  </div>
+
+  <h2
+    class="font-serif text-xl font-semibold leading-snug transition-colors duration-200 group-hover:text-accent"
+  >
+    <a href={`/blog/${post.id}`} data-astro-prefetch class="after:absolute after:inset-0">
+      {data.draft && <span class="me-1 text-accent">[草稿]</span>}
+      {data.title}
+    </a>
+  </h2>
+
+  <p class="line-clamp-2 text-sm leading-relaxed text-ink-soft">{data.description}</p>
+
+  <div class="mt-auto flex flex-wrap items-center gap-2 pt-3">
+    {
+      data.tags.map((tag) => (
+        <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
+          #{tag}
+        </a>
+      ))
+    }
+    <span class="ms-auto flex items-center gap-1 text-xs text-ink-soft">
+      <span class="i-lucide-clock size-3.5" aria-hidden="true"></span>
+      {remarkPluginFrontmatter.minutesRead} 分钟
+    </span>
+  </div>
+</article>

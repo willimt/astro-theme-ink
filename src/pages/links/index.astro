@@ -1,0 +1,70 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { config } from '@/site-config'
+---
+
+<BaseLayout title="友链" description={`${config.friends.length} 位朋友`}>
+  <div class="animate">
+    <header class="mb-8">
+      <h1 class="font-serif text-3xl font-semibold">友链</h1>
+      <p class="mt-2 text-sm text-ink-soft">共 {config.friends.length} 位朋友</p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {
+        config.friends.map((friend) => (
+          <a
+            href={friend.url}
+            target="_blank"
+            rel="noreferrer"
+            class="paper-card group flex items-start gap-4 p-5"
+          >
+            {friend.avatar && (
+              <img
+                src={friend.avatar}
+                alt=""
+                loading="lazy"
+                class="size-12 shrink-0 rounded-full border border-line bg-wash object-cover"
+              />
+            )}
+            <span class="min-w-0 flex-1">
+              <span class="flex items-center gap-2">
+                <span class="truncate font-serif text-lg font-semibold transition-colors group-hover:text-accent">
+                  {friend.name}
+                </span>
+                <span
+                  class="i-lucide-external-link size-3.5 shrink-0 text-ink-soft transition-colors group-hover:text-accent"
+                  aria-hidden="true"
+                />
+              </span>
+              <span class="mt-1 line-clamp-2 block text-sm leading-relaxed text-ink-soft">
+                {friend.desc}
+              </span>
+              <span class="mt-2 block truncate font-mono text-xs text-ink-soft/70">
+                {friend.url}
+              </span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="paper-card mt-10 p-6">
+      <h2 class="font-serif text-lg font-semibold">申请友链</h2>
+      <p class="mt-2 text-sm leading-relaxed text-ink-soft">
+        欢迎交换友链！请先在贵站添加本站链接，然后通过评论或邮件告诉我你的：
+      </p>
+      <ul class="mt-3 list-inside list-disc space-y-1 text-sm text-ink-soft">
+        <li>站点名称</li>
+        <li>一句话简介</li>
+        <li>网站地址</li>
+        <li>头像（可选）</li>
+      </ul>
+      <p class="mt-3 text-sm leading-relaxed text-ink-soft">
+        本站链接：<code class="rounded bg-wash px-1.5 py-0.5 font-mono text-xs"
+          >{config.site.title} — {config.site.description}</code
+        >
+      </p>
+    </div>
+  </div>
+</BaseLayout>

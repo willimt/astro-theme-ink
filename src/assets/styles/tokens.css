@@ -1,0 +1,70 @@
+/* ============================================================
+   astro-theme-ink · design tokens
+   Warm "ink on paper" palette. All colors are HSL triplets
+   consumed through the CSS variables below.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* Surface — cream paper */
+  --paper: 42 35% 97%;
+  --card: 45 40% 99%;
+
+  /* Ink — warm near-black text */
+  --ink: 30 14% 13%;
+  --ink-soft: 32 9% 36%;
+
+  /* Muted wash */
+  --wash: 40 22% 92%;
+
+  /* Accent — terracotta / ochre, the only hue on the page */
+  --accent: 22 46% 44%;
+  --ring: 22 46% 44%;
+
+  /* Hairlines */
+  --line: 38 20% 86%;
+
+  /* Shape */
+  --radius: 0.5rem;
+
+  /* Type */
+  --font-serif:
+    'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', 'Noto Serif SC',
+    'Songti SC', 'SimSun', serif;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono',
+    monospace;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Surface — warm dark paper */
+  --paper: 32 18% 8%;
+  --card: 32 14% 11%;
+
+  /* Ink */
+  --ink: 42 32% 92%;
+  --ink-soft: 38 10% 66%;
+
+  --wash: 32 12% 14%;
+
+  /* Accent glows warmer in the dark */
+  --accent: 28 72% 68%;
+  --ring: 28 72% 68%;
+
+  --line: 32 10% 20%;
+}
+
+:root {
+  --un-default-border-color: hsl(var(--line) / 1);
+}
+
+/* Selection: ink on accent */
+::selection {
+  background-color: hsl(var(--accent) / 0.22);
+}

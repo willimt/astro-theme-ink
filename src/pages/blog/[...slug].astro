@@ -1,0 +1,27 @@
+---
+import { getCollection, render } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
+
+import PostLayout from '@/layouts/PostLayout.astro'
+
+export const prerender = true
+
+// Include drafts in the build so they stay reachable by URL
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog')
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  post: CollectionEntry<'blog'>
+}
+
+const { post } = Astro.props as Props
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
+const minutesRead = (remarkPluginFrontmatter.minutesRead as number | undefined) ?? 1
+---
+
+<PostLayout post={post} {headings} {minutesRead}>
+  <Content />
+</PostLayout>

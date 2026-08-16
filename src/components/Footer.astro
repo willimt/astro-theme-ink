@@ -1,0 +1,84 @@
+---
+import { config } from '@/site-config'
+
+const year = new Date().getFullYear()
+const copyright = config.footer.copyright ?? `© ${year} ${config.site.author}`
+
+// Static class map — UnoCSS can only detect literal class names,
+// so social icons must be resolved here, not interpolated.
+const SOCIAL_ICONS: Record<string, string> = {
+  github: 'i-lucide-github',
+  gitlab: 'i-lucide-gitlab',
+  rss: 'i-lucide-rss',
+  mail: 'i-lucide-mail',
+  x: 'i-lucide-twitter',
+  weibo: 'i-lucide-globe'
+}
+
+const social = Object.entries(config.footer.social ?? {})
+const footerLinks = config.footer.links ?? []
+const socialItems = social.map(([key, item]) => ({
+  ...item,
+  icon: SOCIAL_ICONS[key] ?? 'i-lucide-link'
+}))
+---
+
+<footer class="border-t border-line py-8 text-sm text-ink-soft">
+  <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+    <p class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
+      <span>{copyright}</span>
+      {
+        footerLinks.map((link) => (
+          <>
+            <span aria-hidden="true">·</span>
+            <a href={link.url} class="link-ink">
+              {link.title}
+            </a>
+          </>
+        ))
+      }
+      <span aria-hidden="true">·</span>
+      <span>
+        由 <a href="https://astro.build" target="_blank" rel="noreferrer" class="link-ink">Astro</a> 驱动
+      </span>
+    </p>
+
+    {
+      socialItems.length > 0 && (
+        <div class="flex items-center gap-2">
+          {socialItems.map((item) => (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={item.label}
+              title={item.label}
+              class="icon-link"
+            >
+              <span class={`${item.icon} size-5`} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</footer>
+
+<style>
+  .icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    color: hsl(var(--ink-soft) / 1);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .icon-link:hover {
+    color: hsl(var(--accent) / 1);
+    background-color: hsl(var(--wash) / 1);
+  }
+</style>

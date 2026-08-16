@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { config } from '@/site-config'
+---
+
+<BaseLayout title="关于" description={`关于 ${config.site.author}`}>
+  <div class="animate mx-auto max-w-2xl">
+    <header class="mb-8 text-center">
+      <h1 class="font-serif text-3xl font-semibold">关于</h1>
+      <p class="mt-3 text-ink-soft">{config.site.description}</p>
+    </header>
+
+    <div class="prose">
+      <h2>这个站点</h2>
+      <p>
+        这是一个由 <strong>astro-theme-ink</strong> 驱动的个人博客 —— 一款温暖纸感风格的 Astro 主题。墨色文字落在米白纸上，是它想传达的全部。
+      </p>
+      <blockquote>简单的东西往往最好。留白不是空白，是呼吸。</blockquote>
+
+      <h2>关于我</h2>
+      <p>
+        在这里替换为你的个人介绍：你是谁、在做什么、关心什么。可以聊聊技术、生活，
+        或者任何你愿意分享的事情。
+      </p>
+
+      <h2>技术栈</h2>
+      <ul>
+        <li><strong>Astro 5</strong> —— 内容驱动的 Web 框架</li>
+        <li>
+          <strong>UnoCSS</strong>（presetWind3 + presetTypography + presetIcons）—— 即时原子化 CSS
+          引擎
+        </li>
+        <li><strong>纯静态输出</strong> —— 构建产物可直接托管到任意静态平台</li>
+      </ul>
+
+      <h2>联系</h2>
+      <p>
+        欢迎通过 <a href="/links">友链</a> 或文章评论区与我交流。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

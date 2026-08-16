@@ -1,0 +1,39 @@
+{
+  "name": "astro-theme-ink",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A warm, paper-feel personal blog theme built with Astro & UnoCSS. Ink on paper.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "sync": "astro sync",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "clean": "astro clean"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.15",
+    "@iconify-json/lucide": "^1.2.0",
+    "@unocss/astro": "^66.6.8",
+    "@unocss/preset-icons": "^66.6.8",
+    "@unocss/reset": "^66.6.8",
+    "astro": "^5.17.3",
+    "sharp": "^0.34.5",
+    "unocss": "^66.6.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@unocss/preset-typography": "^66.6.8",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

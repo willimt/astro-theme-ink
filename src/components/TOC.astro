@@ -1,0 +1,60 @@
+---
+import type { MarkdownHeading } from 'astro'
+
+interface Props {
+  headings: MarkdownHeading[]
+}
+
+const { headings } = Astro.props
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4)
+---
+
+{
+  toc.length > 0 && (
+    <aside class="toc sticky top-24 hidden max-h-[calc(100dvh-8rem)] self-start overflow-y-auto pb-6 xl:block">
+      <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">目录</h2>
+      <ul class="toc-list mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
+        {toc.map((h) => (
+          <li style={`padding-inline-start: ${(h.depth - 2) * 0.85}rem`}>
+            <a
+              href={`#${h.slug}`}
+              class="block rounded-md py-1 text-[13px] leading-snug text-ink-soft transition-colors duration-200 hover:text-accent"
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .toc a.active {
+    color: hsl(var(--accent) / 1);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  const links = Array.from(document.querySelectorAll('.toc a'))
+  if (links.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        if (!visible.length) return
+        const id = visible[0].target.id
+        links.forEach((link) =>
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`)
+        )
+      },
+      { rootMargin: '-15% 0px -70% 0px' }
+    )
+    links.forEach((link) => {
+      const el = document.getElementById(link.getAttribute('href')!.slice(1))
+      if (el) observer.observe(el)
+    })
+  }
+</script>

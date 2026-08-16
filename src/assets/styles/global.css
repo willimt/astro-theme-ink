@@ -1,0 +1,132 @@
+/* ============================================================
+   astro-theme-ink · global styles
+   Base typography, entrance motion, scrollbar, code blocks.
+   ============================================================ */
+
+/* ---- Base ---- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- Entrance motion (staggered by page author) ---- */
+@keyframes fade-up {
+  from {
+    transform: translateY(0.9rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate {
+  opacity: 0;
+  animation: fade-up 420ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate {
+    animation-duration: 60ms;
+  }
+}
+
+/* ---- Scrollbar: quiet, warm ---- */
+:not(html) ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+:not(html) ::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--ink-soft) / 0.28);
+  border-radius: 999px;
+}
+:not(html) ::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--accent) / 0.5);
+}
+
+/* ---- Shiki code blocks (`.astro-code`) ---- */
+.astro-code {
+  position: relative;
+  margin-block: 1.25rem;
+  border-radius: calc(var(--radius) * 1.5);
+  border: 1px solid hsl(var(--line) / 1);
+  background-color: hsl(var(--wash) / 0.7) !important;
+  overflow: hidden;
+}
+
+.astro-code pre {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  background: transparent !important;
+}
+
+.astro-code code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Copy button (injected by client script) */
+.astro-code .code-copy {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  color: hsl(var(--ink-soft) / 1);
+  background-color: hsl(var(--card) / 0.9);
+  border: 1px solid hsl(var(--line) / 1);
+  border-radius: 0.4rem;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.astro-code:hover .code-copy,
+.astro-code:focus-within .code-copy {
+  opacity: 1;
+}
+
+.astro-code .code-copy:hover {
+  color: hsl(var(--accent) / 1);
+  border-color: hsl(var(--accent) / 0.5);
+}
+
+.astro-code .code-copy.copied {
+  color: hsl(var(--accent) / 1);
+}
+
+/* In dark mode, let Shiki recolor tokens */
+.dark .astro-code {
+  background-color: hsl(var(--wash) / 0.5) !important;
+}
+
+/* ---- Misc ---- */
+hr {
+  border-color: hsl(var(--line) / 1);
+}
+
+/* Search highlight */
+mark {
+  background-color: hsl(var(--accent) / 0.18);
+  color: inherit;
+  border-radius: 0.2em;
+  padding-inline: 0.1em;
+}

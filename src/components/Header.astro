@@ -1,0 +1,188 @@
+---
+import { config } from '@/site-config'
+
+const pathname = Astro.url.pathname
+
+function isActive(link: string): boolean {
+  if (link === '/') return pathname === '/'
+  return pathname === link || pathname.startsWith(`${link}/`)
+}
+---
+
+<header class="site-header sticky top-0 z-40" id="site-header">
+  <div class="mx-auto flex h-14 max-w-4xl items-center justify-between gap-4 px-5 sm:px-8">
+    <!-- Brand -->
+    <a href="/" class="group flex items-center gap-2" aria-label={config.site.title}>
+      <span
+        class="i-lucide-feather text-lg text-accent transition-transform duration-300 group-hover:-rotate-12"
+        aria-hidden="true"></span>
+      <span class="font-serif text-lg font-semibold tracking-wide">{config.site.title}</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-1 md:flex" aria-label="主导航">
+      {
+        config.header.menu.map((item) => (
+          <a
+            href={item.link}
+            class={[
+              'rounded-md px-3 py-1.5 text-sm transition-colors duration-200',
+              isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
+            ].join(' ')}
+          >
+            {item.title}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-1">
+      {
+        config.search.enabled && (
+          <a href="/search" title="搜索" aria-label="搜索" class="icon-btn" data-astro-prefetch>
+            <span class="i-lucide-search size-5" aria-hidden="true" />
+          </a>
+        )
+      }
+
+      <button
+        id="theme-toggle"
+        type="button"
+        class="icon-btn"
+        aria-label="切换主题"
+        title="切换主题"
+      >
+        <span class="i-lucide-monitor icon-system size-5" aria-hidden="true"></span>
+        <span class="i-lucide-sun icon-light hidden size-5" aria-hidden="true"></span>
+        <span class="i-lucide-moon icon-dark hidden size-5" aria-hidden="true"></span>
+      </button>
+
+      <button
+        id="menu-toggle"
+        type="button"
+        class="icon-btn md:hidden"
+        aria-label="打开菜单"
+        aria-expanded="false"
+      >
+        <span class="i-lucide-menu size-5" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <nav id="mobile-menu" class="mobile-menu md:hidden" aria-label="移动端导航">
+    <div class="mx-auto max-w-4xl px-5 pb-3 sm:px-8">
+      <div class="flex flex-col gap-0.5">
+        {
+          config.header.menu.map((item) => (
+            <a
+              href={item.link}
+              class={[
+                'rounded-md px-3 py-2 text-sm transition-colors',
+                isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
+              ].join(' ')}
+            >
+              {item.title}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  /* Sticky bar: transparent at top, frosted paper once scrolled */
+  .site-header {
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      backdrop-filter 0.25s ease;
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.scrolled {
+    background-color: color-mix(in srgb, hsl(var(--paper) / 1) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom-color: hsl(var(--line) / 1);
+  }
+  :global(.dark) .site-header.scrolled {
+    background-color: color-mix(in srgb, hsl(var(--paper) / 1) 72%, transparent);
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    color: hsl(var(--ink-soft) / 1);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .icon-btn:hover {
+    color: hsl(var(--accent) / 1);
+    background-color: hsl(var(--wash) / 1);
+  }
+
+  /* Mobile menu: hidden by default, slides down when open */
+  .mobile-menu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+  }
+  .mobile-menu > div {
+    overflow: hidden;
+  }
+  .mobile-menu.open {
+    grid-template-rows: 1fr;
+  }
+
+  /* Theme icons: only the icon matching [data-theme] is shown */
+  #theme-toggle[data-theme='light'] .icon-light,
+  #theme-toggle[data-theme='dark'] .icon-dark,
+  #theme-toggle[data-theme='system'] .icon-system {
+    display: inline-block;
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header')
+  const toggle = document.getElementById('theme-toggle')
+  const menuToggle = document.getElementById('menu-toggle')
+  const mobileMenu = document.getElementById('mobile-menu')
+
+  // Frosted bar on scroll
+  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8)
+  onScroll()
+  window.addEventListener('scroll', onScroll, { passive: true })
+
+  // Theme: system -> light -> dark
+  const THEME_KEY = 'ink-theme'
+  const order = ['system', 'light', 'dark']
+  const applyTheme = (theme: string) => {
+    const dark =
+      theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.classList.toggle('dark', dark)
+    document.documentElement.dataset.theme = theme
+    if (toggle) toggle.dataset.theme = theme
+  }
+  toggle?.addEventListener('click', () => {
+    const current = localStorage.getItem(THEME_KEY) || 'system'
+    const next = order[(order.indexOf(current) + 1) % order.length]
+    localStorage.setItem(THEME_KEY, next)
+    applyTheme(next)
+  })
+  if (toggle) toggle.dataset.theme = document.documentElement.dataset.theme || 'system'
+
+  // Mobile menu
+  menuToggle?.addEventListener('click', () => {
+    const open = mobileMenu?.classList.toggle('open')
+    menuToggle.setAttribute('aria-expanded', String(!!open))
+  })
+  mobileMenu
+    ?.querySelectorAll('a')
+    .forEach((a) => a.addEventListener('click', () => mobileMenu.classList.remove('open')))
+</script>

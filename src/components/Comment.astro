@@ -1,0 +1,35 @@
+---
+import { config } from '@/site-config'
+
+const enabled = config.comment.provider === 'giscus' && config.comment.repo !== ''
+const { repo, repoId, category, categoryId, lang } = config.comment
+---
+
+{
+  enabled && (
+    <section class="mt-14" aria-label="评论">
+      <h2 class="mb-4 flex items-center gap-2 font-serif text-lg font-semibold">
+        <span class="i-lucide-message-square size-4 text-accent" aria-hidden="true" />
+        评论
+      </h2>
+      <div class="giscus" />
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={repo}
+        data-repo-id={repoId}
+        data-category={category}
+        data-category-id={categoryId}
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang={lang}
+        crossorigin="anonymous"
+        async
+      ></script>
+    </section>
+  )
+}

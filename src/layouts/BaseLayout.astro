@@ -1,0 +1,128 @@
+---
+import '@unocss/reset/tailwind.css'
+import '@/assets/styles/tokens.css'
+import '@/assets/styles/global.css'
+
+import Footer from '@/components/Footer.astro'
+import Header from '@/components/Header.astro'
+import { config } from '@/site-config'
+
+interface Props {
+  title?: string
+  description?: string
+  /** ISO date of the page (for article meta) */
+  date?: Date
+  /** Path to an OG image (absolute, under public/) */
+  ogImage?: string
+  /** Disable page indexation */
+  noindex?: boolean
+}
+
+const {
+  title,
+  description = config.site.description,
+  date,
+  ogImage = config.site.ogImage,
+  noindex = false
+} = Astro.props
+
+const fullTitle = title
+  ? `${title}${config.site.titleDelimiter}${config.site.title}`
+  : config.site.title
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com')
+const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
+---
+
+<!doctype html>
+<html lang={config.site.lang} class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f7f1e5" />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={date ? 'article' : 'website'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:site_name" content={config.site.title} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {date && <meta property="article:published_time" content={date.toISOString()} />}
+
+    <!-- Theme, applied before first paint to avoid flash -->
+    <script is:inline>
+      ;(() => {
+        const key = 'ink-theme'
+        const stored = localStorage.getItem(key)
+        const theme = stored === 'light' || stored === 'dark' ? stored : 'system'
+        const dark =
+          theme === 'dark' ||
+          (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+        document.documentElement.dataset.theme = theme
+        const meta = document.querySelector('meta[name="theme-color"]')
+        if (meta) meta.setAttribute('content', dark ? '#17120c' : '#f7f1e5')
+      })()
+    </script>
+  </head>
+
+  <body
+    class="min-h-dvh bg-paper font-sans text-ink transition-colors duration-300"
+    data-astro-page
+  >
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:border focus:border-accent focus:bg-card focus:px-3 focus:py-2"
+    >
+      跳到正文
+    </a>
+
+    <div class="mx-auto flex min-h-dvh w-full max-w-4xl flex-col px-5 sm:px-8">
+      <Header />
+      <main id="main" class="flex-1 py-10">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <!-- Copy button for code blocks -->
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        document.querySelectorAll('.astro-code').forEach((block) => {
+          if (block.querySelector('.code-copy')) return
+          const btn = document.createElement('button')
+          btn.type = 'button'
+          btn.className = 'code-copy'
+          btn.innerHTML =
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> 复制'
+          btn.addEventListener('click', async () => {
+            const text = block.querySelector('pre')?.innerText ?? ''
+            try {
+              await navigator.clipboard.writeText(text)
+              btn.classList.add('copied')
+              btn.innerHTML =
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 已复制'
+              setTimeout(() => {
+                btn.classList.remove('copied')
+                btn.innerHTML =
+                  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> 复制'
+              }, 1600)
+            } catch {
+              /* clipboard unavailable */
+            }
+          })
+          block.appendChild(btn)
+        })
+      })
+    </script>
+  </body>
+</html>

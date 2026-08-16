@@ -1,0 +1,143 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { config } from '@/site-config'
+---
+
+<BaseLayout title="搜索" description="站内全文搜索" noindex>
+  <div class="animate mx-auto max-w-2xl">
+    <header class="mb-6">
+      <h1 class="font-serif text-3xl font-semibold">搜索</h1>
+      <p class="mt-2 text-sm text-ink-soft">在本地索引中检索全部文章（无需外部服务）</p>
+    </header>
+
+    {
+      config.search.enabled ? (
+        <>
+          <div class="relative">
+            <span
+              class="i-lucide-search absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-soft"
+              aria-hidden="true"
+            />
+            <input
+              id="search-input"
+              type="search"
+              placeholder="输入关键词，如 astro、主题、搜索…"
+              autocomplete="off"
+              autofocus
+              class="w-full rounded-xl border border-line bg-card px-10 py-3 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink-soft/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
+            />
+          </div>
+          <p id="search-status" class="mt-3 text-sm text-ink-soft" />
+          <ul id="search-results" class="mt-6 flex flex-col gap-3" />
+        </>
+      ) : (
+        <p class="py-10 text-center text-ink-soft">搜索功能已在配置中关闭。</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  interface SearchItem {
+    slug: string
+    title: string
+    description: string
+    tags: string[]
+    date: string
+    content: string
+  }
+
+  const input = document.getElementById('search-input') as HTMLInputElement | null
+  const status = document.getElementById('search-status') as HTMLElement | null
+  const list = document.getElementById('search-results') as HTMLElement | null
+  let index: SearchItem[] | null = null
+
+  if (input && status && list) {
+    const escapeHtml = (s: string) =>
+      s.replace(
+        /[&<>"']/g,
+        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+      )
+
+    const highlight = (text: string, q: string) => {
+      const i = text.toLowerCase().indexOf(q)
+      if (i < 0) return escapeHtml(text)
+      return (
+        escapeHtml(text.slice(0, i)) +
+        '<mark>' +
+        escapeHtml(text.slice(i, i + q.length)) +
+        '</mark>' +
+        escapeHtml(text.slice(i + q.length))
+      )
+    }
+
+    const snippet = (item: SearchItem, q: string) => {
+      const hay = `${item.description} ${item.content}`
+      const i = hay.toLowerCase().indexOf(q)
+      if (i < 0) return escapeHtml(item.description)
+      const start = Math.max(0, i - 40)
+      return (start > 0 ? '…' : '') + highlight(hay.slice(start, i + 140), q) + '…'
+    }
+
+    const render = (q: string) => {
+      const query = q.trim().toLowerCase()
+      if (!query) {
+        list!.innerHTML = ''
+        status!.textContent = '输入关键词开始搜索'
+        return
+      }
+      if (!index) {
+        list!.innerHTML = ''
+        status!.textContent = '正在加载索引…'
+        return
+      }
+      const hits = index.filter(
+        (item) =>
+          item.title.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query) ||
+          item.tags.some((t) => t.toLowerCase().includes(query)) ||
+          item.content.toLowerCase().includes(query)
+      )
+      status!.textContent = `找到 ${hits.length} 条结果`
+      list!.innerHTML = hits.length
+        ? hits
+            .map(
+              (item) => `
+            <li>
+              <a href="/blog/${item.slug}" class="paper-card group block p-4" data-astro-prefetch>
+                <div class="flex items-center justify-between gap-3">
+                  <h2 class="truncate font-serif font-semibold transition-colors group-hover:text-accent">${highlight(item.title, query)}</h2>
+                  <time class="shrink-0 font-mono text-xs text-ink-soft">${new Date(item.date).toLocaleDateString()}</time>
+                </div>
+                <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-soft">${snippet(item, query)}</p>
+                ${
+                  item.tags.length
+                    ? `<div class="mt-2 flex flex-wrap gap-1.5">${item.tags
+                        .map((t) => `<span class="chip">#${escapeHtml(t)}</span>`)
+                        .join('')}</div>`
+                    : ''
+                }
+              </a>
+            </li>`
+            )
+            .join('')
+        : '<li class="py-12 text-center text-ink-soft">没有找到相关文章</li>'
+    }
+
+    let timer: number | undefined
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => render(input.value), 120)
+    })
+
+    fetch('/search-index.json')
+      .then((r) => r.json())
+      .then((data: SearchItem[]) => {
+        index = data
+        render(input.value)
+      })
+      .catch(() => {
+        status!.textContent = '搜索索引加载失败'
+      })
+  }
+</script>
