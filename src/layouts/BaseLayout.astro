@@ -1,10 +1,13 @@
 ---
 import '@unocss/reset/tailwind.css'
+import 'katex/dist/katex.min.css'
 import '@/assets/styles/tokens.css'
 import '@/assets/styles/global.css'
 
+import BackToTop from '@/components/BackToTop.astro'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
+import Lightbox from '@/components/Lightbox.astro'
 import { config } from '@/site-config'
 import { THEME_COLORS, themeColorHex } from '@/utils/theme'
 
@@ -127,5 +130,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
       </main>
       <Footer />
     </div>
+    <BackToTop />
+    <Lightbox />
   </body>
 </html>

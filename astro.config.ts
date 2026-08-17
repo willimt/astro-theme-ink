@@ -4,6 +4,9 @@ import { defineConfig } from 'astro/config'
 import unocss from '@unocss/astro'
 // Sitemap generation (https://docs.astro.build/en/guides/integrations-guide/sitemap)
 import sitemap from '@astrojs/sitemap'
+// KaTeX math rendering: $...$ / $$...$$ in Markdown
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
 
 // Shiki code-block pipeline (ported from astro-theme-pure)
 import {
@@ -34,7 +37,8 @@ export default defineConfig({
 
   // [Markdown]
   markdown: {
-    rehypePlugins: [rehypeImageAttributes],
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeImageAttributes, rehypeKatex],
     shikiConfig: {
       themes: {
         light: 'github-light',

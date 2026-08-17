@@ -32,9 +32,12 @@
 - 🎨 两套内置配色——暖调 **ink** 与雾霾蓝 **fresh**——顶栏一键切换（持久化保存）；柔和的极光渐变与随配色变化的强调色
 - 📖 桌面端吸顶目录，移动端可折叠目录
 - 🖼️ 每篇文章可选封面图（`heroImage`）
+- 🖼️ 文章图片点击放大（lightbox）
 - 📊 文章页阅读进度条 + 上一篇 / 下一篇导航
+- 🔝 浮动返回顶部按钮
 - 🔍 SEO：JSON-LD `BlogPosting` 结构化数据、Open Graph / Twitter 卡片、canonical URL
 - ✍️ 基于 UnoCSS `presetTypography` 的衬线标题排版
+- 📐 KaTeX 数学公式——Markdown 中 `$...$` / `$$...$$`（remark-math + rehype-katex）
 - 📦 代码块：语言徽标、复制按钮、暗色模式正确的高亮配色
 - 🧩 UnoCSS `presetWind3` + `presetIcons`（lucide），纯静态输出
 

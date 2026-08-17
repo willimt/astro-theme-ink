@@ -24,6 +24,9 @@
     "@unocss/reset": "^66.6.8",
     "@waline/client": "^3.15.2",
     "astro": "^5.17.3",
+    "katex": "^0.18.4",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "sharp": "^0.34.5",
     "unocss": "^66.6.8"
   },

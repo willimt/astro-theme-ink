@@ -32,9 +32,12 @@ A warm, paper-feel personal blog theme built with [Astro](https://astro.build) &
 - 🎨 Two built-in palettes — warm **ink** and fresh **haze blue** — switchable from the header (persisted); soft aurora gradients & palette-aware accents
 - 📖 Sticky table of contents on desktop, collapsible TOC on mobile
 - 🖼️ Optional cover images per post (`heroImage`)
+- 🖼️ Click-to-zoom lightbox for article images
 - 📊 Reading progress bar + prev/next post navigation on article pages
+- 🔝 Floating back-to-top button
 - 🔍 SEO: JSON-LD `BlogPosting` structured data, Open Graph / Twitter cards, canonical URLs
 - ✍️ Serif-display typography over UnoCSS `presetTypography`
+- 📐 KaTeX math rendering — `$...$` / `$$...$$` in Markdown (remark-math + rehype-katex)
 - 📦 Code blocks with language badges, copy buttons, and proper dark-mode token colors
 - 🧩 UnoCSS `presetWind3` + `presetIcons` (lucide), pure static output
 

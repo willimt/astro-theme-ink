@@ -1,0 +1,106 @@
+<style>
+  /* Click-to-zoom lightbox for article images (.prose img) */
+  .lb-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 78%);
+    cursor: zoom-out;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .lb-backdrop.open {
+    opacity: 1;
+  }
+  .lb-backdrop img {
+    max-width: 92vw;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    box-shadow: 0 12px 48px rgb(0 0 0 / 45%);
+  }
+  .lb-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 25%);
+    background: rgb(0 0 0 / 35%);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .lb-close:hover {
+    background: rgb(0 0 0 / 55%);
+  }
+  .lb-caption {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgb(255 255 255 / 85%);
+    font-size: 0.8125rem;
+  }
+</style>
+
+<script>
+  // Minimal dependency-free lightbox: click any image inside article prose to
+  // view it full-size. Esc / click on the backdrop / close button to dismiss.
+  const open = (img: HTMLImageElement) => {
+    const backdrop = document.createElement('div')
+    backdrop.className = 'lb-backdrop'
+    const full = img.cloneNode(false) as HTMLImageElement
+    full.loading = 'eager'
+    const close = document.createElement('button')
+    close.className = 'lb-close'
+    close.type = 'button'
+    close.setAttribute('aria-label', 'Close')
+    close.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
+    backdrop.append(full, close)
+    if (img.alt) {
+      const caption = document.createElement('div')
+      caption.className = 'lb-caption'
+      caption.textContent = img.alt
+      backdrop.append(caption)
+    }
+    const dismiss = () => {
+      backdrop.remove()
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', onKey)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') dismiss()
+    }
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop || e.target === close) dismiss()
+    })
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    document.body.append(backdrop)
+    // Trigger the fade-in after insertion
+    requestAnimationFrame(() => backdrop.classList.add('open'))
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    const img = target.closest('img')
+    if (!img || !img.closest('.prose')) return
+    // Leave images that are already inside a link alone (normal link behavior)
+    if (img.closest('a')) return
+    e.preventDefault()
+    open(img)
+  })
+</script>

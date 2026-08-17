@@ -403,3 +403,15 @@ mark {
     break-after: avoid;
   }
 }
+
+/* ---- KaTeX math ---- */
+/* Follow the surrounding text color so formulas adapt to dark mode */
+.katex {
+  color: inherit;
+}
+/* Long display formulas scroll horizontally instead of overflowing */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
