@@ -1,8 +1,26 @@
 # astro-theme-ink 墨
 
+[English](./README.md) · [简体中文](./README.zh-CN.md)
+
 A warm, paper-feel personal blog theme built with [Astro](https://astro.build) & [UnoCSS](https://unocss.dev). Ink on paper — one accent hue, quiet grays, generous whitespace, serif headings.
 
-一款温暖纸感风格的个人博客主题。墨色文字，落在米白纸上。
+## Screenshots
+
+<p>
+  <img src="public/images/home-ink.png" alt="Home page - ink palette" width="49%" />
+  <img src="public/images/home-fresh.png" alt="Home page - fresh palette" width="49%" />
+</p>
+
+<p>
+  <img src="public/images/blog-content-ink.png" alt="Article page - ink palette" width="49%" />
+  <img src="public/images/blog-content-fresh.png" alt="Article page - fresh palette" width="49%" />
+</p>
+
+<p>
+  <img src="public/images/blog-index.png" alt="Blog list page" width="32%" />
+  <img src="public/images/about.png" alt="About page" width="32%" />
+  <img src="public/images/links.png" alt="Links page" width="32%" />
+</p>
 
 ## Features
 
