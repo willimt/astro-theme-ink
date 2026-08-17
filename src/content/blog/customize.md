@@ -105,7 +105,11 @@ pageview: {
 }
 ```
 
-实现原理：直接请求 `{server}/article?path=当前路径` 拿计数，无额外依赖；请求失败时静默隐藏。没有 Waline 的话也可以用不蒜子（busuanzi）之类的服务，自行接入即可。
+实现原理：向 `{server}/article` 发送 POST（`{path, type: 'time', action: 'inc'}`）计数并取回最新值——这是 Waline 3 的计数语义（v2 是 GET 计数，组件会自动回退兼容），无额外依赖；请求失败时显示 0。没有 Waline 的话也可以用不蒜子（busuanzi）之类的服务，自行接入即可。
+
+### 全站访问量
+
+`pageview.siteWide`（默认 `true`）开启时，页脚会显示"**total visits**"全站总访问量：每个页面每被打开一次就 +1，数据同样来自 Waline 服务器（固定虚拟路径 `/site-pv`），与文章阅读量互不干扰。不需要时设 `siteWide: false` 即可。
 
 ## 6. 搜索开关
 

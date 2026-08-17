@@ -27,6 +27,7 @@ A warm, paper-feel personal blog theme built with [Astro](https://astro.build) &
 - 📝 Blog list with pagination, tags, yearly archives, RSS & sitemap
 - 🔍 Built-in lightweight full-text search — a prerendered JSON index, zero external services
 - 💬 Waline comments + 📊 article page views (share one Waline server, opt-in via `src/site.config.ts`)
+- 🧮 Site-wide total-visits counter in the footer — shares the same Waline server, no extra dependency
 - 🌗 Light / dark / system themes, applied before first paint (no flash) with a smooth cross-fade
 - 🎨 Two built-in palettes — warm **ink** and fresh **haze blue** — switchable from the header (persisted); soft aurora gradients & palette-aware accents
 - 📖 Sticky table of contents on desktop, collapsible TOC on mobile

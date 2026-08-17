@@ -1,0 +1,63 @@
+---
+import { config } from '@/site-config'
+
+const server = config.pageview.server
+const enabled = config.pageview.siteWide
+// Fixed virtual path — one counter for the whole site (total PV).
+const SITE_PATH = '/site-pv'
+---
+
+{
+  server && enabled && (
+    <span
+      class="site-pv inline-flex items-center gap-1 text-xs"
+      data-server={server}
+      data-path={SITE_PATH}
+    >
+      <span class="i-lucide-activity size-3.5" aria-hidden="true" />
+      <span class="site-pv-num" aria-label="total visits">
+        ···
+      </span>
+      <span class="site-pv-unit">total visits</span>
+    </span>
+  )
+}
+
+<script>
+  // Site-wide visit counter backed by a Waline server.
+  // Waline 3 counts on POST /article ({ path, type: 'time', action: 'inc' });
+  // GET became read-only in v3. Older v2 servers count on GET instead —
+  // POST first, fall back to the v2 GET counter, show 0 on failure.
+  const el = document.querySelector<HTMLElement>('.site-pv')
+  if (el) {
+    const server = el.dataset.server
+    // Normalize a trailing slash in the configured server URL — otherwise
+    // `server + '/article'` becomes `//article`, which some hosts redirect
+    // (308) without CORS headers, failing the cross-origin request.
+    const base = (server || '').replace(/\/+$/, '')
+    const path = el.dataset.path || '/site-pv'
+    const readViews = (json: any) => {
+      if (typeof json === 'number') return json
+      const first = json?.data?.[0]
+      if (typeof first?.time === 'number') return first.time
+      return first?.views
+    }
+    const record = (method: 'POST' | 'GET') =>
+      fetch(`${base}/article`, {
+        method,
+        headers: method === 'POST' ? { 'Content-Type': 'application/json' } : undefined,
+        body: method === 'POST' ? JSON.stringify({ path, type: 'time', action: 'inc' }) : undefined
+      })
+        .then((r) => r.json())
+        .then(readViews)
+    const show = (views: number) => {
+      if (!el.isConnected) return
+      const num = el.querySelector('.site-pv-num')
+      if (num) num.textContent = views.toLocaleString()
+    }
+    record('POST')
+      .catch(() => record('GET'))
+      .then((views) => show(typeof views === 'number' ? views : 0))
+      .catch(() => show(0))
+  }
+</script>

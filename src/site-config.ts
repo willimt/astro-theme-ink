@@ -82,9 +82,12 @@ export interface Config {
     menu: NavItem[]
   }
   /** Article page views — Waline server URL; leave empty to disable.
-   *  (Any Waline server exposing the `/article?path=` API works.) */
+   *  Waline 3 counts via POST `/article` (v2 counted on GET); the theme
+   *  handles both. The same server also powers the site-wide counter below. */
   pageview: {
     server: string
+    /** Site-wide total-visits counter in the footer (shares the same server) */
+    siteWide: boolean
   }
   footer: {
     /** Shown as `© <year> <author>`; set a custom string to override entirely */
@@ -136,10 +139,10 @@ export const config: Config = {
     ]
   },
 
-  // Article page views. Fill in your Waline server URL (e.g. Waline on
-  // LeanCloud or a self-hosted one) to enable; empty = hidden.
+  // Article page views + site-wide visit counter (your own Waline server)
   pageview: {
-    server: ''
+    server: 'https://waline.willimt.com/',
+    siteWide: true
   },
 
   footer: {

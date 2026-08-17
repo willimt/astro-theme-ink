@@ -1,6 +1,7 @@
 ---
 import { SOCIAL_ICONS } from '@/utils'
 import { config } from '@/site-config'
+import SitePageview from '@/components/SitePageview.astro'
 
 const year = new Date().getFullYear()
 const copyright = config.footer.copyright ?? `© ${year} ${config.site.author}`
@@ -33,6 +34,7 @@ const socialItems = social.map(([key, item]) => ({
           >Astro</a
         >
       </span>
+      <SitePageview />
     </p>
 
     {
