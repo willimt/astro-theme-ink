@@ -1,5 +1,7 @@
-<style>
-  /* Click-to-zoom lightbox for article images (.prose img) */
+<style is:global>
+  /* Click-to-zoom lightbox for article images (.prose img).
+     Global on purpose: the backdrop is created dynamically via JS, so
+     scoped styles (data-astro-cid) would never match it. */
   .lb-backdrop {
     position: fixed;
     inset: 0;
