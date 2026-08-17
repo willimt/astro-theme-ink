@@ -63,6 +63,10 @@
   const open = (img: HTMLImageElement) => {
     const backdrop = document.createElement('div')
     backdrop.className = 'lb-backdrop'
+    // Measure BEFORE hiding the scrollbar: when overflow:hidden kicks in the
+    // scrollbar disappears and the viewport widens, shifting centered content.
+    // Compensate with an equal right padding so the layout doesn't move.
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
     const full = img.cloneNode(false) as HTMLImageElement
     full.loading = 'eager'
     const close = document.createElement('button')
@@ -81,6 +85,7 @@
     const dismiss = () => {
       backdrop.remove()
       document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
       document.removeEventListener('keydown', onKey)
     }
     const onKey = (e: KeyboardEvent) => {
@@ -91,6 +96,7 @@
     })
     document.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
+    document.body.style.paddingRight = `${scrollbarWidth}px`
     document.body.append(backdrop)
     // Trigger the fade-in after insertion
     requestAnimationFrame(() => backdrop.classList.add('open'))
