@@ -133,6 +133,7 @@ export const config: Config = {
   header: {
     menu: [
       { title: 'Blog', link: '/blog' },
+      { title: 'Archives', link: '/archives' },
       { title: 'Tags', link: '/tags' },
       { title: 'Links', link: '/links' },
       { title: 'About', link: '/about' }
