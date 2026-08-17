@@ -22,27 +22,40 @@ const path = Astro.url.pathname
 }
 
 <script>
-  // Fetch the article view count from a Waline server (`GET /article?path=…`).
-  // Pure client-side; hidden gracefully on any failure.
+  // Article view counter backed by a Waline server.
+  // Waline 3 counts on POST /article ({ path, type: 'time', action: 'inc' });
+  // GET became read-only in v3. Older v2 servers count on GET instead —
+  // POST first, fall back to the v2 GET counter, show 0 on failure.
   const el = document.querySelector<HTMLElement>('.pv')
   if (el) {
     const server = el.dataset.server
+    // Normalize a trailing slash in the configured server URL — otherwise
+    // `server + '/article'` becomes `//article`, which some hosts redirect
+    // (308) without CORS headers, failing the cross-origin request.
+    const base = (server || '').replace(/\/+$/, '')
     const path = el.dataset.path || window.location.pathname
-    fetch(`${server}/article?path=${encodeURIComponent(path)}`)
-      .then((r) => r.json())
-      .then((json) => {
-        // Some Waline deployments return a plain number, others
-        // `{ data: [{ views }] }` — accept both.
-        const views = typeof json === 'number' ? json : json?.data?.[0]?.views
-        if (typeof views === 'number' && el.isConnected) {
-          const num = el.querySelector('.pv-num')
-          if (num) num.textContent = views.toLocaleString()
-        } else if (el.isConnected) {
-          el.remove()
-        }
+    const readViews = (json: any) => {
+      if (typeof json === 'number') return json
+      const first = json?.data?.[0]
+      if (typeof first?.time === 'number') return first.time
+      return first?.views
+    }
+    const record = (method: 'POST' | 'GET') =>
+      fetch(`${base}/article`, {
+        method,
+        headers: method === 'POST' ? { 'Content-Type': 'application/json' } : undefined,
+        body: method === 'POST' ? JSON.stringify({ path, type: 'time', action: 'inc' }) : undefined
       })
-      .catch(() => {
-        el.remove()
-      })
+        .then((r) => r.json())
+        .then(readViews)
+    const show = (views: number) => {
+      if (!el.isConnected) return
+      const num = el.querySelector('.pv-num')
+      if (num) num.textContent = views.toLocaleString()
+    }
+    record('POST')
+      .catch(() => record('GET'))
+      .then((views) => show(typeof views === 'number' ? views : 0))
+      .catch(() => show(0))
   }
 </script>
