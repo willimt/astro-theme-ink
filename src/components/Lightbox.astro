@@ -55,6 +55,13 @@
     color: rgb(255 255 255 / 85%);
     font-size: 0.8125rem;
   }
+  /* Affordance: article images are clickable */
+  .prose img {
+    cursor: zoom-in;
+  }
+  .prose a img {
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -67,6 +74,7 @@
     // scrollbar disappears and the viewport widens, shifting centered content.
     // Compensate with an equal right padding so the layout doesn't move.
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const prevFocus = document.activeElement as HTMLElement | null
     const full = img.cloneNode(false) as HTMLImageElement
     full.loading = 'eager'
     const close = document.createElement('button')
@@ -87,6 +95,8 @@
       document.body.style.overflow = ''
       document.body.style.paddingRight = ''
       document.removeEventListener('keydown', onKey)
+      // Return focus to the element that opened the lightbox
+      prevFocus?.focus()
     }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') dismiss()
@@ -98,6 +108,8 @@
     document.body.style.overflow = 'hidden'
     document.body.style.paddingRight = `${scrollbarWidth}px`
     document.body.append(backdrop)
+    // Move focus into the dialog so Tab doesn't reach the background page
+    close.focus()
     // Trigger the fade-in after insertion
     requestAnimationFrame(() => backdrop.classList.add('open'))
   }

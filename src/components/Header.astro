@@ -187,6 +187,24 @@ function isActive(link: string): boolean {
     )
   }
 
+  // Storage access that never throws (private mode / disabled storage)
+  const storage = {
+    get: (key) => {
+      try {
+        return localStorage.getItem(key)
+      } catch {
+        return null
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem(key, value)
+      } catch {
+        /* storage unavailable — ignore */
+      }
+    }
+  }
+
   // Theme: system -> light -> dark
   const THEME_KEY = 'ink-theme'
   const order = ['system', 'light', 'dark']
@@ -197,23 +215,14 @@ function isActive(link: string): boolean {
     document.documentElement.dataset.theme = theme
     if (toggle) toggle.dataset.theme = theme
     syncThemeColor()
-    // Keep Giscus in sync with the chosen theme
-    document
-      .querySelectorAll('iframe[src*="giscus.app"]')
-      .forEach((frame) =>
-        frame.contentWindow?.postMessage(
-          { giscus: { setConfig: { theme: dark ? 'dark' : 'light' } } },
-          'https://giscus.app'
-        )
-      )
   }
   toggle?.addEventListener('click', () => {
     // brief cross-fade while the theme class flips
     document.documentElement.classList.add('theme-switching')
     window.setTimeout(() => document.documentElement.classList.remove('theme-switching'), 300)
-    const current = localStorage.getItem(THEME_KEY) || 'system'
+    const current = storage.get(THEME_KEY) || 'system'
     const next = order[(order.indexOf(current) + 1) % order.length]
-    localStorage.setItem(THEME_KEY, next)
+    storage.set(THEME_KEY, next)
     applyTheme(next)
   })
   if (toggle) toggle.dataset.theme = document.documentElement.dataset.theme || 'system'
@@ -231,7 +240,7 @@ function isActive(link: string): boolean {
     window.setTimeout(() => document.documentElement.classList.remove('theme-switching'), 300)
     const current = document.documentElement.dataset.palette || 'ink'
     const next = current === 'ink' ? 'fresh' : 'ink'
-    localStorage.setItem(PALETTE_KEY, next)
+    storage.set(PALETTE_KEY, next)
     applyPalette(next)
   })
   if (paletteToggle)

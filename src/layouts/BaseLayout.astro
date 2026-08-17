@@ -81,7 +81,15 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
         const THEME_KEY = 'ink-theme'
         const PALETTE_KEY = 'ink-palette'
         const root = document.documentElement
-        const stored = localStorage.getItem(THEME_KEY)
+        // Storage may throw in private mode / when disabled — fall back to defaults
+        let stored = null
+        let storedPalette = null
+        try {
+          stored = localStorage.getItem(THEME_KEY)
+          storedPalette = localStorage.getItem(PALETTE_KEY)
+        } catch {
+          /* storage unavailable — use config defaults */
+        }
         const theme =
           stored === 'light' || stored === 'dark'
             ? stored
@@ -90,9 +98,7 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
           theme === 'dark' ||
           (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
         const palette =
-          localStorage.getItem(PALETTE_KEY) === 'fresh'
-            ? 'fresh'
-            : (root.dataset.defaultPalette ?? 'ink')
+          storedPalette === 'fresh' ? 'fresh' : (root.dataset.defaultPalette ?? 'ink')
         root.classList.toggle('dark', dark)
         root.classList.toggle('fresh', palette === 'fresh')
         root.dataset.theme = theme
