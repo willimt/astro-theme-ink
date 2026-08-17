@@ -154,8 +154,18 @@ function isActive(link: string): boolean {
   }
 </style>
 
-<script>
-  import { themeColorHex } from '@/utils/theme'
+<script is:inline>
+  // Inline & synchronous on purpose: a deferred module script binds the
+  // toggle handlers only after the whole HTML is parsed, so the first
+  // click on a freshly opened page would be missed. With is:inline the
+  // handlers exist as soon as this header markup is parsed.
+  // THEME_COLORS duplicates src/utils/theme.ts (kept in sync manually).
+  const THEME_COLORS = {
+    ink: { light: '#faf8f5', dark: '#181511' },
+    fresh: { light: '#f5f7fa', dark: '#11161d' }
+  }
+  const themeColorHex = (palette, dark) =>
+    THEME_COLORS[palette][dark ? 'dark' : 'light']
 
   const header = document.getElementById('site-header')
   const toggle = document.getElementById('theme-toggle')
@@ -170,7 +180,7 @@ function isActive(link: string): boolean {
   const syncThemeColor = () => {
     const meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) return
-    const palette = (document.documentElement.dataset.palette || 'ink') as 'ink' | 'fresh'
+    const palette = document.documentElement.dataset.palette || 'ink'
     meta.setAttribute(
       'content',
       themeColorHex(palette, document.documentElement.classList.contains('dark'))
@@ -180,7 +190,7 @@ function isActive(link: string): boolean {
   // Theme: system -> light -> dark
   const THEME_KEY = 'ink-theme'
   const order = ['system', 'light', 'dark']
-  const applyTheme = (theme: string) => {
+  const applyTheme = (theme) => {
     const dark =
       theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
     document.documentElement.classList.toggle('dark', dark)
@@ -189,7 +199,7 @@ function isActive(link: string): boolean {
     syncThemeColor()
     // Keep Giscus in sync with the chosen theme
     document
-      .querySelectorAll<HTMLIFrameElement>('iframe[src*="giscus.app"]')
+      .querySelectorAll('iframe[src*="giscus.app"]')
       .forEach((frame) =>
         frame.contentWindow?.postMessage(
           { giscus: { setConfig: { theme: dark ? 'dark' : 'light' } } },
@@ -210,7 +220,7 @@ function isActive(link: string): boolean {
 
   // Palette: ink (warm) <-> fresh (mint)
   const PALETTE_KEY = 'ink-palette'
-  const applyPalette = (palette: 'ink' | 'fresh') => {
+  const applyPalette = (palette) => {
     document.documentElement.classList.toggle('fresh', palette === 'fresh')
     document.documentElement.dataset.palette = palette
     if (paletteToggle) paletteToggle.dataset.palette = palette
@@ -219,7 +229,7 @@ function isActive(link: string): boolean {
   paletteToggle?.addEventListener('click', () => {
     document.documentElement.classList.add('theme-switching')
     window.setTimeout(() => document.documentElement.classList.remove('theme-switching'), 300)
-    const current = (document.documentElement.dataset.palette || 'ink') as 'ink' | 'fresh'
+    const current = document.documentElement.dataset.palette || 'ink'
     const next = current === 'ink' ? 'fresh' : 'ink'
     localStorage.setItem(PALETTE_KEY, next)
     applyPalette(next)
