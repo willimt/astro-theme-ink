@@ -42,6 +42,8 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
   data-bg-ink-dark={THEME_COLORS.ink.dark}
   data-bg-fresh-light={THEME_COLORS.fresh.light}
   data-bg-fresh-dark={THEME_COLORS.fresh.dark}
+  data-default-theme={config.site.theme}
+  data-default-palette={config.site.palette}
 >
   <head>
     <meta charset="utf-8" />
@@ -75,14 +77,19 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
       ;(() => {
         const THEME_KEY = 'ink-theme'
         const PALETTE_KEY = 'ink-palette'
+        const root = document.documentElement
         const stored = localStorage.getItem(THEME_KEY)
-        const theme = stored === 'light' || stored === 'dark' ? stored : '${config.site.theme}'
+        const theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : (root.dataset.defaultTheme ?? 'system')
         const dark =
           theme === 'dark' ||
           (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
         const palette =
-          localStorage.getItem(PALETTE_KEY) === 'fresh' ? 'fresh' : '${config.site.palette}'
-        const root = document.documentElement
+          localStorage.getItem(PALETTE_KEY) === 'fresh'
+            ? 'fresh'
+            : (root.dataset.defaultPalette ?? 'ink')
         root.classList.toggle('dark', dark)
         root.classList.toggle('fresh', palette === 'fresh')
         root.dataset.theme = theme
