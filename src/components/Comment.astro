@@ -138,8 +138,9 @@ const enabled = config.comment.provider === 'waline' && server !== ''
     font-weight: normal;
     border: none;
     background: none;
-    /* explicit theme color — `inherit` picks up Waline's white from the root */
-    color: hsl(var(--ink-soft) / 1);
+    /* explicit theme color with !important — `inherit` picked up Waline's
+       white, and plain rules lost to Waline's stylesheet in some browsers */
+    color: hsl(var(--ink-soft) / 1) !important;
     padding: 0.2rem 0.4rem;
     border-radius: 6px;
   }
@@ -151,8 +152,8 @@ const enabled = config.comment.provider === 'waline' && server !== ''
   }
   #waline .wl-reaction-item.active .wl-reaction-votes,
   [data-waline] .wl-reaction-item.active .wl-reaction-votes {
-    background: var(--waline-theme-color);
-    color: var(--waline-bg-color);
+    background: var(--waline-theme-color) !important;
+    color: var(--waline-bg-color) !important;
   }
   #waline .wl-reaction-votes:after,
   [data-waline] .wl-reaction-votes:after {
