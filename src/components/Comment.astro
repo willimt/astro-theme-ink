@@ -32,11 +32,141 @@ const enabled = config.comment.provider === 'waline' && server !== ''
       // page views are handled by the separate <Pageview /> component
       pageview: false,
       imageUploader: false,
-      reaction: true,
+      // Single heart "like" reaction — style ported from astro-pure
+      reaction: ['/icons/heart-item.svg'],
       locale: {
-        reaction0: 'Like',
+        reaction0: 'Like(s)',
+        reactionTitle: '这篇文章对你有帮助吗？',
         placeholder: 'Welcome to comment. (Email to receive replies. Login is unnecessary)'
       }
     })
   }
+
+  // Belt-and-braces: Waline mounts client-side; force the reaction row layout
+  // with inline styles in case any stylesheet wins the cascade.
+  const applyReactionLayout = () => {
+    document
+      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-item, #waline .wl-reaction-item')
+      .forEach((item) => {
+        Object.assign(item.style, {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '0.4rem'
+        })
+      })
+    document
+      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-img, #waline .wl-reaction-img')
+      .forEach((img) => {
+        img.style.height = '35px'
+      })
+    document
+      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-votes, #waline .wl-reaction-votes')
+      .forEach((v) => {
+        Object.assign(v.style, {
+          position: 'inherit',
+          top: 'inherit',
+          insetInlineEnd: 'inherit',
+          minWidth: 'inherit',
+          padding: '0.2rem 0.4rem',
+          border: 'none',
+          borderRadius: '6px',
+          background: 'none'
+        })
+      })
+  }
+  const reactionObserver = new MutationObserver(() => {
+    if (document.querySelector('[data-waline] .wl-reaction-item, #waline .wl-reaction-item')) {
+      applyReactionLayout()
+      reactionObserver.disconnect()
+    }
+  })
+  reactionObserver.observe(document.body, { childList: true, subtree: true })
+  applyReactionLayout()
 </script>
+
+<style is:global>
+  /* Comment box follows the theme tokens */
+  #waline,
+  [data-waline] {
+    --waline-font-size: 16px;
+    --waline-white: hsl(var(--paper) / 1);
+    --waline-light-grey: hsl(var(--ink-soft) / 0.6);
+    --waline-dark-grey: hsl(var(--ink-soft) / 1);
+    --waline-theme-color: hsl(var(--accent) / 1);
+    --waline-active-color: hsl(var(--accent) / 1);
+    --waline-color: hsl(var(--ink-soft) / 1);
+    --waline-bg-color: hsl(var(--card) / 1);
+    --waline-bg-color-light: hsl(var(--wash) / 1);
+    --waline-bg-color-hover: hsl(var(--wash) / 1);
+    --waline-border-color: hsl(var(--line) / 1);
+    --waline-disable-bg-color: hsl(var(--wash) / 1);
+    --waline-disable-color: hsl(var(--ink-soft) / 0.5);
+    --waline-info-bg-color: hsl(var(--wash) / 1);
+    --waline-info-color: hsl(var(--ink-soft) / 0.8);
+    --waline-info-font-size: 0.75em;
+    --waline-border: 1px solid var(--waline-border-color);
+    --waline-box-shadow: none;
+  }
+
+  /* Reaction row: single heart + "N Like(s)" — ported from astro-pure */
+  #waline .wl-reaction-title,
+  #waline .wl-reaction-text,
+  [data-waline] .wl-reaction-title,
+  [data-waline] .wl-reaction-text {
+    display: none;
+  }
+  #waline .wl-reaction,
+  [data-waline] .wl-reaction {
+    overflow: visible;
+    margin-bottom: 0.5em;
+  }
+  #waline .wl-reaction-img,
+  [data-waline] .wl-reaction-img {
+    width: auto;
+    display: flex;
+    height: 35px;
+    align-items: center;
+    column-gap: 0.4rem;
+  }
+  #waline .wl-reaction-votes,
+  [data-waline] .wl-reaction-votes {
+    position: inherit;
+    top: inherit;
+    min-width: inherit;
+    inset-inline-end: inherit;
+    display: flex;
+    font-weight: normal;
+    border: none;
+    background: none;
+    color: inherit;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+  }
+  #waline .wl-reaction-loading,
+  [data-waline] .wl-reaction-loading {
+    position: inherit;
+    top: inherit;
+    min-width: inherit;
+  }
+  #waline .wl-reaction-item.active .wl-reaction-votes,
+  [data-waline] .wl-reaction-item.active .wl-reaction-votes {
+    background: var(--waline-theme-color);
+    color: var(--waline-bg-color);
+  }
+  #waline .wl-reaction-votes:after,
+  [data-waline] .wl-reaction-votes:after {
+    margin-left: 0.25em;
+    content: 'Like(s)';
+    display: inline-block;
+    clear: both;
+    border: 0;
+  }
+  #waline .wl-reaction img,
+  [data-waline] .wl-reaction img {
+    filter: invert(25%);
+  }
+  html.dark #waline .wl-reaction img,
+  html.dark [data-waline] .wl-reaction img {
+    filter: invert(75%);
+  }
+</style>
