@@ -1,7 +1,9 @@
 ---
 import { config } from '@/site-config'
 
-import '@waline/client/style'
+// Waline stylesheet + our overrides live together in waline.css (import
+// order guarantees our rules win) — see src/assets/styles/waline.css
+import '@/assets/styles/waline.css'
 
 const server = config.comment.server
 const enabled = config.comment.provider === 'waline' && server !== ''
@@ -20,11 +22,15 @@ const enabled = config.comment.provider === 'waline' && server !== ''
 }
 
 <script>
-  import { init } from '@waline/client'
   import { config } from '@/site-config'
 
   const server = config.comment.server
-  if (server && document.getElementById('waline')) {
+  const target = document.getElementById('waline')
+
+  // Lazy-load Waline: initialize only when the comment section approaches the
+  // viewport — saves ~190 KB of JS on the first paint of every post page.
+  const initComment = async () => {
+    const { init } = await import('@waline/client')
     init({
       el: '#waline',
       serverURL: server,
@@ -32,7 +38,7 @@ const enabled = config.comment.provider === 'waline' && server !== ''
       // page views are handled by the separate <Pageview /> component
       pageview: false,
       imageUploader: false,
-      // Single heart "like" reaction — style ported from astro-pure
+      // Single heart "like" reaction — styling lives in waline.css
       reaction: ['/icons/heart-item.svg'],
       locale: {
         reaction0: 'Like(s)',
@@ -42,133 +48,16 @@ const enabled = config.comment.provider === 'waline' && server !== ''
     })
   }
 
-  // Belt-and-braces: Waline mounts client-side; force the reaction row layout
-  // with inline styles in case any stylesheet wins the cascade.
-  const applyReactionLayout = () => {
-    document
-      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-item, #waline .wl-reaction-item')
-      .forEach((item) => {
-        Object.assign(item.style, {
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: '0.4rem'
-        })
-      })
-    document
-      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-img, #waline .wl-reaction-img')
-      .forEach((img) => {
-        img.style.height = '35px'
-      })
-    document
-      .querySelectorAll<HTMLElement>('[data-waline] .wl-reaction-votes, #waline .wl-reaction-votes')
-      .forEach((v) => {
-        Object.assign(v.style, {
-          position: 'inherit',
-          top: 'inherit',
-          insetInlineEnd: 'inherit',
-          minWidth: 'inherit',
-          padding: '0.2rem 0.4rem',
-          border: 'none',
-          borderRadius: '6px',
-          background: 'none'
-        })
-      })
+  if (server && target) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          observer.disconnect()
+          initComment()
+        }
+      },
+      { rootMargin: '600px 0px' }
+    )
+    observer.observe(target)
   }
-  const reactionObserver = new MutationObserver(() => {
-    if (document.querySelector('[data-waline] .wl-reaction-item, #waline .wl-reaction-item')) {
-      applyReactionLayout()
-      reactionObserver.disconnect()
-    }
-  })
-  reactionObserver.observe(document.body, { childList: true, subtree: true })
-  applyReactionLayout()
 </script>
-
-<style is:global>
-  /* Comment box follows the theme tokens */
-  #waline,
-  [data-waline] {
-    --waline-font-size: 16px;
-    --waline-white: hsl(var(--paper) / 1);
-    --waline-light-grey: hsl(var(--ink-soft) / 0.6);
-    --waline-dark-grey: hsl(var(--ink-soft) / 1);
-    --waline-theme-color: hsl(var(--accent) / 1);
-    --waline-active-color: hsl(var(--accent) / 1);
-    --waline-color: hsl(var(--ink-soft) / 1);
-    --waline-bg-color: hsl(var(--card) / 1);
-    --waline-bg-color-light: hsl(var(--wash) / 1);
-    --waline-bg-color-hover: hsl(var(--wash) / 1);
-    --waline-border-color: hsl(var(--line) / 1);
-    --waline-disable-bg-color: hsl(var(--wash) / 1);
-    --waline-disable-color: hsl(var(--ink-soft) / 0.5);
-    --waline-info-bg-color: hsl(var(--wash) / 1);
-    --waline-info-color: hsl(var(--ink-soft) / 0.8);
-    --waline-info-font-size: 0.75em;
-    --waline-border: 1px solid var(--waline-border-color);
-    --waline-box-shadow: none;
-  }
-
-  /* Reaction row: single heart + "N Like(s)" — ported from astro-pure */
-  #waline .wl-reaction-title,
-  #waline .wl-reaction-text,
-  [data-waline] .wl-reaction-title,
-  [data-waline] .wl-reaction-text {
-    display: none;
-  }
-  #waline .wl-reaction,
-  [data-waline] .wl-reaction {
-    overflow: visible;
-    margin-bottom: 0.5em;
-  }
-  #waline .wl-reaction-img,
-  [data-waline] .wl-reaction-img {
-    width: auto;
-    display: flex;
-    height: 35px;
-    align-items: center;
-    column-gap: 0.4rem;
-  }
-  #waline .wl-reaction-votes,
-  [data-waline] .wl-reaction-votes {
-    position: inherit;
-    top: inherit;
-    min-width: inherit;
-    inset-inline-end: inherit;
-    display: flex;
-    font-weight: normal;
-    border: none;
-    background: none;
-    /* explicit theme color with !important — `inherit` picked up Waline's
-       white, and plain rules lost to Waline's stylesheet in some browsers */
-    color: hsl(var(--ink-soft) / 1) !important;
-    padding: 0.2rem 0.4rem;
-    border-radius: 6px;
-  }
-  #waline .wl-reaction-loading,
-  [data-waline] .wl-reaction-loading {
-    position: inherit;
-    top: inherit;
-    min-width: inherit;
-  }
-  #waline .wl-reaction-item.active .wl-reaction-votes,
-  [data-waline] .wl-reaction-item.active .wl-reaction-votes {
-    background: var(--waline-theme-color) !important;
-    color: var(--waline-bg-color) !important;
-  }
-  #waline .wl-reaction-votes:after,
-  [data-waline] .wl-reaction-votes:after {
-    margin-left: 0.25em;
-    content: 'Like(s)';
-    display: inline-block;
-    clear: both;
-    border: 0;
-  }
-  #waline .wl-reaction img,
-  [data-waline] .wl-reaction img {
-    filter: invert(25%);
-  }
-  html.dark #waline .wl-reaction img,
-  html.dark [data-waline] .wl-reaction img {
-    filter: invert(75%);
-  }
-</style>
