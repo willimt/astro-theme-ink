@@ -12,7 +12,7 @@ export const GET: APIRoute = async () => {
   const posts = await getCollection('blog', ({ data }) => !data.draft)
 
   const index = posts.map((post) => ({
-    slug: post.id,
+    slug: post.id.replace(/\/index$/, ''),
     title: post.data.title,
     description: post.data.description,
     tags: post.data.tags,

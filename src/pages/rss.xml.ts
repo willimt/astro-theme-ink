@@ -2,7 +2,7 @@ import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
 
 import { config } from '@/site-config'
-import { getBlogCollection, sortMDByDate } from '@/utils/server'
+import { getBlogCollection, postUrl, sortMDByDate } from '@/utils/server'
 
 export async function GET(context: APIContext) {
   const posts = sortMDByDate(await getBlogCollection())
@@ -15,8 +15,9 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.publishDate,
-      link: `/blog/${post.id}`,
-      categories: post.data.tags
+      link: postUrl(post.id),
+      categories: post.data.tags,
+      content: post.body // full post (markdown) so subscribers get the whole article
     })),
     customData: `<language>${config.site.lang}</language>`
   })

@@ -1,15 +1,17 @@
 ---
+import 'katex/dist/katex.min.css'
 import { Image } from 'astro:assets'
 import type { MarkdownHeading } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
 import BaseLayout from './BaseLayout.astro'
 import Comment from '@/components/Comment.astro'
+import Mermaid from '@/components/Mermaid.astro'
 import Pageview from '@/components/Pageview.astro'
 import TOC from '@/components/TOC.astro'
 import { config } from '@/site-config'
 import { formatDate } from '@/utils'
-import { getBlogCollection, sortMDByDate } from '@/utils/server'
+import { getBlogCollection, postUrl, sortMDByDate } from '@/utils/server'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -28,7 +30,7 @@ const index = allPosts.findIndex((p) => p.id === post.id)
 const newerPost = index > 0 ? allPosts[index - 1] : undefined
 const olderPost = index >= 0 && index < allPosts.length - 1 ? allPosts[index + 1] : undefined
 
-const canonical = new URL(`/blog/${post.id}/`, Astro.site ?? 'https://example.com')
+const canonical = new URL(postUrl(post.id), Astro.site ?? 'https://example.com')
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -118,6 +120,7 @@ const jsonLd = {
       <div class="prose prose-fill">
         <slot />
       </div>
+      <Mermaid />
 
       <!-- Post footer -->
       <footer class="not-prose mt-14 border-t border-line pt-6">
@@ -139,7 +142,7 @@ const jsonLd = {
             <nav class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2" aria-label="Post navigation">
               {newerPost && (
                 <a
-                  href={`/blog/${newerPost.id}`}
+                  href={postUrl(newerPost.id)}
                   class="paper-card group flex flex-col gap-1 p-4"
                   data-astro-prefetch
                 >
@@ -157,7 +160,7 @@ const jsonLd = {
               )}
               {olderPost && (
                 <a
-                  href={`/blog/${olderPost.id}`}
+                  href={postUrl(olderPost.id)}
                   class="paper-card group flex flex-col gap-1 p-4 sm:text-end"
                   data-astro-prefetch
                 >

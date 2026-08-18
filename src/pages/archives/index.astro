@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { formatDate } from '@/utils'
-import { getBlogCollection, groupByYear } from '@/utils/server'
+import { getBlogCollection, groupByYear, postUrl } from '@/utils/server'
 
 const groups = groupByYear(await getBlogCollection())
 ---
@@ -32,7 +32,7 @@ const groups = groupByYear(await getBlogCollection())
                 {posts.map((post) => (
                   <li>
                     <a
-                      href={`/blog/${post.id}`}
+                      href={postUrl(post.id)}
                       class="group flex items-baseline gap-4 py-2.5 transition-colors hover:text-accent"
                       data-astro-prefetch
                     >

@@ -5,6 +5,12 @@ import { readingTime, stripMarkdown } from './index'
 
 export type Post = CollectionEntry<'blog'>
 
+/** Public URL of a post. Folder-based posts (`mailserver/index.md`) keep the
+ *  folder name in the URL (`/blog/mailserver`). */
+export function postUrl(postId: string): string {
+  return `/blog/${postId.replace(/\/index$/, '')}`
+}
+
 /** Raw markdown of every post, keyed by its path (used for reading-time & search index). */
 const rawPosts = import.meta.glob<string>('/src/content/blog/**/*.{md,mdx}', {
   query: '?raw',

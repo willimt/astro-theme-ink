@@ -415,3 +415,9 @@ mark {
   overflow-y: hidden;
   padding: 0.25rem 0;
 }
+
+/* ---- Mermaid diagrams ---- */
+.prose svg {
+  max-width: 100%;
+  height: auto;
+}

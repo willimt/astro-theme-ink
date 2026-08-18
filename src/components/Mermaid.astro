@@ -1,0 +1,28 @@
+<script>
+  // Render ```mermaid fenced blocks to diagrams on the client.
+  // The mermaid chunk is only loaded when a diagram actually exists on the
+  // page, so articles without diagrams pay no cost.
+  const blocks = document.querySelectorAll<HTMLElement>('.prose [data-language="mermaid"]')
+  if (blocks.length > 0) {
+    const { default: mermaid } = await import('mermaid')
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
+    })
+    blocks.forEach((code, i) => {
+      const pre = code.closest('pre')
+      const source = (code.textContent ?? '').trim()
+      if (!pre || !source) return
+      mermaid
+        .render(`mermaid-${i}`, source)
+        .then(({ svg }) => {
+          pre.outerHTML = svg
+        })
+        .catch((err) => {
+          // keep the code block as-is and surface the error in the console
+          console.error('[mermaid] render failed:', err)
+        })
+    })
+  }
+</script>
