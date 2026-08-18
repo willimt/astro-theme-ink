@@ -138,7 +138,8 @@ const enabled = config.comment.provider === 'waline' && server !== ''
     font-weight: normal;
     border: none;
     background: none;
-    color: inherit;
+    /* explicit theme color — `inherit` picks up Waline's white from the root */
+    color: hsl(var(--ink-soft) / 1);
     padding: 0.2rem 0.4rem;
     border-radius: 6px;
   }
