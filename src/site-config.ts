@@ -71,6 +71,8 @@ export interface Config {
     avatar: string
     /** Open-graph image path under `public/` */
     ogImage: string
+    /** Founding year of the blog — used by the console easter egg */
+    since: number
     /** Default color palette for first-time visitors: 'ink' (warm) | 'fresh' (mint) */
     palette: 'ink' | 'fresh'
     /** Default theme for first-time visitors: 'light' | 'dark' | 'system' (follow OS) */
@@ -125,6 +127,7 @@ export const config: Config = {
     favicon: '/favicon/favicon.ico',
     avatar: '/avatar.webp',
     ogImage: '/og-card.svg',
+    since: 2020,
     palette: 'fresh',
     theme: 'system',
     titleDelimiter: ' · '
@@ -167,7 +170,7 @@ export const config: Config = {
       tagline: 'Developer / Designer / Photographer',
       location: 'China / QingDao',
       about:
-        '你好，我是 Hansen，一名偶尔 996 的社畜，业余时间喜欢折腾各种技术和工具，追求高效和极简的生活方式。目前就职于一家芯片设计公司，主要从事软件开发和系统、工具的维护工作，最近在研究嵌入式 IDE 的设计与开发。平时喜欢玩游戏、听音乐、看电影、拍照。',
+        '你好，我是 Hansen，业余时间喜欢折腾各种技术和工具，追求高效和极简的生活方式。\n\n目前就职于一家芯片设计公司，主要从事嵌入式 IDE 的开发和负责系统、工具的维护工作。\n\n平时喜欢玩游戏、听音乐、看电影、拍照。',
       buttons: [{ title: 'More about me', link: '/about' }]
     },
     recentPosts: 5,
