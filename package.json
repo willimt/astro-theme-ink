@@ -36,6 +36,7 @@
     "@shikijs/core": "3.23.0",
     "@shikijs/types": "3.23.0",
     "@types/hast": "^3.0.5",
+    "@types/node": "^26.2.0",
     "@unocss/preset-typography": "^66.6.8",
     "hastscript": "^9.0.1",
     "prettier": "^3.8.1",

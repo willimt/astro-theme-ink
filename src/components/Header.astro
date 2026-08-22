@@ -164,8 +164,7 @@ function isActive(link: string): boolean {
     ink: { light: '#faf8f5', dark: '#181511' },
     fresh: { light: '#f5f7fa', dark: '#11161d' }
   }
-  const themeColorHex = (palette, dark) =>
-    THEME_COLORS[palette][dark ? 'dark' : 'light']
+  const themeColorHex = (palette, dark) => THEME_COLORS[palette][dark ? 'dark' : 'light']
 
   const header = document.getElementById('site-header')
   const toggle = document.getElementById('theme-toggle')

@@ -91,14 +91,11 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
           /* storage unavailable — use config defaults */
         }
         const theme =
-          stored === 'light' || stored === 'dark'
-            ? stored
-            : (root.dataset.defaultTheme ?? 'system')
+          stored === 'light' || stored === 'dark' ? stored : (root.dataset.defaultTheme ?? 'system')
         const dark =
           theme === 'dark' ||
           (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-        const palette =
-          storedPalette === 'fresh' ? 'fresh' : (root.dataset.defaultPalette ?? 'ink')
+        const palette = storedPalette === 'fresh' ? 'fresh' : (root.dataset.defaultPalette ?? 'ink')
         root.classList.toggle('dark', dark)
         root.classList.toggle('fresh', palette === 'fresh')
         root.dataset.theme = theme

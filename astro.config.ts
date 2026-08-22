@@ -26,8 +26,13 @@ import rehypeImageAttributes from './src/plugins/rehype-image-attributes.ts'
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: replace with your real site URL — needed for sitemap & canonical links
-  site: 'https://example.com',
+  // Real site URL — also injected by the GitHub Pages deploy workflow.
+  // Needed for sitemap & canonical links.
+  site: process.env.SITE_URL || 'https://example.com',
+
+  // Sub-path base, used when deployed under a project Pages URL
+  // (e.g. /astro-theme-ink/). Empty locally & for user/project root deploys.
+  base: process.env.BASE_PATH || undefined,
 
   // The site is fully static, so we can prerender everything.
   output: 'static',
