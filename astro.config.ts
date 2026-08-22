@@ -24,15 +24,18 @@ import {
 // Lazy-load Markdown images
 import rehypeImageAttributes from './src/plugins/rehype-image-attributes.ts'
 
+// Sub-path base, used when deployed under a project Pages URL
+// (e.g. /astro-theme-ink/). Empty locally & for user/project root deploys.
+const base = process.env.BASE_PATH || ''
+
 // https://astro.build/config
 export default defineConfig({
   // Real site URL — also injected by the GitHub Pages deploy workflow.
   // Needed for sitemap & canonical links.
   site: process.env.SITE_URL || 'https://example.com',
 
-  // Sub-path base, used when deployed under a project Pages URL
-  // (e.g. /astro-theme-ink/). Empty locally & for user/project root deploys.
-  base: process.env.BASE_PATH || undefined,
+  // Sub-path base (empty locally & for root deploys).
+  base: base || undefined,
 
   // The site is fully static, so we can prerender everything.
   output: 'static',
@@ -65,9 +68,9 @@ export default defineConfig({
         // @ts-ignore
         addLanguage(),
         // @ts-ignore
-        addCopyButton(2000), // timeout in ms
+        addCopyButton(2000, base), // timeout in ms
         // @ts-ignore
-        addCollapse(15) // max lines that needs to collapse
+        addCollapse(15, base) // max lines that needs to collapse
       ]
     }
   },

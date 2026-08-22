@@ -9,6 +9,7 @@ import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import Lightbox from '@/components/Lightbox.astro'
 import { config } from '@/site-config'
+import { withBase } from '@/utils'
 import { THEME_COLORS, themeColorHex } from '@/utils/theme'
 
 interface Props {
@@ -34,7 +35,7 @@ const fullTitle = title
   ? `${title}${config.site.titleDelimiter}${config.site.title}`
   : config.site.title
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com')
-const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
+const ogUrl = new URL(withBase(ogImage), Astro.site ?? 'https://example.com')
 ---
 
 <!doctype html>
@@ -54,11 +55,11 @@ const ogUrl = new URL(ogImage, Astro.site ?? 'https://example.com')
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href={config.site.favicon} sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <link rel="icon" href={withBase(config.site.favicon)} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon/favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={withBase('/favicon/favicon-16x16.png')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/favicon/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/favicon/site.webmanifest')} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content={themeColorHex(config.site.palette, false)} />
 

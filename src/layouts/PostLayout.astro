@@ -10,7 +10,7 @@ import Mermaid from '@/components/Mermaid.astro'
 import Pageview from '@/components/Pageview.astro'
 import TOC from '@/components/TOC.astro'
 import { config } from '@/site-config'
-import { formatDate } from '@/utils'
+import { formatDate, withBase } from '@/utils'
 import { getBlogCollection, postUrl, sortMDByDate } from '@/utils/server'
 
 interface Props {
@@ -104,7 +104,7 @@ const jsonLd = {
                 <span aria-hidden="true">·</span>
                 {data.tags.map((tag, i) => (
                   <>
-                    <a href={`/tags/${tag}`} class="link-ink" data-astro-prefetch>
+                    <a href={withBase(`/tags/${tag}`)} class="link-ink" data-astro-prefetch>
                       #{tag}
                     </a>
                     {i < data.tags.length - 1 && <span class="text-ink-soft/50">/</span>}
@@ -126,7 +126,7 @@ const jsonLd = {
       <footer class="not-prose mt-14 border-t border-line pt-6">
         <p class="font-serif text-sm italic text-ink-soft">— End of article. Thanks for reading.</p>
         <div class="mt-4 flex flex-wrap items-center gap-3">
-          <a href="/blog" class="chip" data-astro-prefetch>
+          <a href={withBase('/blog')} class="chip" data-astro-prefetch>
             <span class="i-lucide-arrow-left size-3.5" aria-hidden="true"></span>
             Back to blog
           </a>

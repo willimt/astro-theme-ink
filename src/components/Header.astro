@@ -1,18 +1,20 @@
 ---
 import { config } from '@/site-config'
+import { withBase } from '@/utils'
 
 const pathname = Astro.url.pathname
 
 function isActive(link: string): boolean {
-  if (link === '/') return pathname === '/'
-  return pathname === link || pathname.startsWith(`${link}/`)
+  const href = withBase(link)
+  if (href === withBase('/')) return pathname === href
+  return pathname === href || pathname.startsWith(`${href}/`)
 }
 ---
 
 <header class="site-header not-prose sticky top-0 z-40" id="site-header">
   <div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-5 sm:px-8">
     <!-- Brand -->
-    <a href="/" class="group flex items-center gap-2" aria-label={config.site.title}>
+    <a href={withBase('/')} class="group flex items-center gap-2" aria-label={config.site.title}>
       <span
         class="i-lucide-feather text-lg text-accent transition-transform duration-300 group-hover:-rotate-12"
         aria-hidden="true"></span>
@@ -24,7 +26,7 @@ function isActive(link: string): boolean {
       {
         config.header.menu.map((item) => (
           <a
-            href={item.link}
+            href={withBase(item.link)}
             aria-current={isActive(item.link) ? 'page' : undefined}
             class={[
               'rounded-md px-3 py-1.5 text-sm transition-colors duration-200',
@@ -41,7 +43,7 @@ function isActive(link: string): boolean {
     <div class="flex items-center gap-1">
       {
         config.search.enabled && (
-          <a href="/search" title="Search" aria-label="Search" class="icon-btn" data-astro-prefetch>
+          <a href={withBase('/search')} title="Search" aria-label="Search" class="icon-btn" data-astro-prefetch>
             <span class="i-lucide-search size-5" aria-hidden="true" />
           </a>
         )
@@ -81,7 +83,7 @@ function isActive(link: string): boolean {
   {
     config.header.menu.map((item) => (
       <a
-        href={item.link}
+        href={withBase(item.link)}
         aria-current={isActive(item.link) ? 'page' : undefined}
         class={[
           'flex-none rounded-md px-3 py-1 text-sm transition-colors duration-200',

@@ -102,4 +102,4 @@ pnpm preview    # 本地预览构建结果
 
 把 `src/content/blog/` 下的示例文章删掉或改写，把 `public/avatar.png`、`favicon/` 换成你自己的，就完成了。
 
-遇到问题？可以看[主题特色与特性](/blog/features)了解功能，或去[深度定制](/blog/customize)调整细节。
+遇到问题？可以看[主题特色与特性](../features/)了解功能，或去[深度定制](../customize/)调整细节。

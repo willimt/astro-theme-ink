@@ -14,6 +14,18 @@ export function cn(...classes: Array<string | false | null | undefined>): string
   return classes.filter(Boolean).join(' ')
 }
 
+/** Prefix a root-absolute path with the Astro base (`import.meta.env.BASE_URL`).
+ *  Needed so internal links & assets keep working when the site is served from a
+ *  sub-path (e.g. GitHub Pages project site `/astro-theme-ink/`). External URLs
+ *  (`https://…`) and relative / hash paths pass through untouched. */
+export function withBase(path: string): string {
+  if (!path.startsWith('/')) return path
+  const base = import.meta.env.BASE_URL
+  if (base === '/' || base === '') return path
+  const normalized = base.endsWith('/') ? base : `${base}/`
+  return `${normalized}${path.replace(/^\//, '')}`
+}
+
 /** Format a date using the site locale, e.g. "August 16, 2026". */
 export function formatDate(
   date: Date,

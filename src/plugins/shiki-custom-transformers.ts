@@ -4,6 +4,13 @@
 import { h } from 'hastscript'
 import type { ShikiTransformer } from 'shiki'
 
+// The icon sprite lives in `public/icons/code.svg`. It is prefixed with the
+// Astro `base` (passed in from `astro.config.ts`) so the copy/collapse button
+// icons keep working when the site is served from a sub-path (e.g. a GitHub
+// Pages project URL like `/astro-theme-ink/`).
+const iconUrl = (base: string, id: string): string =>
+  `${base.replace(/\/+$/, '')}/icons/code.svg#${id}`
+
 function parseMetaString(str = '') {
   return Object.fromEntries(
     str.split(' ').reduce(
@@ -70,7 +77,7 @@ export const addLanguage = (): ShikiTransformer => {
 }
 
 // Add a copy button to the code block
-export const addCopyButton = (timeout?: number): ShikiTransformer => {
+export const addCopyButton = (timeout?: number, base = ''): ShikiTransformer => {
   const toggleMs = timeout || 2000
   return {
     name: 'shiki-transformer-copy-button',
@@ -90,12 +97,12 @@ export const addCopyButton = (timeout?: number): ShikiTransformer => {
         [
           h('div', { class: 'ready' }, [
             h('svg', { class: 'size-5' }, [
-              h('use', { href: '/icons/code.svg#mingcute-clipboard-line' })
+              h('use', { href: iconUrl(base, 'mingcute-clipboard-line') })
             ])
           ]),
           h('div', { class: 'success hidden' }, [
             h('svg', { class: 'size-5' }, [
-              h('use', { href: '/icons/code.svg#mingcute-file-check-line' })
+              h('use', { href: iconUrl(base, 'mingcute-file-check-line') })
             ])
           ])
         ]
@@ -106,7 +113,7 @@ export const addCopyButton = (timeout?: number): ShikiTransformer => {
 }
 
 // Collapse long code blocks (> displayLineCount lines)
-export const addCollapse = (displayLineCount?: number): ShikiTransformer => {
+export const addCollapse = (displayLineCount?: number, base = ''): ShikiTransformer => {
   const line = displayLineCount || 15
   return {
     name: 'shiki-transformer-add-collapse',
@@ -125,7 +132,7 @@ export const addCollapse = (displayLineCount?: number): ShikiTransformer => {
         },
         [
           h('svg', { class: 'size-5' }, [
-            h('use', { href: '/icons/code.svg#mingcute-arrow-down-line' })
+            h('use', { href: iconUrl(base, 'mingcute-arrow-down-line') })
           ]),
           h('span', { class: 'desc' }, ' code')
         ]

@@ -171,7 +171,7 @@ rm -rf /var/cache             # [!code --]
 
 ## 10. 写文章
 
-Frontmatter 字段详见[安装与使用](/blog/getting-started)。补充几个技巧：
+Frontmatter 字段详见[安装与使用](../getting-started/)。补充几个技巧：
 
 - `draft: true`：草稿只通过 URL 访问，不进列表和搜索
 - `heroImage: { src: ../../assets/cover.png, alt: '…' }`：文章封面。必须是相对文章文件的本地资源，构建时会被 sharp 压缩并生成响应式尺寸（不会布局抖动）

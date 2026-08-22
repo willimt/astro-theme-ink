@@ -1,5 +1,5 @@
 ---
-import { SOCIAL_ICONS } from '@/utils'
+import { SOCIAL_ICONS, withBase } from '@/utils'
 import { config } from '@/site-config'
 import SitePageview from '@/components/SitePageview.astro'
 
@@ -25,7 +25,7 @@ const socialItems = social.map(([key, item]) => ({
         footerLinks.map((link) => (
           <>
             <span aria-hidden="true">·</span>
-            <a href={link.url} class="link-ink">
+            <a href={withBase(link.url)} class="link-ink">
               {link.title}
             </a>
           </>

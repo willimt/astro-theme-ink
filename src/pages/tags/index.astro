@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
+import { withBase } from '@/utils'
 import { getBlogCollection, getUniqueTagsWithCount } from '@/utils/server'
 
 const tags = getUniqueTagsWithCount(await getBlogCollection())
@@ -18,7 +19,7 @@ const tags = getUniqueTagsWithCount(await getBlogCollection())
       ) : (
         <div class="flex flex-wrap gap-2.5">
           {tags.map(([tag, count]) => (
-            <a href={`/tags/${tag}`} class="chip !px-3.5 !py-1.5" data-astro-prefetch>
+            <a href={withBase(`/tags/${tag}`)} class="chip !px-3.5 !py-1.5" data-astro-prefetch>
               #{tag}
               <span class="font-mono text-[11px] opacity-70">{count}</span>
             </a>

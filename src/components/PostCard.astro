@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 
-import { cn, formatDate } from '@/utils'
+import { cn, formatDate, withBase } from '@/utils'
 import { getPostReadingTime, postUrl } from '@/utils/server'
 
 interface Props {
@@ -41,7 +41,7 @@ const minutesRead = getPostReadingTime(post)
   <div class="relative z-10 mt-auto flex flex-wrap items-center gap-2 pt-3">
     {
       data.tags.map((tag) => (
-        <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
+        <a href={withBase(`/tags/${tag}`)} class="chip" data-astro-prefetch>
           #{tag}
         </a>
       ))

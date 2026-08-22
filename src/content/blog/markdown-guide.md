@@ -60,7 +60,7 @@ pnpm dev
 
 本地图片会被自动懒加载并居中、圆角展示；推荐用 HTML 标签写上宽高避免布局抖动：
 
-<img src="/og-card.svg" alt="占位图片" width="1200" height="630" loading="lazy" decoding="async" />
+<img src="../../og-card.svg" alt="占位图片" width="1200" height="630" loading="lazy" decoding="async" />
 
 ## 长代码块折叠
 

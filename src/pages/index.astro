@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import PostCard from '@/components/PostCard.astro'
-import { SOCIAL_ICONS } from '@/utils'
+import { SOCIAL_ICONS, withBase } from '@/utils'
 import { config } from '@/site-config'
 import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from '@/utils/server'
 
@@ -30,7 +30,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
       >
       </div>
       <img
-        src={config.site.avatar}
+        src={withBase(config.site.avatar)}
         alt={config.site.author}
         width="96"
         height="96"
@@ -80,7 +80,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
         hero.buttons && hero.buttons.length > 0 && (
           <div class="flex flex-wrap items-center justify-center gap-3">
             {hero.buttons.map((btn) => (
-              <a href={btn.link} class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>
+              <a href={withBase(btn.link)} class="chip !px-4 !py-1.5 text-sm" data-astro-prefetch>
                 {btn.title}
               </a>
             ))}
@@ -102,7 +102,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             />
             Posts
           </h2>
-          <a href="/blog" class="link-ink text-sm" data-astro-prefetch>
+          <a href={withBase('/blog')} class="link-ink text-sm" data-astro-prefetch>
             More posts →
           </a>
         </div>
@@ -197,13 +197,13 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             />
             Tags
           </h2>
-          <a href="/tags" class="link-ink text-sm" data-astro-prefetch>
+          <a href={withBase('/tags')} class="link-ink text-sm" data-astro-prefetch>
             All tags →
           </a>
         </div>
         <div class="flex flex-wrap gap-2">
           {tags.map(([tag, count]) => (
-            <a href={`/tags/${tag}`} class="chip" data-astro-prefetch>
+            <a href={withBase(`/tags/${tag}`)} class="chip" data-astro-prefetch>
               #{tag}
               <span class="font-mono text-[10px] opacity-70">{count}</span>
             </a>
@@ -225,7 +225,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             />
             Friends
           </h2>
-          <a href="/links" class="link-ink text-sm" data-astro-prefetch>
+          <a href={withBase('/links')} class="link-ink text-sm" data-astro-prefetch>
             All friends →
           </a>
         </div>
@@ -239,7 +239,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             >
               {friend.avatar && (
                 <img
-                  src={friend.avatar}
+                  src={withBase(friend.avatar)}
                   alt=""
                   loading="lazy"
                   class="size-9 shrink-0 rounded-full border border-line bg-wash object-cover"

@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Spoiler from '@/components/Spoiler.astro'
 import { config } from '@/site-config'
+import { withBase } from '@/utils'
 ---
 
 <BaseLayout title="About" description={`About ${config.site.author}`}>
@@ -39,7 +40,7 @@ import { config } from '@/site-config'
 
       <h2>Contact</h2>
       <p>
-        Feel free to reach out via <a href="/links">friend links</a> or the comment section.
+        Feel free to reach out via <a href={withBase('/links')}>friend links</a> or the comment section.
         <Spoiler>Hover me to reveal a secret!</Spoiler>
       </p>
     </div>

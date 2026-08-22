@@ -89,4 +89,4 @@ src/
 └── content/blog/         # 你的文章（Markdown）
 ```
 
-下一步：[从零开始：安装与使用](/blog/getting-started) 会带你把它跑起来。
+下一步：[从零开始：安装与使用](../getting-started/) 会带你把它跑起来。
