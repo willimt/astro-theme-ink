@@ -1,7 +1,7 @@
 {
   "name": "astro-theme-ink",
   "type": "module",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "packageManager": "pnpm@10.20.0",
   "engines": {
     "node": ">=22.12.0"
