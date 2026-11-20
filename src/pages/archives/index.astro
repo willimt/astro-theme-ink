@@ -33,19 +33,19 @@ const groups = groupByYear(await getBlogCollection())
                   <li>
                     <a
                       href={postUrl(post.id)}
-                      class="group flex items-baseline gap-4 py-2.5 transition-colors hover:text-accent"
+                      class="group flex items-baseline gap-3 py-2.5 transition-colors hover:text-accent sm:gap-4"
                       data-astro-prefetch
                     >
                       <time
                         datetime={post.data.publishDate.toISOString()}
-                        class="w-24 shrink-0 font-mono text-xs text-ink-soft"
+                        class="w-[5ch] shrink-0 whitespace-nowrap font-mono text-xs text-ink-soft sm:w-24"
                       >
                         {formatDate(post.data.publishDate, 'en-US', {
                           month: '2-digit',
                           day: '2-digit'
                         })}
                       </time>
-                      <span class="truncate font-medium group-hover:underline group-hover:decoration-accent/60 group-hover:underline-offset-4">
+                      <span class="line-clamp-2 min-w-0 break-words font-medium group-hover:underline group-hover:decoration-accent/60 group-hover:underline-offset-4 sm:block sm:truncate">
                         {post.data.title}
                       </span>
                     </a>

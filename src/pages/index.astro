@@ -21,7 +21,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
 <BaseLayout>
   <div class="mx-auto max-w-[47.5rem]">
     <!-- Hero -->
-    <div id="content-header" class="animate not-prose mb-12 border-b border-line pb-10">
+    <div id="content-header" class="not-prose mb-12 border-b border-line pb-10">
       <div class="flex items-center gap-4 sm:gap-5">
         <img
           src={withBase(config.site.avatar)}
@@ -103,7 +103,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
     <!-- Recent posts -->
     {
       recent.length > 0 && (
-        <section aria-label="Posts" class="animate not-prose mb-16" style="animation-delay: 60ms">
+        <section aria-label="Posts" class="not-prose mb-16">
           <div class="mb-5 flex items-end justify-between">
             <h2 class="font-serif text-xl font-normal">Posts</h2>
             <a href={withBase('/blog')} class="link-ink text-sm" data-astro-prefetch>
@@ -188,7 +188,7 @@ const socialItems = Object.entries(config.footer.social ?? {}).map(([key, item])
             {tags.map(([tag, count]) => (
               <a href={withBase(`/tags/${tag}`)} class="tag-link" data-astro-prefetch>
                 #{tag}
-                <span class="font-mono text-[10px] opacity-70">{count}</span>
+                <span class="font-mono text-xs">{count}</span>
               </a>
             ))}
           </div>

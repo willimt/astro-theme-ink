@@ -8,21 +8,20 @@
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: 'strict',
+      suppressErrorRendering: true,
       theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
     })
-    blocks.forEach((code, i) => {
-      const pre = code.closest('pre')
-      const source = (code.textContent ?? '').trim()
-      if (!pre || !source) return
-      mermaid
-        .render(`mermaid-${i}`, source)
-        .then(({ svg }) => {
-          pre.outerHTML = svg
-        })
-        .catch((err) => {
-          // keep the code block as-is and surface the error in the console
-          console.error('[mermaid] render failed:', err)
-        })
-    })
+    for (const [index, block] of blocks.entries()) {
+      // Shiki wraps <pre><code> alongside the title, language label and controls.
+      const source = block.querySelector('pre > code')?.textContent?.trim()
+      if (!source) continue
+      try {
+        const { svg } = await mermaid.render(`mermaid-${index}`, source)
+        block.outerHTML = svg
+      } catch (err) {
+        // Leave the original highlighted source in place so the diagram stays readable.
+        console.error('[mermaid] render failed:', err)
+      }
+    }
   }
 </script>

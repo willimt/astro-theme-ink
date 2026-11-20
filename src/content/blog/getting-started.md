@@ -1,123 +1,79 @@
 ---
 title: '从零开始：安装与使用'
-description: '环境准备、下载安装、跑起开发服务器、写第一篇文章、构建部署——完整的上手流程。'
+description: '在本地启动主题，写一篇有固定地址的 Markdown 文章，再把构建好的博客发布到自己的域名或 GitHub Pages。'
 publishDate: 2026-08-17
+updatedDate: 2026-11-20
 tags: [主题, 文档]
 ---
 
-本文带你从零把 astro-theme-ink 跑起来，并完成第一篇文章和一次部署。
+从空目录到第一篇文章，只需要一个本地开发服务。下面用 `hello.md` 作例子，它最终的地址是 `/blog/hello`。
 
-## 1. 环境准备
+## 安装与预览
 
-需要 Node.js 22+ 和 pnpm：
-
-```bash
-node -v   # v22.0.0+
-pnpm -v   # v10+
-```
-
-## 2. 获取主题
-
-把仓库 clone 到本地（或者直接下载 ZIP 解压）：
+准备 Node.js 22.12.0 或更高版本、pnpm 10 和 Git。仓库的 `package.json` 指定了 pnpm 10.20.0。第一次尝试可以直接克隆主题；如果已经创建了自己的博客仓库，就把下面的地址换成自己的。
 
 ```bash
-git clone <你的仓库地址> my-blog
+git clone https://github.com/willimt/astro-theme-ink.git my-blog
 cd my-blog
-```
-
-> 如果是从 GitHub 模板仓库创建，也可以直接用 "Use this template"。
-
-## 3. 安装依赖并启动
-
-```bash
 pnpm install
 pnpm dev
 ```
 
-打开 http://localhost:4321 就能看到主题首页。开发模式下改文件会热更新。
+打开终端显示的本地地址，默认是 `http://localhost:4321`。保持这个终端运行，保存 Markdown 文件后就能在浏览器里看到变化。
 
-## 4. 写第一篇文章
+## 写下第一篇文章
 
-在 `src/content/blog/` 下新建一个 Markdown 文件，例如 `hello.md`：
+新建 `src/content/blog/hello.md`，把开头三项换成自己的标题、摘要和实际发布日期：
 
 ```markdown
 ---
-title: '你好，世界'
-description: '我的第一篇文章。'
-publishDate: 2026-08-17
+title: '窗边的第一篇笔记'
+description: '周末重新整理书桌，也给写作留了一个位置。'
+publishDate: 2026-11-20
 tags: [随笔]
 ---
 
-这里是正文。支持标准 Markdown 语法。
+把书桌挪到窗边之后，我发现下午四点正适合坐下来写几行字。
 ```
 
-保存后刷新浏览器，文章就会出现在首页的"最近文章"和 `/blog` 列表里。
+在本地打开 `/blog/hello`，再到[文章列表](/blog)看摘要。正文里链接其他文章时，写成 `[定制指南](/blog/customize)`。主题会在构建时补上部署子路径，读者从带或不带末尾斜杠的地址进入都能正确跳转。
 
-**Frontmatter 字段速查：**
+| 字段                                  | 用途                                                                                    |
+| ------------------------------------- | --------------------------------------------------------------------------------------- |
+| `title`、`description`、`publishDate` | 必填。标题最多 80 个字符，摘要最多 200 个字符。日期可以写成 `YYYY-MM-DD`。              |
+| `updatedDate`                         | 修订日期。文章页同时显示首次发表和最近更新时间。                                        |
+| `tags`                                | 可选标签数组。首尾空格会被去掉，英文转为小写后去重。                                    |
+| `heroImage`                           | 可选封面。`src` 是相对于文章源文件的本地图片路径，`alt` 用来描述画面。                  |
+| `draft`                               | 设为 `true` 会从文章列表、搜索和 RSS 中排除。构建仍生成文章页面，知道网址的人可以阅读。 |
+| `comment`                             | 设为 `false` 可关闭本篇评论。显示评论还需要配置全站 Waline 服务。                       |
 
-| 字段          | 必填 | 说明                                                                                                     |
-| ------------- | ---- | -------------------------------------------------------------------------------------------------------- |
-| `title`       | ✅   | 标题（≤80 字）                                                                                           |
-| `description` | ✅   | 一句话摘要（≤200 字）                                                                                    |
-| `publishDate` | ✅   | 发布日期                                                                                                 |
-| `updatedDate` | —    | 更新日期（显示"Updated"）                                                                                |
-| `tags`        | —    | 标签数组                                                                                                 |
-| `heroImage`   | —    | 封面图：`heroImage: { src: ../../assets/cover.png, alt: '…' }`（相对文章文件的本地资源，构建时自动压缩） |
-| `draft`       | —    | `true` 时仅在 URL 可见，不进列表                                                                         |
-| `comment`     | —    | 单篇关闭评论                                                                                             |
+要在文章旁保存插图，也可以用 `src/content/blog/hello/index.md` 组织同一篇文章，地址仍是 `/blog/hello`。两种目录结构选一种即可。
 
-## 5. 配置个人信息
+## 换成自己的博客
 
-编辑 `src/site-config.ts`，把站点改成你的：
+先在 `src/site-config.ts` 修改 `site.title`、`site.author` 和 `home.hero.about`。默认头像是 `public/avatar.webp`；替换成另一个文件时，记得一起改 `site.avatar`。首页简介、导航和评论可以等第一篇文章写完再配。[深度定制指南](/blog/customize)
 
-```ts
-site: {
-  title: "Hansen's ink",   // 站点标题
-  author: 'Hansen W.',      // 作者名
-  description: '……',
-  lang: 'en',               // 语言
-  avatar: '/avatar.png',    // 首页头像（放 public/）
-  palette: 'fresh'          // 默认配色：'ink' 或 'fresh'
-}
-```
-
-首页内容（简介、教育、技能等）改 `home` 配置块，评论和浏览量在 `comment` / `pageview` 里填你的 Waline 服务器地址。
-
-## 6. 构建与部署
+## 构建与部署
 
 ```bash
-pnpm build      # 产物在 dist/
-pnpm preview    # 本地预览构建结果
-```
-
-**重要**：部署前把 `astro.config.ts` 里的 `site: 'https://example.com'` 换成你的真实域名 —— sitemap、canonical 和 RSS 都依赖它。
-
-纯静态产物可以部署到任何平台：
-
-- **Vercel / Netlify**：连上仓库自动构建（build 命令 `pnpm build`，输出目录 `dist`）
-- **Cloudflare Pages**：同上
-- **GitHub Pages**：构建后把 `dist/` 内容推送到 pages 分支
-
-## 7. 更新主题（主题与博客分开时）
-
-如果把主题放在 `D:/Code/astro-theme-ink`，而真实文章和个人配置放在 `D:/Code/Blog`，主题升级时使用同步脚本，而不是直接复制文件：
-
-```powershell
-cd D:/Code/astro-theme-ink
-pnpm theme:sync --target ../Blog
-pnpm theme:sync --target ../Blog --apply
-
-cd ../Blog
-pnpm test
 pnpm build
+pnpm preview
 ```
 
-第一条只列出变更，第二条才写入。脚本会保留文章、个人图片、域名、部署设置和个人站点配置；将生成的 `.theme-sync.json` 一起提交。需要解决 `REVIEW` 或 `CONFLICT` 时，阅读仓库中的 `docs/theme-sync.md`。
+`pnpm build` 先运行 Astro 检查，再把静态站点写入 `dist/`。`pnpm preview` 提供这份产物的本地预览。发布前可以从首页进入文章，点一次文中的站内链接，再打开 `/rss.xml` 确认订阅链接使用自己的域名。
 
-也可以执行 `pnpm theme:sync:ui` 打开本机同步面板，在浏览器中完成目录选择、预览和确认应用。
+- **部署到域名根目录**：在托管平台的构建环境中设置 `SITE_URL`（例如 `https://example.org`），`BASE_PATH` 留空。构建命令为 `pnpm build`，发布目录为 `dist`。
+- **部署到 GitHub Pages 项目子目录**：仓库自带 `.github/workflows/deploy.yml`。在仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。推送到 `main` 后，工作流会设置站点域名和 `/仓库名/` 前缀，构建并发布 `dist/`。[GitHub Pages 发布设置](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow)
+- **使用根域名的 GitHub Pages**：如果线上地址是 `https://用户名.github.io/` 或独立域名根目录，请相应调整工作流中的 `SITE_URL` 并清空 `BASE_PATH`。
 
-## 8. 清理演示内容
+## 以后怎样更新主题
 
-把 `src/content/blog/` 下的示例文章删掉或改写，把 `public/avatar.png`、`favicon/` 换成你自己的，就完成了。
+如果主题与个人博客是两个相邻的 Git 仓库，在主题目录运行下面的命令。这里假设个人博客的目录名是 `Blog`。
 
-遇到问题？可以看[主题特色与特性](../features/)了解功能，或去[深度定制](../customize/)调整细节。
+```bash
+pnpm theme:sync --target ../Blog
+```
+
+先读预览。出现 `REVIEW` 或 `CONFLICT` 时，按仓库中的 `docs/theme-sync.md` 核对差异。预览符合预期后，用 `pnpm theme:sync --target ../Blog --apply` 写入，再到博客目录运行 `pnpm install`、`pnpm test` 和 `pnpm build`，把 `.theme-sync.json` 与主题更新一起提交。也可以用 `pnpm theme:sync:ui` 打开本机同步面板。
+
+同步范围不含 `src/content/` 下的文章。个人博客里的示例可以自行改写或移除，以后同步时会保留这个选择。

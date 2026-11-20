@@ -25,6 +25,7 @@ import {
 // Lazy-load Markdown images
 import rehypeImageAttributes from './src/plugins/rehype-image-attributes.ts'
 import rehypeContentFeatures from './src/plugins/rehype-content-features.ts'
+import rehypeBaseLinks from './src/plugins/rehype-base-links.ts'
 
 // Sub-path base, used when deployed under a project Pages URL
 // (e.g. /astro-theme-ink/). Empty locally & for user/project root deploys.
@@ -51,11 +52,15 @@ export default defineConfig({
 
   // [Markdown]
   markdown: {
-    // This theme relies on remark/rehype plugins for math, image attributes,
-    // and rendered-content feature detection, so keep the unified pipeline.
+    // Keep the unified pipeline for math, image attributes, site links and content detection.
     processor: unified({
       remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeImageAttributes, rehypeKatex, rehypeContentFeatures]
+      rehypePlugins: [
+        rehypeImageAttributes,
+        [rehypeBaseLinks, base],
+        rehypeKatex,
+        rehypeContentFeatures
+      ]
     }),
     shikiConfig: {
       themes: {

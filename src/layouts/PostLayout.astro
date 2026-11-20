@@ -60,27 +60,9 @@ const jsonLd = {
   <div
     class="mx-auto max-w-[45rem] xl:grid xl:max-w-none xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:gap-10"
   >
-    <TOC {headings} />
-
     <article class="min-w-0 xl:col-start-1 xl:row-start-1">
-      <!-- Cover image (optimized: responsive sizes, eager for LCP, no CLS) -->
-      {
-        data.heroImage && (
-          <Image
-            src={data.heroImage.src}
-            alt={data.heroImage.alt ?? data.title}
-            widths={[640, 960, 1280]}
-            sizes="(min-width: 784px) 720px, (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)"
-            fetchpriority="high"
-            loading="eager"
-            decoding="async"
-            class="mb-9 h-auto max-h-96 w-full rounded-2xl border border-line object-cover"
-          />
-        )
-      }
-
       <!-- Post header -->
-      <header class="mb-9">
+      <header class="mb-6 xl:mb-9">
         <h1 class="font-serif text-3xl font-semibold leading-tight sm:text-4xl">
           {data.draft && <span class="me-2 text-accent">[Draft]</span>}
           {data.title}
@@ -124,6 +106,24 @@ const jsonLd = {
           }
         </div>
       </header>
+
+      <TOC {headings} variant="mobile" />
+
+      <!-- Cover image (optimized: responsive sizes, eager for LCP, no CLS) -->
+      {
+        data.heroImage && (
+          <Image
+            src={data.heroImage.src}
+            alt={data.heroImage.alt ?? data.title}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 784px) 720px, (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+            class="mb-9 h-auto max-h-96 w-full rounded-2xl border border-line object-cover"
+          />
+        )
+      }
 
       <!-- Article body -->
       <div class="prose prose-fill">
@@ -192,6 +192,7 @@ const jsonLd = {
         {data.comment && <Comment />}
       </footer>
     </article>
+    <TOC {headings} variant="desktop" />
   </div>
 
   <!-- BlogPosting structured data -->

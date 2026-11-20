@@ -28,10 +28,7 @@ function isActive(link: string): boolean {
           <a
             href={withBase(item.link)}
             aria-current={isActive(item.link) ? 'page' : undefined}
-            class={[
-              'rounded-md px-3 py-1.5 text-sm transition-colors duration-200',
-              isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
-            ].join(' ')}
+            class="nav-link rounded-md px-3 py-1.5 text-sm text-ink-soft transition-colors duration-200 hover:text-accent focus-visible:text-accent"
           >
             {item.title}
           </a>
@@ -91,10 +88,7 @@ function isActive(link: string): boolean {
       <a
         href={withBase(item.link)}
         aria-current={isActive(item.link) ? 'page' : undefined}
-        class={[
-          'flex-none rounded-md px-3 py-1 text-sm transition-colors duration-200',
-          isActive(item.link) ? 'text-accent' : 'text-ink-soft hover:text-accent'
-        ].join(' ')}
+        class="nav-link flex-none rounded-md px-3 py-1 text-sm text-ink-soft transition-colors duration-200 hover:text-accent focus-visible:text-accent"
       >
         {item.title}
       </a>
@@ -119,6 +113,20 @@ function isActive(link: string): boolean {
   }
   :global(.dark) .site-header.scrolled {
     background-color: color-mix(in srgb, hsl(var(--paper) / 1) 72%, transparent);
+  }
+
+  .nav-link[aria-current='page'] {
+    position: relative;
+    color: hsl(var(--accent));
+  }
+  .nav-link[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0.125rem;
+    width: 1rem;
+    margin-inline: auto;
+    border-bottom: 1px solid currentColor;
   }
 
   .icon-btn {

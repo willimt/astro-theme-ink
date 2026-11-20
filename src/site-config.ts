@@ -147,9 +147,9 @@ export const config: Config = {
     ]
   },
 
-  // Article page views + site-wide visit counter (your own Waline server)
+  // Set your own Waline server URL to enable visit counters.
   pageview: {
-    server: 'https://waline.willimt.com/',
+    server: '',
     siteWide: true
   },
 

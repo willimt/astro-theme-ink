@@ -21,7 +21,7 @@ const tags = getUniqueTagsWithCount(await getBlogCollection())
           {tags.map(([tag, count]) => (
             <a href={withBase(`/tags/${tag}`)} class="tag-link !text-sm" data-astro-prefetch>
               #{tag}
-              <span class="font-mono text-[11px] opacity-70">{count}</span>
+              <span class="font-mono text-xs">{count}</span>
             </a>
           ))}
         </div>

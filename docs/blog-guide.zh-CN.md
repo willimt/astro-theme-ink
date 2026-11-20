@@ -179,7 +179,7 @@ pageview: {
 }
 ```
 
-将 `comment.server` 或 `pageview.server` 留空可关闭对应功能；`siteWide: false` 只关闭页脚全站计数。搜索完全在构建期生成索引、浏览器内查询；设置 `search.enabled: false` 会同时隐藏入口和停止生成索引。
+将 `comment.server` 或 `pageview.server` 留空可关闭对应功能。`siteWide: false` 只关闭页脚全站计数。设置 `search.enabled: false` 会隐藏搜索入口，搜索页会显示停用提示。构建仍会生成已发表文章的索引 `/search-index.json`。
 
 ## 9. 更新主题而不覆盖个人内容
 
