@@ -1,9 +1,11 @@
 ---
+language: 'zh-CN'
 title: '从零开始：安装与使用'
 description: '在本地启动主题，写一篇有固定地址的 Markdown 文章，再把构建好的博客发布到自己的域名或 GitHub Pages。'
 publishDate: 2026-08-17
 updatedDate: 2026-11-20
 tags: [主题, 文档]
+series: { name: 主题使用指南, order: 1 }
 ---
 
 从空目录到第一篇文章，只需要一个本地开发服务。下面用 `hello.md` 作例子，它最终的地址是 `/blog/hello`。

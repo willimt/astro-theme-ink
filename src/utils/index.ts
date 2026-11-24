@@ -1,3 +1,5 @@
+import { siteLanguage } from './locale'
+
 /** Static UnoCSS icon classes for common social platforms.
  *  UnoCSS can only detect literal class names, so lookups happen here. */
 export const SOCIAL_ICONS: Record<string, string> = {
@@ -29,7 +31,7 @@ export function withBase(path: string): string {
 /** Format a date using the site locale, e.g. "August 16, 2026". */
 export function formatDate(
   date: Date,
-  locale = 'en-US',
+  locale = siteLanguage,
   options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
 ): string {
   return new Intl.DateTimeFormat(locale, options).format(date)
@@ -46,12 +48,11 @@ export function readingTime(text: string, cjkPerMinute = 350, latinPerMinute = 2
 }
 
 /**
- * Strip Markdown frontmatter & syntax to plain text.
- * Used for the client-side search index (kept dependency-free).
+ * Reduce an Astro collection entry's Markdown body to plain text.
+ * Astro has already separated the frontmatter from the body.
  */
 export function stripMarkdown(raw: string): string {
   return raw
-    .replace(/^---[\s\S]*?---/, '') // frontmatter
     .replace(/```[\s\S]*?```/g, ' ') // code fences
     .replace(/`([^`]+)`/g, '$1') // inline code
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, ' $1 ') // images

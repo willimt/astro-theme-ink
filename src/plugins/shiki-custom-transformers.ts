@@ -2,6 +2,7 @@
 // that give code blocks titles, language labels, copy buttons and collapse —
 // the exact look of ink.willimt.com. The box styling lives in global.css.
 import { h } from 'hastscript'
+import type { ElementContent } from 'hast'
 import type { ShikiTransformer } from 'shiki'
 
 // The icon sprite lives in `public/icons/code.svg`. It is prefixed with the
@@ -76,9 +77,13 @@ export const addLanguage = (): ShikiTransformer => {
   }
 }
 
-// Add a copy button to the code block
+// Match the browser's code.textContent after notation transformers have run.
+function codeText(node: ElementContent): string {
+  if (node.type === 'text') return node.value
+  return node.type === 'element' ? node.children.map(codeText).join('') : ''
+}
+
 export const addCopyButton = (timeout?: number, base = ''): ShikiTransformer => {
-  const toggleMs = timeout || 2000
   return {
     name: 'shiki-transformer-copy-button',
     pre(node) {
@@ -86,13 +91,11 @@ export const addCopyButton = (timeout?: number, base = ''): ShikiTransformer => 
         'button',
         {
           class: 'copy text-muted-foreground p-1 box-content border rounded-lg bg-card',
+          type: 'button',
+          hidden: true,
           'aria-label': 'Copy code',
-          'data-code': this.source,
-          onclick: `
-          navigator.clipboard.writeText(this.dataset.code);
-          this.classList.add('copied');
-          setTimeout(() => this.classList.remove('copied'), ${toggleMs})
-        `
+          'data-code': codeText(this.code) === this.source ? undefined : this.source,
+          'data-copy-timeout': timeout && timeout !== 2000 ? timeout : undefined
         },
         [
           h('div', { class: 'ready' }, [
@@ -119,16 +122,13 @@ export const addCollapse = (displayLineCount?: number, base = ''): ShikiTransfor
     name: 'shiki-transformer-add-collapse',
     pre(node) {
       if (this.lines.length <= line) return
-      node.properties = {
-        ...node.properties,
-        class: `${(node.properties?.class as string) || ''} collapsed`
-      }
       const collapse = h(
         'button',
         {
           class: 'collapse-toggle bg-card text-muted-foreground rounded-lg m-2',
-          'aria-label': 'Toggle collapse code block',
-          onclick: "this.parentElement.classList.toggle('collapsed')"
+          type: 'button',
+          hidden: true,
+          'aria-label': 'Toggle collapse code block'
         },
         [
           h('svg', { class: 'size-5' }, [

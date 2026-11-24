@@ -41,6 +41,9 @@ importers:
       mermaid:
         specifier: ^11.16.1
         version: 11.16.1
+      parse5:
+        specifier: ^7.3.0
+        version: 7.3.0
       rehype-katex:
         specifier: ^7.0.1
         version: 7.0.1
@@ -57,6 +60,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.10
         version: 0.9.10(prettier-plugin-astro@1.1.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(prettier@3.9.6))(prettier@3.9.6)(typescript@5.9.3)
+      '@prettier/parse-srcset':
+        specifier: ^3.1.0
+        version: 3.1.0
       '@shikijs/core':
         specifier: 4.4.3
         version: 4.4.3

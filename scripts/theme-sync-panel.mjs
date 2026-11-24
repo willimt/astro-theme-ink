@@ -95,6 +95,13 @@ function page(defaults) {
       .changes { display: grid; gap: .4rem; margin-top: 1rem; }
       .change { display: grid; grid-template-columns: 5.5rem 1fr; gap: .75rem; align-items: baseline; padding: .55rem .7rem; border-radius: .4rem; background: #f5f3ed; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .8rem; }
       .change strong { color: #9a5b38; font-size: .72rem; letter-spacing: .04em; }
+      details .change { display: list-item; cursor: pointer; overflow-wrap: anywhere; }
+      details .change strong { margin-inline-end: .75rem; }
+      .file-diff { min-width: 0; padding: 0 .7rem .7rem; }
+      .file-diff h3 { margin: 1rem 0 .35rem; font-size: .88rem; }
+      .file-diff pre { margin: 0; white-space: pre; }
+      .diff-add { color: #c1d6af; }
+      .diff-remove { color: #efbcaa; }
       pre { max-height: 18rem; overflow: auto; margin: 1rem 0 0; padding: 1rem; border-radius: .5rem; background: #292825; color: #dedbd2; font: .78rem/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; }
       .hint { margin-top: 2rem; font-size: .85rem; }
       code { border-radius: .25rem; background: #ece9e0; padding: .12rem .28rem; color: #514d45; }
@@ -164,14 +171,54 @@ function page(defaults) {
         }
         changes.replaceChildren()
         for (const item of data.changes) {
-          const row = document.createElement('div')
+          const expandable = data.reviewId && (item.kind === 'REVIEW' || item.kind === 'CONFLICT')
+          const row = document.createElement(expandable ? 'summary' : 'div')
           row.className = 'change'
           const kind = document.createElement('strong')
           kind.textContent = item.kind
           const name = document.createElement('span')
           name.textContent = item.name
           row.append(kind, name)
-          changes.append(row)
+          if (expandable) {
+            const details = document.createElement('details')
+            const content = document.createElement('div')
+            content.className = 'file-diff'
+            content.setAttribute('aria-live', 'polite')
+            let loading = false
+            details.addEventListener('toggle', async () => {
+              if (!details.open || loading) return
+              loading = true
+              content.textContent = '正在读取差异…'
+              try {
+                const response = await fetch('/api/sync', {
+                  method: 'POST',
+                  headers: { 'content-type': 'application/json', 'x-ink-sync-token': token },
+                  body: JSON.stringify({ action: 'diff', reviewId: data.reviewId, name: item.name })
+                })
+                const detail = await response.json()
+                if (!response.ok) throw new Error(detail.message)
+                content.replaceChildren()
+                for (const section of detail.sections) {
+                  const title = document.createElement('h3')
+                  title.textContent = section.title
+                  const patch = document.createElement('pre')
+                  for (const line of section.text.split('\\n')) {
+                    const span = document.createElement('span')
+                    if (line.startsWith('+')) span.className = 'diff-add'
+                    else if (line.startsWith('-')) span.className = 'diff-remove'
+                    span.textContent = line + '\\n'
+                    patch.append(span)
+                  }
+                  content.append(title, patch)
+                }
+              } catch (error) {
+                loading = false
+                content.textContent = '无法读取差异：' + error.message
+              }
+            })
+            details.append(row, content)
+            changes.append(details)
+          } else changes.append(row)
         }
         log.textContent = data.log
       }
@@ -267,7 +314,10 @@ function parseLog(log) {
 
 function runSync(opts) {
   return new Promise((resolve) => {
-    const syncScript = path.join(opts.source, 'scripts', 'theme-sync.mjs')
+    const syncScript =
+      opts.action === 'diff'
+        ? path.join(scriptDir, 'theme-sync.mjs')
+        : path.join(opts.source, 'scripts', 'theme-sync.mjs')
     if (!fs.existsSync(syncScript)) {
       resolve({ status: 1, log: `Theme sync script not found: ${syncScript}\n` })
       return
@@ -276,8 +326,10 @@ function runSync(opts) {
     if (opts.init) args.push('--init')
     if (opts.allowDirty) args.push('--allow-dirty')
     if (opts.action === 'apply') args.push('--apply')
+    if (opts.action === 'diff') args.push('--diff', opts.name)
     const child = spawn(process.execPath, args, { cwd: opts.source, windowsHide: true })
     let log = ''
+    let stdout = ''
     const append = (chunk) => {
       log += chunk
       if (log.length > 1024 * 1024) {
@@ -285,10 +337,13 @@ function runSync(opts) {
         log += '\nOutput exceeded 1 MiB; sync stopped.\n'
       }
     }
-    child.stdout.on('data', append)
-    child.stderr.on('data', append)
+    child.stdout.setEncoding('utf8').on('data', (chunk) => {
+      if (opts.action === 'diff') stdout += chunk
+      append(chunk)
+    })
+    child.stderr.setEncoding('utf8').on('data', append)
     child.on('error', (error) => resolve({ status: 1, log: `${log}${error.message}\n` }))
-    child.on('close', (status) => resolve({ status: status ?? 1, log }))
+    child.on('close', (status) => resolve({ status: status ?? 1, log, stdout }))
   })
 }
 
@@ -308,6 +363,7 @@ function openBrowser(url) {
 }
 
 const defaults = panelOptions(process.argv.slice(2))
+let review
 const server = http.createServer(async (request, reply) => {
   // Reject DNS-rebinding requests: only the loopback host may use the panel.
   const hostHeader = request.headers.host || ''
@@ -336,12 +392,35 @@ const server = http.createServer(async (request, reply) => {
       return
     }
     try {
-      const opts = requestOptions(await readJson(request))
+      const input = await readJson(request)
+      if (input?.action === 'diff') {
+        if (!review || input.reviewId !== review.id || !review.names.has(input.name)) {
+          response(reply, 409, { message: '该文件不在当前待核对列表中，请重新预览。' })
+          return
+        }
+        const detail = await runSync({ ...review.opts, action: 'diff', name: input.name })
+        if (detail.status !== 0) throw new Error(detail.log.trim())
+        response(reply, 200, { sections: JSON.parse(detail.stdout) })
+        return
+      }
+      const opts = requestOptions(input)
+      review = null
       const result = await runSync(opts)
       const parsed = parseLog(result.log)
       const ok = result.status === 0
+      if (opts.action === 'preview' && result.status === 2) {
+        const unresolved = parsed.changes.filter(
+          ({ kind }) => kind === 'REVIEW' || kind === 'CONFLICT'
+        )
+        review = {
+          id: randomBytes(16).toString('hex'),
+          opts,
+          names: new Set(unresolved.map(({ name }) => name))
+        }
+      }
       response(reply, ok ? 200 : 422, {
         ok,
+        reviewId: review?.id,
         message: ok
           ? opts.action === 'preview'
             ? '预览完成，尚未写入任何文件。'

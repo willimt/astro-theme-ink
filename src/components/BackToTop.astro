@@ -1,3 +1,7 @@
+---
+import { ui } from '@/utils/locale'
+---
+
 <style>
   #back-to-top {
     position: fixed;
@@ -39,7 +43,7 @@
   }
 </style>
 
-<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+<button id="back-to-top" type="button" aria-label={ui('Back to top', '返回顶部')} title={ui('Back to top', '返回顶部')}>
   <span class="i-lucide-arrow-up size-5" aria-hidden="true"></span>
 </button>
 

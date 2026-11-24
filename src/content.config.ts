@@ -20,9 +20,13 @@ const blog = defineCollection({
       publishDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       tags: z.array(z.string()).default([]).transform(dedupeTags),
-      /** Post language tag, e.g. '中文' / 'English'. Kept in data for
-       *  display in the meta row, RSS or filtering. Optional — posts
-       *  without it just have no language label. */
+      /** Previous site-relative article paths. Omit the deployment base. */
+      aliases: z.array(z.string()).default([]),
+      /** Explicit reading order within a named series. */
+      series: z
+        .object({ name: z.string().trim().min(1), order: z.number().int().positive() })
+        .optional(),
+      /** Language of the article, used for pronunciation. Accepts 中文, English or a BCP 47 tag. */
       language: z.string().optional(),
       /** Optional cover image — a local asset referenced relative to this file,
        *  e.g. `src: ../../assets/cover.png`. Optimized by the Astro image

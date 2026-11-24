@@ -11,25 +11,11 @@ export function postUrl(postId: string): string {
   return withBase(`/blog/${postId.replace(/\/index$/, '')}`)
 }
 
-/** Raw markdown of every post, keyed by its path (used for reading-time & search index). */
-const rawPosts = import.meta.glob<string>('/src/content/blog/**/*.{md,mdx}', {
-  query: '?raw',
-  import: 'default',
-  eager: true
-})
-
-/** Raw markdown source of a post (empty string if missing). */
-export function getPostRawMarkdown(postId: string): string {
-  return (
-    rawPosts[`/src/content/blog/${postId}.md`] ?? rawPosts[`/src/content/blog/${postId}.mdx`] ?? ''
-  )
-}
-
 /** Estimate reading time from the post's raw markdown (CJK-aware).
  *  Note: Astro ≥5.18 no longer provides `remarkPluginFrontmatter.minutesRead`,
  *  so we compute it ourselves. */
 export function getPostReadingTime(post: Post): number {
-  return readingTime(stripMarkdown(getPostRawMarkdown(post.id)))
+  return readingTime(stripMarkdown(post.body ?? ''))
 }
 
 /** All published posts (drafts excluded). */

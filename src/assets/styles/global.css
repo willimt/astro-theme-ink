@@ -136,8 +136,8 @@ html.theme-switching *::after {
           position: sticky;
           content: counter(step);
           counter-increment: step;
-          color: hsl(var(--ink-soft) / 0.6);
-          background-color: hsl(var(--wash) / var(--un-bg-opacity, 1));
+          color: var(--code-gutter-ink, hsl(var(--ink-soft)));
+          background-color: var(--code-line-bg, hsl(var(--wash)));
           inset-inline-start: 0;
           justify-content: end;
           display: inline-flex;
@@ -218,8 +218,8 @@ html.dark .astro-code pre span {
     & .hidden {
       display: none;
     }
-    & .success::before {
-      content: 'Copied!';
+    &.copied::before {
+      content: attr(data-copied-label);
       position: absolute;
       right: 100%;
       top: 0;
@@ -244,8 +244,7 @@ html.dark .astro-code pre span {
       }
     }
   }
-  &:hover,
-  &:focus-within {
+  &:has(button.copy:not([hidden])):is(:hover, :focus-within) {
     & button.copy {
       opacity: 1;
     }
@@ -253,35 +252,43 @@ html.dark .astro-code pre span {
       opacity: 0;
     }
   }
+  @media (hover: none) {
+    & button.copy {
+      opacity: 1;
+    }
+    &:has(button.copy:not([hidden])) .language {
+      right: 2.75rem;
+    }
+  }
 
   /* Highlighted & diffs */
   & .highlighted,
   & .diff {
+    --code-gutter-ink: color-mix(in srgb, hsl(var(--ink-soft)) 65%, hsl(var(--ink)));
     min-width: 100%;
     display: inline-block;
+    background-color: var(--code-line-bg);
   }
-  & .highlighted,
-  & .highlighted::before {
-    background-color: rgba(149, 166, 183, 0.32) !important;
+  & .highlighted {
+    --code-line-bg: color-mix(in srgb, hsl(var(--wash)) 86%, hsl(var(--accent)));
   }
-  & .diff {
-    &.remove {
-      background-color: rgba(244, 63, 94, 0.16);
-      &::before {
-        background-color: rgba(244, 63, 94, 0.16);
-        content: '-';
-      }
+  & .diff.remove {
+    --code-line-bg: color-mix(in srgb, hsl(var(--wash)) 80%, hsl(10 42% 49%));
+    &::before {
+      content: '-';
     }
-    &.add {
-      background-color: rgba(16, 185, 129, 0.16);
-      &::before {
-        background-color: rgba(16, 185, 129, 0.16);
-        content: '+';
-      }
+  }
+  & .diff.add {
+    --code-line-bg: color-mix(in srgb, hsl(var(--wash)) 80%, hsl(145 27% 43%));
+    &::before {
+      content: '+';
     }
   }
 
   /* Collapse */
+  & .collapse-toggle[hidden] {
+    display: none;
+  }
   & .collapse-toggle {
     z-index: 3;
     padding: 0.25rem;
@@ -336,6 +343,25 @@ html.dark .astro-code pre span {
   }
 }
 
+/* The selected source remains available when clipboard access is denied. */
+.code-copy-fallback {
+  display: block;
+  margin-block: 1rem;
+  color: hsl(var(--ink));
+  font-size: 0.875rem;
+  & textarea {
+    display: block;
+    width: 100%;
+    margin-block-start: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid hsl(var(--line));
+    border-radius: 0.5rem;
+    background: hsl(var(--card));
+    color: inherit;
+    font-family: var(--font-mono), monospace;
+  }
+}
+
 /* ---- Misc ---- */
 hr {
   border-color: hsl(var(--line) / 1);
@@ -371,8 +397,9 @@ mark {
   #reading-progress,
   .toc,
   .toc-mobile,
-  .code-copy,
-  .code-lang,
+  .code-copy-fallback,
+  .astro-code .copy,
+  .astro-code .language,
   .collapse-toggle,
   .collapse-fade {
     display: none !important;
@@ -391,13 +418,24 @@ mark {
     color: inherit !important;
   }
   .astro-code {
+    display: block;
     box-shadow: none;
     border-color: #ccc;
     background-color: #f7f7f7 !important;
   }
-  .astro-code code {
+  .astro-code pre,
+  .astro-code.collapsed pre {
+    max-height: none;
+    overflow: visible;
+    break-inside: auto;
+  }
+  .astro-code pre code {
+    width: 100%;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+  }
+  html.dark .astro-code pre span {
+    color: #222 !important;
   }
   img {
     max-width: 100% !important;
@@ -428,4 +466,64 @@ mark {
 .prose svg {
   max-width: 100%;
   height: auto;
+}
+
+.mermaid-flowchart {
+  margin-block: 1.5rem;
+  padding-block: 0.75rem;
+  overflow-x: auto;
+  --diagram-node: color-mix(in srgb, hsl(var(--card)) 92%, hsl(var(--accent)));
+  --diagram-outline: color-mix(in srgb, hsl(var(--line)) 52%, hsl(var(--accent)));
+  --diagram-link: hsl(var(--ink-soft) / 0.78);
+}
+
+.mermaid-flowchart > svg {
+  display: block;
+  margin-inline: auto;
+  max-width: none;
+}
+
+/* Mermaid scopes its defaults with an SVG id. Match that specificity while
+   leaving the author's inline styles and classDef rules in control. */
+#main .mermaid-flowchart {
+  & .node .label-container {
+    fill: var(--diagram-node);
+    stroke: var(--diagram-outline);
+  }
+  & .node rect.label-container:is(:not([rx]), [rx='0']) {
+    rx: 6px;
+    ry: 6px;
+  }
+  & .flowchart-link {
+    stroke: var(--diagram-link);
+  }
+  & .marker {
+    fill: var(--diagram-link);
+    stroke: var(--diagram-link);
+  }
+  & .label :is(span, text),
+  & .cluster-label :is(span, text),
+  & .flowchartTitleText {
+    color: hsl(var(--ink));
+    fill: hsl(var(--ink));
+  }
+  & .edgeLabel,
+  & .edgeLabel p,
+  & .labelBkg {
+    background-color: hsl(var(--paper));
+    color: hsl(var(--ink-soft));
+  }
+  & .edgeLabel rect {
+    fill: hsl(var(--paper));
+  }
+  & .cluster rect {
+    fill: hsl(var(--wash) / 0.45);
+    stroke: hsl(var(--line));
+  }
+}
+
+@media print {
+  .mermaid-flowchart > svg {
+    max-width: 100%;
+  }
 }

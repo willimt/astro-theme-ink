@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
+import { articleLanguage, siteLanguage } from '@/utils/locale'
 import { formatDate } from '@/utils'
 import { getBlogCollection, groupByYear, postUrl } from '@/utils/server'
 
@@ -40,12 +41,12 @@ const groups = groupByYear(await getBlogCollection())
                         datetime={post.data.publishDate.toISOString()}
                         class="w-[5ch] shrink-0 whitespace-nowrap font-mono text-xs text-ink-soft sm:w-24"
                       >
-                        {formatDate(post.data.publishDate, 'en-US', {
+                        {formatDate(post.data.publishDate, siteLanguage, {
                           month: '2-digit',
                           day: '2-digit'
                         })}
                       </time>
-                      <span class="line-clamp-2 min-w-0 break-words font-medium group-hover:underline group-hover:decoration-accent/60 group-hover:underline-offset-4 sm:block sm:truncate">
+                      <span lang={articleLanguage(post.data.language)} class="line-clamp-2 min-w-0 break-words font-medium group-hover:underline group-hover:decoration-accent/60 group-hover:underline-offset-4 sm:block sm:truncate">
                         {post.data.title}
                       </span>
                     </a>

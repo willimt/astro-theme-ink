@@ -1,4 +1,5 @@
 ---
+language: 'zh-CN'
 title: '欢迎使用 astro-theme-ink'
 description: '从一篇文章开始认识这个博客：挑一张喜欢的纸色，翻翻归档，或动手写下第一篇随笔。'
 publishDate: 2026-08-16

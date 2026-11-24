@@ -30,6 +30,7 @@ const files = new Set([
   'src/content.config.ts',
   'src/site-config.ts',
   'src/pages/index.astro',
+  'src/pages/[...alias].astro',
   'src/pages/about/index.astro',
   'src/pages/links/index.astro',
   'src/pages/404.astro',
@@ -38,6 +39,7 @@ const files = new Set([
   'src/pages/search-index.json.ts',
   'scripts/theme-sync.mjs',
   'scripts/theme-sync-panel.mjs',
+  'scripts/check-links.mjs',
   'scripts/optimize-avatar.mjs',
   'docs/theme-sync.md',
   'docs/blog-guide.md',
@@ -209,6 +211,58 @@ function merge(ours, base, theirs) {
   }
 }
 
+// git diff --no-index uses the same line diff readers see in their checkout and
+// also works for first syncs where the two Git repositories share no history.
+function lineDiff(before, after) {
+  if (before === after) return '内容相同。'
+  const change = before === null ? '新增文件\n' : after === null ? '删除文件\n' : ''
+  if ((before ?? '') === (after ?? '')) return change + '空文件'
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'ink-diff-'))
+  const original = path.join(temp, 'before')
+  const updated = path.join(temp, 'after')
+  try {
+    fs.writeFileSync(original, before ?? '')
+    fs.writeFileSync(updated, after ?? '')
+    const result = spawnSync(
+      'git',
+      [
+        '-c',
+        'core.autocrlf=false',
+        'diff',
+        '--no-index',
+        '--text',
+        '--no-color',
+        '--no-ext-diff',
+        '--no-textconv',
+        '--unified=3',
+        '--',
+        'before',
+        'after'
+      ],
+      { cwd: temp, encoding: 'utf8', maxBuffer: 512 * 1024, timeout: 10000, windowsHide: true }
+    )
+    if (result.error?.code === 'ETIMEDOUT') return '差异计算超时，请在本地编辑器中查看此文件。'
+    const overflow = result.error?.code === 'ENOBUFS'
+    if (!overflow && (result.error || result.status !== 1))
+      throw new Error(result.error?.message || result.stderr.trim() || 'Unable to compute diff.')
+    const patch = result.stdout.slice(result.stdout.indexOf('\n@@') + 1)
+    const excerpt = patch
+      .slice(0, 32 * 1024)
+      .split('\n')
+      .slice(0, 300)
+      .join('\n')
+    return (
+      change +
+      excerpt +
+      (overflow || excerpt.length < patch.length ? '\n… 差异较长，余下内容已省略。' : '')
+    )
+  } finally {
+    fs.rmSync(original, { force: true })
+    fs.rmSync(updated, { force: true })
+    fs.rmdirSync(temp)
+  }
+}
+
 function options(args) {
   const opts = {
     source: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'),
@@ -225,19 +279,22 @@ function options(args) {
     if (arg === '--apply') opts.apply = true
     else if (arg === '--init') opts.init = true
     else if (arg === '--allow-dirty') opts.allowDirty = true
-    else if (['--target', '--source', '--accept-local', '--accept-theme'].includes(arg)) {
+    else if (['--target', '--source', '--accept-local', '--accept-theme', '--diff'].includes(arg)) {
       const value = args[++i]
       if (!value || value.startsWith('--')) throw new Error(`Missing value for ${arg}`)
       if (arg === '--target') opts.target = path.resolve(value)
       if (arg === '--source') opts.source = path.resolve(value)
       if (arg === '--accept-local') opts.local.add(value)
       if (arg === '--accept-theme') opts.theme.add(value)
+      if (arg === '--diff') opts.diff = value
     } else throw new Error(`Unknown argument: ${arg}`)
   }
   if (!opts.target)
     throw new Error(
       'Specify --target <blog-directory>. Without --apply, this is a read-only preview.'
     )
+  if (opts.diff && (opts.apply || opts.local.size || opts.theme.size || !allowed(opts.diff)))
+    throw new Error('--diff requires a managed file and runs only in read-only mode.')
   for (const name of [...opts.local, ...opts.theme]) {
     if (!allowed(name)) throw new Error(`Path outside sync scope: ${name}`)
     if (opts.local.has(name) && opts.theme.has(name))
@@ -252,6 +309,7 @@ function main() {
       'Theme sync: node scripts/theme-sync.mjs --target ../Blog [--apply]\n' +
         'First sync: add --init; review existing differences with --accept-theme <file> or --accept-local <file>.\n' +
         'Conflicts: merge the file yourself, then use --accept-local <file> to record that resolution.\n' +
+        'Diff: --diff <managed-file> prints line differences as JSON.\n' +
         'Options: --source <theme-directory>, --allow-dirty (explicitly permit uncommitted blog changes).\n' +
         'See docs/theme-sync.md. Preview is the default; no commits, install, build or deployment is automatic.'
     )
@@ -301,6 +359,23 @@ function main() {
     throw new Error('Baseline checksum mismatch. Restore .theme-sync.json from version control.')
   }
   const names = [...new Set([...Object.keys(previous), ...Object.keys(latest)])].sort()
+  if (opts.diff) {
+    const name = opts.diff
+    if (!names.includes(name)) throw new Error(`Not a managed file: ${name}`)
+    const base = previous[name] ?? null
+    if (base !== null && typeof base !== 'string')
+      throw new Error(`Invalid baseline entry: ${name}`)
+    const theirs = latest[name] ?? null
+    const ours = textOf(read(target, name), name)
+    const sections = state
+      ? [
+          { title: '上次主题 → 当前主题', text: lineDiff(base, theirs) },
+          { title: '上次主题 → 当前博客', text: lineDiff(base, ours) }
+        ]
+      : [{ title: '首次同步 · 当前主题 → 当前博客', text: lineDiff(theirs, ours) }]
+    console.log(JSON.stringify(sections))
+    return
+  }
   for (const name of [...opts.local, ...opts.theme]) {
     if (!names.includes(name)) throw new Error(`Choice does not match a managed file: ${name}`)
   }

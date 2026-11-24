@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { searchPosts } from '../src/utils/search.ts'
+import { matchingSection, queryTerms, searchPosts } from '../src/utils/search.ts'
+import { extractSearchContent } from '../src/utils/search-content.ts'
 
 const post = (slug, fields = {}) => ({
   slug,
@@ -42,4 +43,42 @@ test('equally relevant matches are ordered newest first', () => {
     searchPosts(posts, 'guide').map((p) => p.slug),
     ['new', 'old']
   )
+})
+
+test('all search terms must match across fields; exact phrases break score ties', () => {
+  const posts = [
+    post('across', { title: 'Astro', tags: ['部署'] }),
+    post('missing', { title: 'Astro only' }),
+    post('separate', { content: 'Astro 构建与部署', date: '2026-09-01' }),
+    post('phrase', { content: 'Astro 部署' })
+  ]
+  assert.deepEqual(queryTerms(' ASTRO  部署  astro '), ['astro', '部署'])
+  assert.deepEqual(
+    searchPosts(posts, 'Astro 部署').map((p) => p.slug),
+    ['across', 'phrase', 'separate']
+  )
+})
+
+test('heading targets use rendered IDs and match the most relevant section', () => {
+  const indexed = extractSearchContent(`
+    <p>Introduction only</p>
+    <h2 id="部署">部署</h2><p>关于网站</p>
+    <h2 id="部署-1"><em>部署</em></h2><p>Astro 的服务配置</p>
+    <div class="astro-code"><pre><code>pnpm build</code></pre><button>Copy code</button></div>
+  `)
+  const item = post('test', indexed)
+  const best = matchingSection(item, queryTerms('Astro 部署'))
+  assert.equal(best.section.id, '部署-1')
+  assert.equal(best.text, '部署 Astro 的服务配置 pnpm build')
+  assert.equal(matchingSection(item, ['introduction']), undefined)
+  assert.equal(item.content.includes('Copy code'), false)
+  assert.equal(matchingSection(post('old-index'), ['text']), undefined)
+})
+
+test('a match spread across unrelated sections links to the article', () => {
+  const body = extractSearchContent('<h2 id="one">Fonts</h2>Astro<h2 id="two">部署</h2>')
+  const item = post('notes', body)
+  assert.deepEqual(searchPosts([item], 'Astro 部署'), [item])
+  assert.equal(matchingSection(item, ['astro', '部署']), undefined)
+  assert.equal(matchingSection({ ...item, tags: ['Astro'] }, ['astro', '部署']).section.id, 'two')
 })

@@ -9,7 +9,7 @@
 #waline {
   --waline-font-size: 16px;
   --waline-white: hsl(var(--paper) / 1);
-  --waline-light-grey: hsl(var(--ink-soft) / 0.6);
+  --waline-light-grey: hsl(var(--ink-soft));
   --waline-dark-grey: hsl(var(--ink-soft) / 1);
   --waline-theme-color: hsl(var(--accent) / 1);
   --waline-active-color: hsl(var(--accent) / 1);
@@ -18,13 +18,27 @@
   --waline-bg-color-light: hsl(var(--wash) / 1);
   --waline-bg-color-hover: hsl(var(--wash) / 1);
   --waline-border-color: hsl(var(--line) / 1);
+  --waline-bq-color: hsl(var(--line));
+  --waline-badge-color: hsl(var(--accent));
   --waline-disable-bg-color: hsl(var(--wash) / 1);
   --waline-disable-color: hsl(var(--ink-soft) / 0.5);
   --waline-info-bg-color: hsl(var(--wash) / 1);
-  --waline-info-color: hsl(var(--ink-soft) / 0.8);
+  --waline-info-color: hsl(var(--ink-soft));
   --waline-info-font-size: 0.75em;
   --waline-border: 1px solid var(--waline-border-color);
   --waline-box-shadow: none;
+}
+
+/* Keep the first lines readable when Waline folds a long comment. */
+#waline .wl-content.expand::before {
+  background: linear-gradient(to bottom, transparent 40%, hsl(var(--paper)));
+}
+#waline .wl-content.expand::after {
+  background: hsl(var(--paper));
+  color: hsl(var(--accent));
+}
+#waline .wl-quote {
+  border-inline-start-color: var(--waline-bq-color);
 }
 
 /* ---- Reaction row: single heart + "N Like(s)" (ported from astro-pure) ---- */

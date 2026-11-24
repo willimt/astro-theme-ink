@@ -9,15 +9,30 @@
       startOnLoad: false,
       securityLevel: 'strict',
       suppressErrorRendering: true,
-      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+      fontFamily: 'var(--font-sans)',
+      flowchart: {
+        padding: 10,
+        nodeSpacing: 32,
+        rankSpacing: 28,
+        diagramPadding: 6,
+        useMaxWidth: false
+      }
     })
     for (const [index, block] of blocks.entries()) {
       // Shiki wraps <pre><code> alongside the title, language label and controls.
       const source = block.querySelector('pre > code')?.textContent?.trim()
       if (!source) continue
       try {
-        const { svg } = await mermaid.render(`mermaid-${index}`, source)
-        block.outerHTML = svg
+        const { svg, diagramType } = await mermaid.render(`mermaid-${index}`, source)
+        if (diagramType.startsWith('flowchart')) {
+          const frame = document.createElement('div')
+          frame.className = 'mermaid-flowchart not-prose'
+          frame.innerHTML = svg
+          block.replaceWith(frame)
+        } else {
+          block.outerHTML = svg
+        }
       } catch (err) {
         // Leave the original highlighted source in place so the diagram stays readable.
         console.error('[mermaid] render failed:', err)

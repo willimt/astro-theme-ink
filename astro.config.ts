@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config'
 // UnoCSS integration
 import unocss from '@unocss/astro'
 // Sitemap generation (https://docs.astro.build/en/guides/integrations-guide/sitemap)
-import sitemap from '@astrojs/sitemap'
+import postSitemap from './src/plugins/post-sitemap.ts'
 import { unified } from '@astrojs/markdown-remark'
 // KaTeX math rendering: $...$ / $$...$$ in Markdown
 import remarkMath from 'remark-math'
@@ -42,6 +42,8 @@ export default defineConfig({
 
   // The site is fully static, so we can prerender everything.
   output: 'static',
+  // A former permalink must never shadow another page (including paginated lists).
+  prerenderConflictBehavior: 'error',
 
   // Preserve Astro 6's HTML-aware whitespace behavior. Astro 7 defaults to
   // JSX whitespace rules, which can remove spaces between adjacent inline elements.
@@ -90,5 +92,5 @@ export default defineConfig({
     }
   },
 
-  integrations: [unocss(), sitemap()]
+  integrations: [unocss(), ...postSitemap(base)]
 })

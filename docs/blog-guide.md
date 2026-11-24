@@ -31,7 +31,7 @@ description: 'A concise summary for lists, search and metadata.'
 publishDate: 2026-09-07
 updatedDate: 2026-09-08 # optional
 tags: [astro, writing]
-language: 'English' # optional
+language: 'en' # optional; language of the article for screen readers
 draft: false # optional; hidden from listings, RSS and search when true
 comment: true # optional; per-post comment switch
 ---
@@ -39,7 +39,23 @@ comment: true # optional; per-post comment switch
 Write in Markdown.
 ```
 
+Set `language` to a BCP 47 tag such as `zh-CN` or `en-GB`. Older values `中文` and `English` also work. Posts without a language inherit `site.lang`, which also controls date formatting and article navigation labels. On smaller screens, articles with five or more level 2–4 headings get a header contents button after the inline outline scrolls out of view.
+
 Titles allow up to 80 characters and descriptions up to 200. Posts are ordered by `publishDate`. Use `draft: true` for local preview only; a static build still creates its URL, so never put sensitive material in a draft.
+
+After moving a post, add its former paths to the new post's frontmatter. Use site-relative paths without the deployment base. The build checks for conflicting paths and emits a static redirect for each alias.
+
+```yaml
+aliases: [/blog/mailserver/docker/]
+```
+
+For a tutorial series, give its posts the same name and distinct positive order numbers. Gaps are fine. Once two parts are published, their footers show the reader's position and link to adjoining parts in reading order.
+
+```yaml
+series:
+  name: Spike
+  order: 1
+```
 
 Use a local, article-relative asset for an optimized cover image:
 
@@ -48,6 +64,8 @@ heroImage:
   src: ../../assets/cover.png
   alt: 'A descriptive cover image'
 ```
+
+The cover also appears in link previews. The build creates a JPEG up to 1200 pixels wide and uses the cover's alt text or the post title. Posts without a cover use `site.ogImage`.
 
 For a body image, write a standalone Markdown image. Its alt text becomes the visible caption. Images lazy-load, can be opened with a keyboard-accessible native dialog, and retain their caption if an external image is unavailable.
 
@@ -61,9 +79,11 @@ Reusable body images belong under `public/` and are referenced with a root-relat
 
 KaTeX supports `$inline$` and `$$display$$` math. Use a `mermaid` fenced block for diagrams. Code fences provide a language label, copy button and automatic folding after 15 lines. Add `title="file.ts"` to name a block; use `[!code highlight]`, `[!code ++]`, and `[!code --]` in a comment to highlight, add, or remove a line.
 
+Printing or saving an article as a PDF includes every line of a code block, even when it is folded on screen.
+
 ## Publish and sync the theme
 
-Before publishing, inspect the page locally and run `pnpm check` and `pnpm build`. Confirm images, captions, links, mobile layout and the final `dist/` with `pnpm preview`.
+Before publishing, run `pnpm build` followed by `pnpm check:links`. The link check reads `dist/` locally and reports the source page for missing files, images and headings. Use `pnpm preview` to inspect the result.
 
 To bring approved theme changes into the blog, preview first and then apply:
 

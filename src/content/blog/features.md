@@ -1,4 +1,5 @@
 ---
+language: 'zh-CN'
 title: '主题特色与阅读体验'
 description: '从首页找文章，在长文里定位章节，再用搜索找回读过的段落。'
 publishDate: 2026-08-17

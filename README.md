@@ -27,7 +27,7 @@ The site is fully static. Build it once, then serve the generated files from any
 ## What is included
 
 - Blog pages with pagination, tags, yearly archives, RSS and sitemap
-- A small, build-time search index searched in the browser; no third-party search service
+- Local search supports multiple keywords, shareable queries and direct links to matching sections
 - Light, dark and system themes, applied before first paint; warm ink and cool fresh palettes can be switched independently
 - A configuration-driven home page with recent posts, education, skills, tag cloud and friend-link sections
 - Sticky desktop table of contents, mobile table of contents, reading progress, reading-time estimates, and previous/next links
@@ -57,6 +57,7 @@ For the day-to-day blogging and release workflow, see the [detailed blog guide](
 | `pnpm dev`             | Start the local development server                                    |
 | `pnpm check`           | Run Astro and TypeScript diagnostics                                  |
 | `pnpm build`           | Run diagnostics, then create the static site in `dist`                |
+| `pnpm check:links`     | Check built pages, heading links and local images in `dist`            |
 | `pnpm test`            | Run the Node regression suite                                         |
 | `pnpm preview`         | Preview the built site locally                                        |
 | `pnpm sync`            | Refresh Astro-generated types and content metadata                    |

@@ -30,7 +30,7 @@ const line = 'var(--un-default-border-color)'
 const typography: TypographyOptions = {
   selectorName: 'prose',
   colorScheme: {
-    body: inkSoft,
+    body: 'var(--ink-body)',
     headings: ink,
     links: ink,
     bold: ink,
@@ -47,37 +47,21 @@ const typography: TypographyOptions = {
   },
   cssExtend: {
     // Root typography lives in global.css: cssExtend targets descendants.
-    // Headings — serif, balanced, breathing margins
+    // Keep the main headings editorial and technical subsections easy to scan.
     '.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6': {
-      'font-family': 'var(--font-serif)',
       'font-weight': '600',
       'letter-spacing': '0.01em',
       'line-height': '1.35',
-      'text-wrap': 'balance',
-      'scroll-margin-top': '5.5rem'
+      'text-wrap': 'balance'
     },
+    // Give heading links and legacy fragment targets clearance below the sticky header.
+    '.prose [id]': { 'scroll-margin-top': '5.5rem' },
+    '.prose h1,.prose h2,.prose h5,.prose h6': { 'font-family': 'var(--font-serif)' },
+    '.prose h3,.prose h4': { 'font-family': 'var(--font-sans)' },
     '.prose h2': { 'margin-top': '2.4em', 'margin-bottom': '0.9em' },
     '.prose h3': { 'margin-top': '2em', 'margin-bottom': '0.7em' },
     '.prose h4': { 'margin-top': '1.6em', 'margin-bottom': '0.5em' },
     '.prose p': { 'margin-block': '1.05em' },
-
-    // Heading anchor links (appear on hover / focus)
-    '.prose h1>a,.prose h2>a,.prose h3>a,.prose h4>a,.prose h5>a,.prose h6>a': {
-      'margin-inline-start': '0.55rem',
-      color: 'hsl(var(--accent) / 0.75)',
-      'font-size': '0.85em',
-      opacity: '0',
-      transition: 'opacity 0.2s ease, color 0.2s ease',
-      'text-decoration': 'none',
-      'font-weight': '400',
-      'user-select': 'none'
-    },
-    '.prose h1:hover>a,.prose h2:hover>a,.prose h3:hover>a,.prose h4:hover>a,.prose h5:hover>a,.prose h6:hover>a':
-      { opacity: '1' },
-    '.prose h1:focus-within>a,.prose h2:focus-within>a,.prose h3:focus-within>a,.prose h4:focus-within>a,.prose h5:focus-within>a,.prose h6:focus-within>a':
-      { opacity: '1' },
-    '.prose h1:target>a,.prose h2:target>a,.prose h3:target>a,.prose h4:target>a,.prose h5:target>a,.prose h6:target>a':
-      { opacity: '1' },
 
     // Links remain recognizable on touch devices, with stronger emphasis on interaction.
     '.prose a': {
@@ -94,19 +78,20 @@ const typography: TypographyOptions = {
       color: accent,
       'text-decoration-color': 'hsl(var(--accent) / 0.9)'
     },
-    '.prose :is(h1,h2,h3,h4,h5,h6)>a': { 'text-decoration': 'none' },
+    '.prose :is(h1,h2,h3,h4,h5,h6) a': { 'font-weight': 'inherit' },
 
-    // Inline code: little paper chips
+    // Inline code in running text; fenced blocks retain their Shiki styling.
     '.prose :not(pre) > code': {
       'font-family': 'var(--font-mono)',
       'font-size': '0.86em',
-      padding: '0.18em 0.42em',
-      'border-radius': '0.35em',
-      'background-color': 'hsl(var(--wash) / 1)',
-      border: '1px solid hsl(var(--line) / 1)',
-      'box-shadow': 'inset 0 -1px 0 hsl(var(--line) / 0.6)',
+      'font-weight': '500',
+      padding: '0.06em 0.24em',
+      'border-radius': '0.2em',
+      'background-color': 'hsl(var(--wash) / 0.75)',
+      'box-decoration-break': 'clone',
       'white-space': 'pre-wrap',
-      'word-break': 'break-all'
+      'word-break': 'normal',
+      'overflow-wrap': 'anywhere'
     },
     '.prose :not(pre) > code::before': { content: 'none' },
     '.prose :not(pre) > code::after': { content: 'none' },
@@ -252,6 +237,7 @@ export default defineConfig({
       paper: 'hsl(var(--paper) / <alpha-value>)',
       ink: 'hsl(var(--ink) / <alpha-value>)',
       'ink-soft': 'hsl(var(--ink-soft) / <alpha-value>)',
+      'ink-body': 'var(--ink-body)',
       // Muted surface
       wash: 'hsl(var(--wash) / <alpha-value>)',
       card: 'hsl(var(--card) / <alpha-value>)',

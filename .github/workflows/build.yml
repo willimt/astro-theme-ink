@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base: ['/', '/astro-theme-ink/']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,5 +27,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run tests
+        if: matrix.base == '/'
+        run: pnpm test
+
       - name: Type-check & build
         run: pnpm build
+        env:
+          BASE_PATH: ${{ matrix.base }}
+
+      - name: Check built links and images
+        run: pnpm check:links

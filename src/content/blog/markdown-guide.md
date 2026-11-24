@@ -1,4 +1,5 @@
 ---
+language: 'zh-CN'
 title: 'Markdown 语法速查'
 description: '一页对照常用写法与实际效果：站内链接、图片、带标题的代码块、可展开的长代码、Mermaid 流程图和数学公式。'
 publishDate: 2026-08-16

@@ -161,6 +161,26 @@ test('configuration changes require review even when blog matched the old defaul
   assert.equal(f.read('package.json'), '{"name":"astro-theme-ink"}\n')
 })
 
+test('diff mode is read-only, limited to managed files, and bounds large patches', (t) => {
+  const f = fixture(t)
+  const name = 'src/components/PostCard.astro'
+  f.put(f.target, name, '博客定制\n'.repeat(2000))
+  for (const args of [
+    ['--diff', name, '--apply'],
+    ['--diff', '../outside'],
+    ['--diff', 'src/utils/missing.ts']
+  ]) {
+    assert.equal(f.run('--init', ...args).status, 1)
+  }
+  const result = f.run('--init', '--diff', name)
+  assert.equal(result.status, 0, result.stderr)
+  const [section] = JSON.parse(result.stdout)
+  assert.match(section.text, /\+博客定制/)
+  assert.match(section.text, /余下内容已省略/)
+  assert.ok(section.text.split('\n').length <= 301)
+  assert.equal(fs.existsSync(path.join(f.target, '.theme-sync.json')), false)
+})
+
 test('recovers a baseline with raw control characters and rewrites valid JSON on apply', (t) => {
   const f = fixture(t)
   f.init()

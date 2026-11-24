@@ -4,8 +4,8 @@
    `site.palette` in site-config.ts):
      - ink    : warm paper (default)
      - fresh  : cool mint, light & airy
-   Each palette has a light and a dark variant. All colors are HSL
-   triplets consumed through the CSS variables below.
+   Each palette has light and dark variants. The palette defines HSL
+   triplets and derives the reading text color from the two ink tones.
    ============================================================ */
 
 /* ---- Palette: ink (warm paper) · light ---- */
@@ -16,6 +16,7 @@
   --card: 45 40% 99%;
   --ink: 30 14% 13%;
   --ink-soft: 32 9% 36%;
+  --ink-body: color-mix(in srgb, hsl(var(--ink-soft)) 65%, hsl(var(--ink)));
   --wash: 40 22% 92%;
   --accent: 22 46% 44%;
   --ring: 22 46% 44%;
@@ -30,6 +31,7 @@
   --card: 32 14% 11%;
   --ink: 42 32% 92%;
   --ink-soft: 38 10% 66%;
+  --ink-body: hsl(var(--ink-soft));
   --wash: 32 12% 14%;
   --accent: 28 72% 68%;
   --ring: 28 72% 68%;

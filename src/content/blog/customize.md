@@ -1,9 +1,11 @@
 ---
+language: 'zh-CN'
 title: '深度定制指南'
 description: '把演示站改成自己的博客：设置首页简介、头像和导航，调整纸色与排版，按需开启评论、浏览量和搜索。'
 publishDate: 2026-08-16
 updatedDate: 2026-11-20
 tags: [主题, 文档]
+series: { name: 主题使用指南, order: 2 }
 heroImage:
   src: ../../assets/cover-demo.png
   alt: '蓝天下，一枝绿叶从白云前伸过。'

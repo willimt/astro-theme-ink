@@ -30,7 +30,7 @@ import { config } from '@/site-config'
               autocomplete="off"
               aria-controls="search-results"
               autofocus
-              class="w-full rounded-xl border border-line bg-card px-10 py-3 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink-soft/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
+              class="w-full rounded-xl border border-line bg-card px-10 py-3 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink-soft focus:border-accent focus:ring-2 focus:ring-accent/20"
             />
           </div>
           <p
@@ -50,9 +50,8 @@ import { config } from '@/site-config'
 </BaseLayout>
 
 <script>
-  const BASE = import.meta.env.BASE_URL
-
-  import { searchPosts, type SearchItem } from '@/utils/search'
+  import { withBase } from '@/utils'
+  import { matchingSection, queryTerms, searchPosts, type SearchItem } from '@/utils/search'
 
   const input = document.getElementById('search-input') as HTMLInputElement | null
   const status = document.getElementById('search-status') as HTMLElement | null
@@ -67,24 +66,11 @@ import { config } from '@/site-config'
         (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
       )
 
-    const highlight = (text: string, q: string) => {
-      const i = text.toLowerCase().indexOf(q)
-      if (i < 0) return escapeHtml(text)
-      return (
-        escapeHtml(text.slice(0, i)) +
-        '<mark>' +
-        escapeHtml(text.slice(i, i + q.length)) +
-        '</mark>' +
-        escapeHtml(text.slice(i + q.length))
-      )
-    }
-
-    const snippet = (item: SearchItem, q: string) => {
-      const hay = `${item.description} ${item.content}`
-      const i = hay.toLowerCase().indexOf(q)
-      if (i < 0) return escapeHtml(item.description)
+    const snippet = (text: string, pattern: RegExp) => {
+      const i = text.search(pattern)
       const start = Math.max(0, i - 40)
-      return (start > 0 ? '…' : '') + highlight(hay.slice(start, i + 140), q) + '…'
+      const end = Math.max(i, 0) + 140
+      return (start > 0 ? '…' : '') + text.slice(start, end).trim() + (end < text.length ? '…' : '')
     }
 
     const render = (q: string) => {
@@ -102,16 +88,32 @@ import { config } from '@/site-config'
         return
       }
       const hits = searchPosts(index, query)
+      const terms = queryTerms(query)
+      const literals = [...terms]
+        .sort((a, b) => b.length - a.length)
+        .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      const pattern = new RegExp(`(${literals.join('|')})`, 'gi')
+      const highlight = (text: string) =>
+        text
+          .split(pattern)
+          .map((part, i) => (i % 2 ? `<mark>${escapeHtml(part)}</mark>` : escapeHtml(part)))
+          .join('')
       status!.textContent = `${hits.length} results found`
       list!.innerHTML = hits.length
         ? hits
-            .map(
-              (item) => `
+            .map((item) => {
+              const matched = matchingSection(item, terms)
+              const path = withBase(
+                '/blog/' + item.slug.split('/').map(encodeURIComponent).join('/')
+              )
+              const href = matched ? path + '#' + encodeURIComponent(matched.section.id) : path
+              const text = matched?.text ?? `${item.description} ${item.content}`
+              return `
             <li class="post-row">
-              <a href="${BASE}blog/${escapeHtml(item.slug.split('/').map(encodeURIComponent).join('/'))}" class="group block">
-                <h2 class="font-serif text-xl font-semibold leading-snug transition-colors group-hover:text-accent">${highlight(item.title, query)}</h2>
-                <time class="mt-2 block text-xs text-ink-soft tabular-nums">${new Date(item.date).toLocaleDateString()}</time>
-                <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-soft">${snippet(item, query)}</p>
+              <a href="${escapeHtml(href)}" class="group block">
+                <h2 class="font-serif text-xl font-semibold leading-snug transition-colors group-hover:text-accent">${highlight(item.title)}${matched ? ` <span class="text-sm font-normal text-ink-soft">› ${highlight(matched.section.title)}</span>` : ''}</h2>
+                <time class="mt-2 block text-xs text-ink-soft tabular-nums">${new Date(item.date).toLocaleDateString(document.documentElement.lang)}</time>
+                <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-body">${highlight(snippet(text, pattern))}</p>
                 ${
                   item.tags.length
                     ? `<div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-ink-soft">${item.tags
@@ -121,19 +123,30 @@ import { config } from '@/site-config'
                 }
               </a>
             </li>`
-            )
+            })
             .join('')
         : '<li class="py-12 text-center text-ink-soft">No matching posts</li>'
     }
 
     let timer: number | undefined
+    const restoreQuery = () => {
+      input.value = new URL(location.href).searchParams.get('q') ?? ''
+      render(input.value)
+    }
+    restoreQuery()
+    window.addEventListener('popstate', restoreQuery)
     input.addEventListener('input', () => {
       window.clearTimeout(timer)
-      timer = window.setTimeout(() => render(input.value), 120)
+      timer = window.setTimeout(() => {
+        const url = new URL(location.href)
+        if (input.value.trim()) url.searchParams.set('q', input.value.trim())
+        else url.searchParams.delete('q')
+        history.replaceState(history.state, '', url)
+        render(input.value)
+      }, 120)
     })
 
-    status.textContent = 'Loading index…'
-    fetch(`${BASE}search-index.json`)
+    fetch(withBase('/search-index.json'))
       .then((r) => {
         if (!r.ok) throw new Error(`Search index request failed: ${r.status}`)
         return r.json()
